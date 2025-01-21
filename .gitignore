@@ -1,0 +1,7 @@
+.protect
+.user.ini
+/uploaded-files/
+/files/
+/vendor/
+/html2pdf-4.5.0/
+/mpdf60/
