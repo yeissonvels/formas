@@ -17,6 +17,7 @@
                 <thead>
                 <tr>
                     <th><?php echo trans('user') ?></th>
+                    <th><?php echo trans('usercode') ?></th>
                     <th><?php echo trans('register_date') ?></th>
                     <th><?php echo trans('last_login') ?></th>
                     <th><?php echo trans('account_status') ?></th>
@@ -54,6 +55,7 @@
                     ?>
                     <tr class="<?php echo ($deleted ? 'deleted' : '') . " " . $trClass ?>">
                         <td><?php echo $dbuser->username ?></td>
+                        <td><?php echo $dbuser->usercode ?? '<span style="color: red;">Sin asignar</span>' ?></td>
                         <td><?php echo americaDate($dbuser->user_registered); ?></td>
                         <td><?php echo americaDate($dbuser->last_login) ?></td>
                         <td>

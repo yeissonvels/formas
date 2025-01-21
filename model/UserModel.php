@@ -75,6 +75,16 @@ class UserModel extends User {
         return false;
     }
 
+    function existUsercode($usercode) {
+        $query = 'SELECT * FROM ' . $this->userTable . ' WHERE usercode="' . $usercode. '" LIMIT 1';
+        $data = $this->wpdb->get_results($query);
+        if (count($data) > 0) {
+            return true;
+        }
+
+        return false;
+    }
+
     function getUser() {
         $mensaje = "";
         if (!empty($_POST['user_login']) && !empty($_POST['user_pass'])) {
@@ -86,7 +96,7 @@ class UserModel extends User {
                 $user = persist($user, 'User');
             }
 
-            if (count($user) > 0 && $user->deleted == 0) {
+            if ($user && $user->deleted == 0) {
                 if ($user->active > 0) {
                 	/*if (isAdmin()) {
                 		print_r($user);

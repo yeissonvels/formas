@@ -112,7 +112,7 @@
 		
     	if (isSuperAdmin() || (is_object($user) && $user->getUsermanager() == 1) || $isAdmLogged) { 
     	?>
-	    <div style="background:gray;color:white;font-size: 18px;font-weight: bold;text-align:center;padding:10px;">
+	    <div style="background:linear-gradient(to bottom, #ffd8a6, #ffffff);color:white;font-size: 18px;font-weight: bold;text-align:center;padding:10px;">
 	    	<form method="post">
 	    		<?php
 	    		if (!$isAdmLogged){?>

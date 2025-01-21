@@ -53,6 +53,7 @@ class AjaxRequest
                 'listDir' => 'listFilesFromDir',
                 'saveUserPermissions' => 'saveUserPermissions',
                 'comprobateUsername' => 'comprobateUsername',
+                'comprobateUsercode' => 'comprobateUsercode',
                 'comprobateEmail' => 'comprobateEmail',
                 'saveMenuPermissions' => 'saveMenuPermissions',
                 'getClassMethods' => 'getClassMethods',
@@ -314,6 +315,18 @@ class AjaxRequest
         $controller = new $_POST['controller']();
 
         if ($controller->existUsername($username)) {
+            echo "si";
+        } else {
+            echo "no";
+        }
+    }
+
+    function comprobateUsercode()
+    {
+        $usercode = $_POST['usercode'];
+        $controller = new $_POST['controller']();
+
+        if ($controller->existUsercode($usercode)) {
             echo "si";
         } else {
             echo "no";

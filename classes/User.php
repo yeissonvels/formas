@@ -22,6 +22,7 @@ class User {
     protected $userrepository = 0;
     protected $useraccounting = 0;
     protected $usermanager;
+    protected $usercode;
 
     /**
      * @return mixed
@@ -289,5 +290,21 @@ class User {
         }
         // Update the timout field with the current time.
         $_SESSION['timeout'] = time();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsercode()
+    {
+        return $this->usercode;
+    }
+
+    /**
+     * @param mixed $usercode
+     */
+    public function setUsercode($usercode)
+    {
+        $this->usercode = $usercode;
     }
 }

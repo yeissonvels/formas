@@ -1,5 +1,6 @@
 <script>
     var usernameValidated = <?php echo ($data && $data->getUsername() != "" ? 'true' : 'false' ); ?>;
+    var usercodeValidated = <?php echo ($data && $data->getUsercode() != "" ? 'true' : 'false' ); ?>;
 
     $(document).ready(function () {
         $('#username').keyup(function () {
@@ -23,6 +24,32 @@
                         addSuccess('#div_user_login', '#username');
                         $('#user_login_response').html("Usuario disponible");
                         usernameValidated = true;
+                    }
+                });
+            }
+        });
+
+        $('#usercode').keyup(function () {
+            var usercode = $("#usercode").val();
+            if (usercode.length > 1) {
+                $.ajax({
+                    type: "post",
+                    url: '/ajax.php',
+                    data: {
+                        usercode: usercode,
+                        op: 'comprobateUsercode',
+                        controller: 'UserController'
+                    }
+                }).done(function (data) {
+                    // Retorna "si" 0 "no" dependeiendo si el usuario existe
+                    if (data == "si") {
+                        addError('#div_user_code', '#usercode');
+                        $('#user_code_response').html("El código ya existe");
+                        usercodeValidated = false;
+                    } else {
+                        addSuccess('#div_user_code', '#usercode');
+                        $('#user_code_response').html("Código disponible");
+                        usercodeValidated = true;
                     }
                 });
             }
@@ -58,13 +85,13 @@
     function check_new_user() {
         var selecteduser = $('#usertype').val();
         if ($('#opt').val() == "save_user") {
-            comprobate = Array('#username', '#user_pass', '#repeat_user_pass', '#usertype');
+            comprobate = Array('#username', '#usercode', '#user_pass', '#repeat_user_pass', '#usertype');
             if (selecteduser == 0) {
                 comprobate.push('#storeid');
             }
 
         } else {
-            comprobate = Array('#username', '#usertype');
+            comprobate = Array('#username', '#usercode', '#usertype');
             if ($('#user_pass').val() != "") {
                 comprobate.push('#user_pass');
                 comprobate.push('#repeat_user_pass');
@@ -83,7 +110,7 @@
         }
 
         // Devuelve true si todos los campos han sido completados
-        if (checkNoEmpty(comprobate) && usernameValidated) {
+        if (checkNoEmpty(comprobate) && usernameValidated && usercodeValidated) {
             return true;
         } else {
             alert(completeRequiredFields);
@@ -116,6 +143,15 @@
                     <input type="text" class="form-control" name="username" id="username" placeholder=""
                            value="<?php echo($data ? $data->getUsername() : ''); ?>">
                     <div id="user_login_response" class="form-control-feedback"></div>
+                </div>
+            </div>
+            <div class="form-group row" id="div_user_code">
+                <label for="user_code"
+                       class="col-sm-2 col-form-label"><?php echo trans('usercode') ?> (sólo números)</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="usercode" id="usercode" placeholder=""
+                           value="<?php echo($data ? $data->getUsercode() : ''); ?>" onkeyup="allowOnlyNumbers(event);">
+                    <div id="user_code_response" class="form-control-feedback"></div>
                 </div>
             </div>
             <div class="form-group row">

@@ -28,6 +28,10 @@ a.lupa:hover {
     color: #c85d2b !important;
 }
 
+li.nav-item.dropdown > a {
+    font-size: 15px;
+}
+
 h4 {
     color: #c85d2b;
 }

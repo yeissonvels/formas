@@ -163,7 +163,7 @@ class WPDB {
         //Comprobar si el dato ya existe en el sistema
         $comprobate = $this->get_row($select);
         $result = FALSE; // Se inicializa a False la variable que será devuelta si la operación es exitosa por que el dato no existe
-        if (count($comprobate) == 0) {
+        if ($comprobate == NULL) {
             //echo $update;
             $this->query($update);
             if ($showmsg) {

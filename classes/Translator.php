@@ -189,6 +189,7 @@ class Translator {
             'users' => array('Users', 'Usuarios', 'Benutzer'),
             'login' => array('Login', 'Acceder', 'Login'),
             'user' => array('User', 'Usuario', 'Benutzer'),
+            'usercode' => array('User code', 'Código de usuario', 'Benutzer code'),
             'email' => array('Email', 'Email', 'Email'),
             'full_name' => array('Full name', 'Nombre mostrado', 'vollständiger Name'),
             'register_date' => array('Register date', 'Fecha de registro', 'Anmeldungsdatum'),

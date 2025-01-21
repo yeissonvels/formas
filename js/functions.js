@@ -134,6 +134,11 @@ function validarNumeros(string) { // Borra los caracteres no numéricos entrados
     return output;
 }
 
+function allowOnlyNumbers(event) {
+    const input = event.target; // Obtiene el elemento que activó el evento
+    input.value = input.value.replace(/\D/g, ''); // Elimina todo lo que no sea un dígito
+}
+
 function redirect(url) {
     location.href=url;
 }
