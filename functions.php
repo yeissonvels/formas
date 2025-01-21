@@ -1,4 +1,6 @@
 <?php
+
+error_reporting(E_ALL);
 if (isset($_GET['error'])) {
 	echo "Activamos errores";
 	error_reporting(E_ALL);
@@ -1132,20 +1134,17 @@ function getGetValue($name) {
  *
  */
 function getFilterDate($month, $year, $trueDate = FALSE, $selector = "", $fieldname = "created_on", $allyear = true) {
-
     if ($trueDate) {
-        if ($month > 0 && $year > 0) {
+        if($allyear && $month === "all") {
+            $filterdate = ' AND ' . $selector . '.' . $fieldname . ' BETWEEN "' . date('Y') . '-1-1" AND "' . date('Y') . '-12-31" ';
+        } else if ($month > 0 && $year > 0) {
             $filterdate = ' AND  ' . $selector . '.' . $fieldname . ' BETWEEN "' . $year . '-' . $month . '-1" AND "' . $year . '-' . $month . '-31" ';
         } else if ($month > 0 && $year == 0) {
             $filterdate = ' AND  ' . $selector . '.' . $fieldname . ' BETWEEN "' . date('Y') . '-' .$month . '-1" AND "' . date('Y') . '-' . $month . '-31" ';
         } else if ($month == 0 && $year > 0) {
             $filterdate = ' AND ' . $selector . '.' . $fieldname . ' BETWEEN "' . $year . '-1-1" AND "' . $year . '-12-31" ';
         } else {
-            if ($allyear) {
-                $filterdate = ' AND  ' . $selector . '.' . $fieldname . ' BETWEEN "' . date('Y') . '-1-1" AND "' . date('Y') . '-12-31" ';
-            } else {
-                $filterdate = ' AND  ' . $selector . '.' . $fieldname . ' BETWEEN "' . date('Y') . '-' . date('m') . '-1" AND "' . date('Y') . '-' . date('m') . '-31" ';
-            }
+            $filterdate = ' AND  ' . $selector . '.' . $fieldname . ' BETWEEN "' . date('Y') . '-' . date('m') . '-1" AND "' . date('Y') . '-' . date('m') . '-31" ';
          }
     } else {
         if ($month > 0 && $year > 0) {
@@ -1307,13 +1306,18 @@ function unsetMenu() {
  */
 function from_calendar_to_date($calendar) {
     $lang = $_SESSION['lang'];
+    $time =  ' 00:00:00';
+
+    if(strpos($calendar, ':') !== false) {
+        $time = '';
+    }
 
     if ($lang == 'es') {
 
-        return implode('-', array_reverse(explode('/', $calendar))) . ' 00:00:00';
+        return implode('-', array_reverse(explode('/', $calendar))) . $time;
     } else if($lang == 'de') {
 
-        return implode('-', array_reverse(explode('.', $calendar))) . ' 00:00:00';
+        return implode('-', array_reverse(explode('.', $calendar))) . $time;
     } else if ($lang == 'en'){
 
         return $calendar;
@@ -1920,6 +1924,27 @@ function createCookie($cname, $cvalue, $exdays = 30) {
 </script>
 
 <?php
+}
+
+function fillWithZero($number) {
+    $length = 3;
+    $zero = "";
+    echo strlen($number);
+    for($i = strlen($number); $i < $length; $i++) {
+        $zero .= '0';
+    }
+
+    return $zero.$number;
+}
+
+function getEstimateCode($totalEstimates, $user) {
+    $totalEstimates++;
+    return fillWithZero($totalEstimates) . " " . $user->getUserCode() . " " . $user->getStoreId() . " " . date('y');
+}
+
+function escapeSerialized($aSerialized) {
+    global $wpdb;
+    return mysqli_real_escape_string($wpdb->getLinker(), serialize($aSerialized));
 }
 
 ?>

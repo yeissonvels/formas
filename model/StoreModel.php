@@ -11,7 +11,9 @@ class StoreModel extends Store
     protected $storestable;
     protected $provincestable;
     protected $pdfsTable;
+    protected $estimatesTable;
     protected $commentsTable;
+    protected $estimateCommentsTable;
     protected $ordersTable;
     protected $usersTable;
     protected $wpdb;
@@ -23,7 +25,9 @@ class StoreModel extends Store
         $this->storestable = $wpdb->prefix . "stores";
         $this->provincestable = $wpdb->prefix . "provinces";
         $this->pdfsTable = $wpdb->prefix . "pdfs";
+        $this->estimatesTable = $wpdb->prefix . "estimates";
         $this->commentsTable = $wpdb->prefix . "pdf_comments";
+        $this->estimateCommentsTable = $wpdb->prefix . "estimate_comments";
         $this->ordersTable = $wpdb->prefix . "orders";
         $this->usersTable = $wpdb->prefix . "users";
     }
@@ -234,6 +238,26 @@ class StoreModel extends Store
 
     }
 
+    function saveEstimate() {
+        if (isset($_POST['total'])) {
+            $_POST['total'] = formatNumberToDB($_POST['total']);
+        }
+
+        $response = $this->wpdb->save($this->estimatesTable, false);
+        $lastId = $this->wpdb->insert_id;
+        $response['pdfurl'] = $this->getEstimatePdfUrl($lastId, $_POST['code']);
+        return $response;
+    }
+
+    function getMyTotalEstimates($createdBy) {
+        return $this->wpdb->get_var("SELECT COUNT(*) FROM " . $this->estimatesTable . " WHERE created_by = " . $createdBy);
+    }
+
+    function getEstimateCode($user) {
+        $totalEst = $this->getMyTotalEstimates($user->getId());
+        return getEstimateCode($totalEst, $user);
+    }
+
     function getCodeByParentId($id = 0) {
         $myId = $_POST['parentcode'];
         if ($id != 0) {
@@ -311,13 +335,14 @@ class StoreModel extends Store
         return $data[0];
     }
 
-    function getNewPdfComments($id = 0) {
+    function getNewPdfComments($id = 0, $table = "", $wherefield = "pdfid") {
+        $commentTable = $table != "" ? $table : $this->commentsTable;
         if ($id > 0) {
             $_GET['id'] = $id;
         }
 
-        $query = 'SELECT c.id as id, created_by, created_on, comment, username FROM ' . $this->commentsTable . ' c, ';
-        $query .= $this->usersTable . ' u WHERE pdfid = ' . $_GET['id'] . ' AND c.created_by = u.id';
+        $query = 'SELECT c.id as id, created_by, created_on, comment, username FROM ' .  $commentTable . ' c, ';
+        $query .= $this->usersTable . ' u WHERE ' . $wherefield . ' = ' . $_GET['id'] . ' AND c.created_by = u.id';
         $query .= ' ORDER BY created_on DESC';
 
         return $this->wpdb->get_results($query);
@@ -399,8 +424,13 @@ class StoreModel extends Store
         return $this->wpdb->get_row($query);
     }
 
-    function saveComment() {
-        $this->wpdb->save($this->commentsTable);
+    function saveComment($aTable = "") {
+        $commentTable = $this->commentsTable;
+        if ($aTable != "") {
+            $commentTable = $aTable;
+        }
+
+        $this->wpdb->save($commentTable);
     }
 	
 	function restore_manual() {
@@ -439,5 +469,96 @@ class StoreModel extends Store
 			echo $queryIncidences . '<br>';
 		}
 	}
+
+    function getEstimates() {
+        global $user;
+        $month = isset($_POST['month']) ? $_POST['month'] : date('m');
+        $year = isset($_POST['year']) ? $_POST['year'] : date('Y');
+        $allyear = false;
+        if ($month == "all") {
+            $allyear = true;
+        }
+        $filterDate = getFilterDate($month, $year, true, "p", "saledate", $allyear);
+
+        $filterUser = "";
+        $filterCommission = "";
+
+        // Si es por rango de fechas sustituímos el filtro anterior $filterDate
+        if (!empty($_POST['from']) && !empty($_POST['to'])) {
+            $from = implode('-', array_reverse(explode('/', $_POST['from'])));
+            $to = implode('-', array_reverse(explode('/', $_POST['to'])));
+            $filterDate = ' AND saledate BETWEEN "' . $from . '" AND "' . $to . '"';
+        }
+
+        if (userWithPrivileges()) {
+            // Ventas de todos los usuarios
+            $firstfilter = ' p.created_by=u.id';
+            $filterStore = "";
+            if (isset($_POST['store'])) {
+                if ($_POST['store'] != "" && $_POST['store'] != "all") {
+                    $filterStore = ' AND p.storeid=' . $_POST['store'];
+                }
+            }
+
+            if (!empty($_POST['user'])) {
+                $filterUser = ' AND created_by = ' . $_POST['user'];
+            }
+
+            if (isset($_POST['commission']) && $_POST['commission'] == "yes") {
+                $filterCommission = ' AND pdfname <>  "" AND saletype = 0 AND commissionpayed = 0';
+            }
+
+            // Concatenamos el filtro de usuario en filterDate
+            $filterDate .= $filterUser . $filterCommission;
+        } else {
+            // Sólo las ventas de mi usuario (tienda)
+            $firstfilter = 'p.created_by = ' . $user->getId() . ' AND p.created_by=u.id';
+            $filterStore = ' AND p.storeid=' . $user->getStoreid();
+        }
+
+        $query = "SELECT * FROM ";
+        $query .= $this->estimatesTable . " p, " . $this->usersTable . " u ";
+        $where = " WHERE " . $firstfilter. " " . $filterStore . $filterDate;
+        $orderby = " ORDER BY code ASC, created_on ASC";
+        $estimates = $this->wpdb->get_results($query . $where . $orderby);
+
+        if (userWithPrivileges() && $estimates) {
+            $pdfparameters = '&commission=' . $_POST['commission'] . '&from=' . $_POST['from'] . '&to=' . $_POST['to'];
+            $pdfparameters .= '&month=' . $_POST['month'] . '&year=' . $_POST['year'] . '&store=' . $_POST['store'];
+            $pdfparameters .= '&user=' . $_POST['user'] . '&saletype=' . $_POST['saletype'];
+            $estimates[0]->pdfparameters = $pdfparameters;
+            //pre($pdfs);
+        }
+        
+        /*if ($filterCommission != "") {
+            foreach ($estimates as $pdf) {
+            	$variation = new stdClass();
+                $query = "SELECT SUM(total) as positive FROM " . $this->estimatesTable . ' WHERE parentcode = ' . $pdf->id . ' AND total > 0';
+                $variations = $this->wpdb->get_var($query);
+                $variation->positive = $variations;
+				$query = "SELECT SUM(total) as negative FROM " . $this->estimatesTable . ' WHERE parentcode = ' . $pdf->id . ' AND total < 0';
+                $variations = $this->wpdb->get_var($query);
+				$variation->negative = $variations;
+				
+                $pdf->variations =  $variation;
+            }
+        }*/
+
+        echo $query . $where . $orderby;
+
+        return $estimates;
+
+    }
+
+    function getEstimatePdfUrl($id, $code) {
+        $urlpdf = '/mpdf60.php?controller=store&legalText=getEstimateFooterLegalText';
+        $urlpdf .= '&nofooterdate&opt=getPdfEstimate&id=' . $id;
+        $urlpdf .= '&logowidth=150&pdfName=Presupuesto_' . $code;
+        return $urlpdf;
+    }
+
+    function getEstimateCommentsTable() {
+        return $this->estimateCommentsTable;
+    }
 	
 }

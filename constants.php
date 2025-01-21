@@ -25,6 +25,7 @@ define('JSON_ZONES', JSON_PATH . "zones.json");
 define('JSON_CATEGORIES', JSON_PATH . "categories.json");
 define('JSON_USERS', JSON_PATH . "users.json");
 define('JSON_FINISHES', JSON_PATH . "finishes.json");
+define('IVA', 21);
 
 // IMPORTANTE: para que funcionen las constantes por AJAX y donde se usa $_GET (por ejemplo en el botón editar),
 // es necesario pasar la variable controller como parámetro, de lo contrario no funciona (no existiría esa variable).

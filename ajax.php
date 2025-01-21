@@ -42,6 +42,13 @@ class AjaxRequest
 
         } else if (isset($_POST['op']) || isset($_POST['opt'])) {
             $request = isset($_POST['op']) ? $_POST['op'] : $_POST['opt'];
+
+            // Nuevo 2025: evitamos tener que crear una opción en el array
+            if (method_exists($this, $request)) {
+                $this->$request();
+                exit;
+            }
+
             $options = array(
                 'savepdf' => 'savePdf',
                 'uploadIcon' => 'uploadIcon',
@@ -103,7 +110,7 @@ class AjaxRequest
                 'updateAdjustPendingPay' => 'updateAdjustPendingPay'
             );
 
-            if (method_exists($this, $options[$request])) {
+            if (isset($options[$request]) && method_exists($this, $options[$request])) {
                 $method = $options[$request];
                 $this->$method();
             } else {
@@ -191,26 +198,6 @@ class AjaxRequest
     function uploadIcon2()
     {
         uploadIcon2();
-    }
-
-    function getTruckIncomes()
-    {
-        $user = $this->user;
-        $criteria = $_GET['search'];
-
-        $income = new IncomeModel();
-
-        $result = $income->getIncomesByAjaxSearch($criteria);
-        $view_path = getGetValue('controller_view_path');
-
-        include($view_path . '/show_incomes.html.php');
-        incomesComplementTable($result, $criteria);
-    }
-
-    function saveAdvancePayment()
-    {
-        $model = new AdvanceController();
-        $model->saveAdvancePayment();
     }
 
     function uploadFiles($dir, $id, $pdfname = "", $showmsg)
@@ -858,6 +845,39 @@ class AjaxRequest
         include($tpl);
     }
 
+    function getStoreProfilDateFilter() {
+        // Si es enero o febrero como a los empleados les ocultamos el filtro de año,
+        // en el selector les hemos activado noviembre y diciembre para que puedan acceder
+        // a ventas del año anterior
+        if (date('m') < 3) {
+            if (!userWithPrivileges() && $_POST['month'] >= 11) {
+                $_POST['year'] = date('Y') - 1;
+            }
+        }
+    }
+
+    function searchEstimates() {
+        $tpl = VIEWS_PATH . "store/dynamic_estimates" . VIEW_EXT;
+        $controller = new StoreController();
+        $this->getStoreProfilDateFilter();
+        /*$conf = new stdClass();
+        $conf->commentsTable = $controller->getEstimateCommentsTable();
+        $conf->fieldName = 'estimateid';
+        //$conf->nexTable = $controller-->getInitialSalesTable();
+        $conf->payments = false;
+
+        if ($_POST['code'] != "") {
+            $data = $controller->getEstimatesOrInitialSalesByCode($controller->getEstimatesTable(), $conf);
+        } else {
+            $data = $controller->getEstimatesOrInitialSales($controller->getEstimatesTable(), $conf);
+        }*/
+
+        $data = $controller->getEstimates();
+        pre($data);
+
+        include($tpl);
+    }
+
     function getAutocompleteCode() {
         $noCancelled = false;
         if (isset($_POST['nocancelled'])) {
@@ -1245,6 +1265,41 @@ class AjaxRequest
 		$_POST['pending_payed_on'] = from_calendar_to_date($_POST['pending_payed_on']);
         $result = $controller->updateSale();
         echo json_encode($result);
+    }
+
+    function saveEstimate() {
+        global $user;
+        $controller = new StoreController();
+        $_POST['saledate'] = from_calendar_to_date($_POST['saledate']);
+
+        //$_POST['storeid'] = $user->getStoreid();
+        
+        $_POST['created_on'] = date('Y-m-d H:i:s');
+        $_POST['created_by'] = $user->getId();
+        //$_POST['concept'] = escapeSerialized($_POST['concept']);
+        $_POST['storeid'] = $user->getStoreId();
+        // El formulario de guardado y actualización es el mismo, en el guardado el id viene vacío.
+        if (isset($_POST['id'])) {
+            unset($_POST['id']);
+        }
+
+
+        $result = $controller->saveEstimate();
+        echo json_encode($result);
+    }
+
+    function saveEstimateComment() {
+        global $user;
+        $tpl = VIEWS_PATH . 'store/pdf_comments' . VIEW_EXT;
+        $_POST['created_by'] = $user->getId();
+        $_POST['created_on'] = date('Y-m-d H:i:s');
+        $controller = new StoreController();
+        $table = $controller->getEstimateCommentsTable();
+        $controller->saveComment($table);
+        $data = new stdClass();
+        $_GET['id'] = $_POST['estimateid'];
+        $data->comments =  $controller->getNewPdfComments(0, $table, "estimateid");
+        include ($tpl);
     }
 }
 

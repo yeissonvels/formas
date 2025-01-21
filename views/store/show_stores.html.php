@@ -8,6 +8,7 @@
         <table class="table table-responsive">
             <thead>
                 <tr>
+                    <th>Nº de tienda</th>
                     <th>CIF</th>
                     <th>Nombre</th>
                     <th>Dirección</th>
@@ -26,6 +27,7 @@
             <?php
             foreach ($data as $store) {?>
                 <tr>
+                    <td><?php echo $store->getId();?></td>
                     <td><?php echo $store->getCif();?></td>
                     <td><?php echo $store->getStorename();?></td>
                     <td><?php echo $store->getAddress();?></td>
