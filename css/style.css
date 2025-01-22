@@ -78,11 +78,17 @@ h4 {
 }
 
 footer {
-    background: #333333;
+    background: #847b78;
+    /*background-color: #f7f7f7;*/
+    min-height: 60px;
     padding: 10px;
     margin-top: 10px;
     color:#EEEEEE;
     font-size: 14px;
+}
+
+.text-muted {
+    color: #6c757d !important;
 }
 
 .card {

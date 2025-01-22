@@ -228,7 +228,7 @@ class AjaxRequest
         }
 
         $loader = new LoadFile($options);
-        return $loader->uploadFiles(false, $id, $pdfname, $showmsg);
+        return $loader->uploadFiles($pdfname, $showmsg, false);
 
     }
 
@@ -244,7 +244,7 @@ class AjaxRequest
         );
 
         $loader = new LoadFile($options);
-        $loader->uploadFiles(true);
+        $loader->uploadFiles('', '', false);
 
     }
 
@@ -860,17 +860,7 @@ class AjaxRequest
         $tpl = VIEWS_PATH . "store/dynamic_estimates" . VIEW_EXT;
         $controller = new StoreController();
         $this->getStoreProfilDateFilter();
-        /*$conf = new stdClass();
-        $conf->commentsTable = $controller->getEstimateCommentsTable();
-        $conf->fieldName = 'estimateid';
-        //$conf->nexTable = $controller-->getInitialSalesTable();
-        $conf->payments = false;
-
-        if ($_POST['code'] != "") {
-            $data = $controller->getEstimatesOrInitialSalesByCode($controller->getEstimatesTable(), $conf);
-        } else {
-            $data = $controller->getEstimatesOrInitialSales($controller->getEstimatesTable(), $conf);
-        }*/
+        $conf = new stdClass();
 
         $data = $controller->getEstimates();
         pre($data);
@@ -1300,6 +1290,108 @@ class AjaxRequest
         $_GET['id'] = $_POST['estimateid'];
         $data->comments =  $controller->getNewPdfComments(0, $table, "estimateid");
         include ($tpl);
+    }
+
+    /**
+     * En principio se había pensado para imágenes pero ahora es posible subir rt, doc, docx
+     */
+    function uploadEstimateDocument() {
+        $alloweds = array('png', 'PNG', 'jpg', 'JPG', 'doc', 'docx', 'rtf', 'pdf');
+        $docs = array('doc', 'docx', 'rtf', 'pdf');
+        $imageType = $_POST['imageType'];
+        unset($_POST['imageType']);
+
+        if ($imageType == 'primary') {
+            $dir = array('', 'secondary');
+        } else {
+            array_push($alloweds, 'rtf');
+            array_push($alloweds, 'doc');
+            array_push($alloweds, 'docx');
+            $dir = array('estimates', 'secondary');
+        }
+
+        $orderid = $_POST['orderid'];
+        $aux = $_FILES['file-0']['name'];
+        $fileExt = explode('.', $aux);
+        $fileExt = $fileExt[1];
+
+        // Si no es imagen mostramos un error
+        if (!in_array($fileExt, $alloweds)) {
+            if ($imageType == 'primary') {
+                $result['sucess'] = 0;
+                $result['html'] = errorMsg("Error al subir el archivo! ¿Es correcto el formato (png, jpg)?", false);
+                echo json_encode($result);
+            } else {
+                errorMsg("Error al subir el archivo! ¿Es correcto el formato (png, jpg)?");
+            }
+            exit;
+        }
+
+
+        $iName = 'Imagen_';
+        $fExt = getFileExtension($fileExt);
+        if (in_array($fExt, $docs)) {
+            $iName = 'Documento_';
+        }
+
+
+        $imageName = $iName . $orderid . "-" . date('d_m_Y-H_i_s') . "." . $fileExt;
+        $response = $this->uploadFiles($dir, $orderid, $imageName, false);
+        unset($_POST['orderid']);
+
+        if ($response) {
+            // La imagen principal la guardamos en la raiz images/orderid
+            if ($imageType == "primary") {
+                $controller = new StoreController();
+                // Obtenemos los comentarios anteriores
+                $_POST['id'] = $orderid;
+                $_POST['image'] = $imageName;
+
+                // Nos vale la función updatePdfCode para actualizar el nombre del pdf
+                //$controller->updatePdfCode();
+
+                $html = 'Archivo cargado correctamente: ';
+                $path = '/uploaded-files/' . $dir . '/' . $orderid . '/' . $imageName;
+                $html .= '<a href="' . $path . '" target="_blank">' . icon('image', false) . '</a><br><br>';
+                //$html .= '<input type="button" class="btn btn-success" value="Enviar PDF al almacén" onclick="confirmSend(' . $orderid . ')">';
+
+                $result['success'] = 1;
+                $result['html'] = confirmationMessage($html, false);
+                echo json_encode($result);
+            } else {
+                // La imagen principal la guardamos en la raiz images/orderid/secondary
+                $config = array(
+                    'divresponse' => $_POST['divresponse'],
+                    'excludes' => array()
+                );
+                listDirectoryTableFormat('uploaded-files/estimates/' . $orderid . '/secondary', true, $config);
+            }
+        } else {
+            $result['sucess'] = 0;
+            $result['html'] = errorMsg("Error al subir el archivo! ¿Es correcto el formato (png, jpg)?", false);
+        }
+    }
+
+    function updateEstimate() {
+        $controller = new StoreController();
+        $_POST['saledate'] = from_calendar_to_date($_POST['saledate']);
+        if (isset($_POST['total'])) {
+            $_POST['total'] = formatNumberToDB($_POST['total']);
+        }
+
+        $result = $controller->updateEstimate();
+        echo json_encode($result);
+    }
+
+    function checkIfAnotherEstimateRegisteredWithTel() {
+        $tel = $_POST['tel'];
+        $controller = new $_POST['controller']();
+
+        if ($controller->checkIfAnotherEstimateRegisteredWithTel($tel)) {
+            echo "si";
+        } else {
+            echo "no";
+        }
     }
 }
 

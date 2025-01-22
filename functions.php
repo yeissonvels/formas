@@ -524,6 +524,8 @@ function icon($name, $show = false, $scape = false) {
         'half' => 'fa-hourglass-half',
         'calculator' => 'fa-calculator',
         'sort' => 'fas fa-sort',
+        'attention' => 'fa-exclamation-circle',
+        'attention2' => 'fa-exclamation-triangle'
     );
 
     if ($scape) {
@@ -1253,6 +1255,10 @@ if (!function_exists('pre')) {
  */
 if (!function_exists('americaDate')) {
     function americaDate($date, $time = TRUE) {
+        if($date === NULL) {
+            return '';
+        }
+
         $lang = $_SESSION['lang'];
 
         if (!$lang || $lang == 'es') {
@@ -1838,6 +1844,138 @@ function listDirectory($path, $delete = false, $config = array('divresponse' => 
     if ($cont == 0 && $excludes == 0) {
         echo 'No se han encontrado archivos!';
     }
+}
+
+/**
+ * $delete = si queremos mostrar un enlace para borrar los archivos
+ * Funcion usada en varios contextos
+ *
+ * $config: configuraciones especiales
+ * $config['divresponse'] div en el que debemos mostrar la respuesta
+ * $config['excludes'] archivos que queremos excluir
+ */
+function listDirectoryTableFormat($path, $delete = false, $config = array('divresponse' => '', 'excludes' => array())) {
+    $notAlloweds = array('.', '..', 'index.php');
+    $cont = 0;
+	$excludes = 0;
+    $files = [];
+
+    if (file_exists($path)) {
+        $dir = opendir($path);
+        while ($file = readdir($dir)) {
+            if (!in_array($file, $notAlloweds)) {
+            	$fname = $file;
+            	$ext =  getFileExtension($fname);
+                $file = $path . '/' . $fname;
+
+                if (!in_array($fname, $config['excludes'])) {
+                    $fileDate = filectime($file);
+                    $humanFileDate = date("Y-m-d H:i:s", filectime($file));
+                    $files[] = [$fileDate, $humanFileDate, $fname, $ext];
+
+                    $cont++;
+                } else {
+                	$excludes++;
+                }
+            }
+        }
+    }
+
+    // Ordenar por fecha descendente
+    $files = sortDescendingArray($files);
+    $config['delete'] = $delete;
+    $html = createResponseTable($path, $files, $config);
+   
+    echo $html;
+}
+
+function sortDescendingArray($array) {
+    usort($array, function ($a, $b) {
+        return $b[0] <=> $a[0]; // Comparar el primer elemento (timestamps)
+    });
+
+    return $array;
+}
+
+function sortAscendingArray() {
+    usort($array, function ($a, $b) {
+        return $a[0] <=> $b[0]; // Comparar el primer elemento (timestamps)
+    });
+}
+
+function getIconNames() {
+    return array(
+        'rtf' => 'word',
+        'doc' => 'word',
+        'docx' => 'word',
+        'pdf' => 'pdf',
+        'png' => 'image'
+    );
+}
+
+function createResponseTable($path, $files, $config) {
+    $cont = 0;
+    $icons = getIconNames();
+    $html = '<table class="table">';
+    $html .= '<thead>';
+    $html .=    '<tr>';
+    $html .=        '<th>Archivo</th>';
+    $html .=        '<th>Fecha de subida</th>';
+    $html .=        '<th>'.delete_icon_js().'</th>';
+    $html .=    '</tr>';
+    $html .= '</thead>';
+
+    $html .= '<tbody>';
+
+    if(is_array($files) && count($files) > 0) {
+        foreach($files as $file) {
+            $fname = $file[2];
+            $ext =  $file[3];
+            $file = $path . '/' . $fname;
+    
+            $html .=    '<tr id="' . $config['divresponse'] . $cont . '">';
+            $html .=        '<td>';
+            
+            if (array_key_exists($ext, $icons)) {
+                $qtip = false;
+                $type = $icons[$ext];
+            } else {
+                $qtip = true;
+                $type = 'image';
+            }
+    
+            if ($qtip) {
+                $html .= '<a href="' . $file . '" target="_blank" title="<img src=\'' . $file . '\'>" class="withqtip-no-close">' . icon($type, false) . '</a>';
+            } else {
+                $html .= '<a href="' . $file . '" target="_blank">' . icon($type, false) . '</a>';
+            }
+    
+            $html .= " " . $fname;
+    
+            $html .=        '</td>';
+            $html .=        '<td>'.date("Y-m-d H:i:s", filectime($file)) ?? ''.'</td>';
+            $html .=        '<td>';
+    
+            if ($config['delete']) {
+                $onclick = 'onclick="unlinkFile(\'' . $file . '\', \'' . $path . '\', \'' . $fname . '\',  \'' . $config['divresponse'] . '\', \'' . $config['divresponse'] . $cont . '\')"';
+                $html .= '<a  target="_blank" style="cursor: pointer;" ' . $onclick . ' title="Eliminar">' . delete_icon_js() . '</a><br>';
+            }
+    
+            $html .=        '</td>';
+            $fileDate = filectime($file);
+            $humanFileDate = date("Y-m-d H:i:s", filectime($file));
+            $files[] = [$fileDate, $humanFileDate, $fname];
+    
+            $cont++;
+        }
+    } else {
+        $html .= '<tr><td colspan="3">No se han encontrado archivos!</td></tr>';
+    }
+
+    $html .=    '</tbody>';
+    $html .= '</table>';
+
+    return $html;
 }
 
 function getFileExtension($fname) {

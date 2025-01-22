@@ -108,7 +108,7 @@ function scrollingTo(id) {
 }
 
 function validar(string) { // Borra los caracteres no numéricos entrados en tiempo real
-    for (var i=0, output='', validos="0123456789."; i<string.length; i++){
+    for (var i=0, output='', validos="0123456789.,"; i<string.length; i++){
         if (validos.indexOf(string.charAt(i)) != -1) {
             output += string.charAt(i);
         }
@@ -371,6 +371,7 @@ function loadOrdersWidget() {
 
 function addCommas(id, n) {
     n = n.toString();
+    n = validar(n);
     commas = n.split(".");
     ncommas = commas.length;
 

@@ -28,10 +28,33 @@
             calculateTotal();
         }
         createComprobate();
+        checkIfAnotherEstimateRegisteredWithTel();
     });
 
     function checkEstimateData() {
         saveEstimate();
+    }
+
+    function checkIfAnotherEstimateRegisteredWithTel() {
+        $('#tel').keyup(function () {
+            var tel = $("#tel").val();
+            if (tel.length > 4) {
+                $.ajax({
+                    type: "post",
+                    url: '/ajax.php',
+                    data: {
+                        tel: tel,
+                        op: 'checkIfAnotherEstimateRegisteredWithTel',
+                        controller: 'StoreController'
+                    }
+                }).done(function (data) {
+                    // Retorna "si" 0 "no" dependeiendo si el usuario existe
+                    if (data == "si") {
+                        $('#modalAlert').modal('show');
+                    }
+                });
+            }
+        });
     }
 
     function saveEstimate() {
@@ -84,7 +107,7 @@
         $('#urltitlepdf').prop('href', url);
     }
 
-    var reuploaded = <?php echo($data && $data->reuploaded == 1 ? 'true' : 'false'); ?>;
+    var reuploaded = <?php echo($data && (isset($data->reuploaded) && $data->reuploaded == 1) ? 'true' : 'false'); ?>;
     var arrayImages = [];
 
     function addImage(imageType) {
@@ -502,7 +525,7 @@
         }
     }
 
-    var cont = <?php echo $data && count(unserialize($data->concept)) > 0 ? count(unserialize($data->concept)) : 0 ?>;
+    /*var cont = < ?php echo $data && count(unserialize($data->concept)) > 0 ? count(unserialize($data->concept)) : 0 ?>;
 
     function addNewConcept() {
         cont++;
@@ -512,7 +535,7 @@
         html +=     '<div class="col-sm-9">';
         html +=         '<textarea class="form-control" name="concept[]" id="concept' + cont + '"></textarea>';
         html +=     '</div>';
-        html += '<a class="cursor-pointer red-color" onclick="deleteConcept(' + cont + ')"><?php echo icon("delete", false); ?></a>';
+        html += '<a class="cursor-pointer red-color" onclick="deleteConcept(' + cont + ')">< ?php echo icon("delete", false); ?></a>';
         html +=  '</div>';
         $('#concepts').append(html);
         scrollingTo('#' + divId);
@@ -520,7 +543,7 @@
 
     function deleteConcept(id) {
         $('#div_concept_' + id).remove();
-    }
+    }*/
 
 </script>
 
@@ -533,7 +556,7 @@
         $canEdit = true;
         $disabled = '';
     } else if ($data && !isTimeOver($data->created_on) || $user->getUsermanager() == 1
-        || isAdmin() || $data->salegenerated == 0) {
+        || isAdmin() /*|| $data->salegenerated == 0*/) {
         $canEdit = true;
         $disabled = '';
     }
@@ -592,22 +615,24 @@
                             </div>
                         <?php } else {
                             $i = 1;
-                            $data->concept = unserialize($data->concept);
-                            foreach ($data->concept as $concept) {
-                            ?>
+                            if(isset($data->concept)) {
+                                $data->concept = unserialize($data->concept);
+                                foreach ($data->concept as $concept) {
+                                ?>
 
-                                <div class="form-group row" id="div_concept_<?php echo $i; ?>">
-                                    <label for="concept"
-                                           class="col-sm-2 col-form-label">Concepto <?php echo ($i); ?></label>
-                                    <div class="col-sm-9">
-                                        <textarea class="form-control" name="concept[]" <?php echo $disabled; ?>><?php echo $concept; ?></textarea>
+                                    <div class="form-group row" id="div_concept_<?php echo $i; ?>">
+                                        <label for="concept"
+                                            class="col-sm-2 col-form-label">Concepto <?php echo ($i); ?></label>
+                                        <div class="col-sm-9">
+                                            <textarea class="form-control" name="concept[]" <?php echo $disabled; ?>><?php echo $concept; ?></textarea>
+                                        </div>
+                                        <?php if ($i > 1) { ?>
+                                            <a class="cursor-pointer red-color" onclick="deleteConcept(<?php echo $i; ?>)"><?php icon('delete', true); ?></a>
+                                        <?php } ?>
                                     </div>
-                                    <?php if ($i > 1) { ?>
-                                        <a class="cursor-pointer red-color" onclick="deleteConcept(<?php echo $i; ?>)"><?php icon('delete', true); ?></a>
-                                    <?php } ?>
-                                </div>
-                            <?php
-                                $i++;
+                                <?php
+                                    $i++;
+                                }
                             }
                         }
                         ?>
@@ -629,7 +654,7 @@
                                class="col-sm-2 col-form-label">Teléfono</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" name="tel" id="tel" 
-                            	value="<?php echo $data ? $data->tel : ''; ?>" <?php echo $disabled; ?>>
+                            	onkeyup="allowOnlyNumbers(event);" value="<?php echo $data ? $data->tel : ''; ?>" <?php echo $disabled; ?> >
                         </div>
                     </div>
                    
@@ -652,7 +677,7 @@
                                 global $estimateOrigins;
                                 foreach ($estimateOrigins as $key => $value) {
                                     $selected = "";
-                                    if ($data && $data->estimateOrigin == $key) {
+                                    if ($data && $data->estimateorigin == $key) {
                                         $selected = 'selected="selected"';
                                     }
                                     echo '<option value="' . $key . '" ' . $selected . '>' . $value . '</option>';
@@ -744,7 +769,7 @@
             <div id="ajax-image-content">
                 <?php
                 if ($data) {
-                    if ($data->image != "") {
+                    if (isset($data->image) && $data->image != "") {
                         $url = "/uploaded-files/images/" . $data->id . "/" . $data->image;
                         confirmationMessage('Imágen actual <a href="' . $url . '" target="_blank">' . icon('image', false) . '</a>');
                     } else {
@@ -767,16 +792,16 @@
             <hr>
             <div class="form-group row">
                 <label for="image"
-                       class="col-sm-1 col-form-label">Documentos<?php icon('image', true) . "" . icon('word', true); ?></label>
+                       class="col-sm-1 col-form-label">Imágenes o documentos<?php icon('image', true) . "" . icon('pdf', true) .  "" . icon('word', true); ?></label>
                 <div class="col-sm-8">
                     <input type="file" id="image2" class="form-control" multiple="multiple" onchange="addImage('secondary');"
                            onclick="border_ok('#image2')">
                 </div>
 
-                    <div class="col-sm-2">
-                        <input type="button" value="Subir documento" class="btn btn-primary" onclick="uploadImage('secondary');">
-                        <?php spinner_icon('spinner', 'sp-upload-image2', true); ?>
-                    </div>
+                <div class="col-sm-2">
+                    <input type="button" value="Subir imagen o documento" class="btn btn-primary" onclick="uploadImage('secondary');">
+                    <?php spinner_icon('spinner', 'sp-upload-image2', true); ?>
+                </div>
             </div>
 
             <div id="ajax-extra-images-content">
@@ -787,7 +812,7 @@
                             'excludes' => array()
                         );
 
-                        listDirectory('uploaded-files/estimates/' . $data->id . '/', true, $config);
+                        listDirectoryTableFormat('uploaded-files/estimates/' . $data->id . '/secondary', true, $config);
                     }
                 ?>
             </div>
@@ -812,46 +837,40 @@
             $displayPdf = "display: none";
         ?>
 
-        <div id="div_pdf" style="<?php echo $displayPdf; ?>">
-            <hr>
-            <div class="form-group row">
-                <label for="file"
-                       class="col-sm-1 col-form-label">Propuesta de pedido<?php icon('pdf', true); ?></label>
-                <div class="col-sm-8">
-                    <input type="file" id="file" class="form-control" multiple="multiple" onchange="addFile();"
-                           onclick="border_ok('#file')" <?php echo $data && $data->orderexist !=  0 ? $disabled : ""; ?>>
-                </div>
-                <div class="col-sm-2">
-                    <input type="button" value="Subir propuesta de pedido" class="btn btn-primary" onclick="uploadPdf();" <?php echo $pdfDisabled; ?>>
-                    <?php spinner_icon('spinner', 'sp-upload', true); ?>
-                </div>
-
-            </div>
-
-            <div id="ajax-content">
-                <?php
-                if ($data) {
-                    if ($data->pdfname != "") {
-                        $deleteLk = $data->orderexist == 0  || $user->getUsermanager() == 1 || isadmin() ? true : false;
-                        echo '<div>';
-                        $config = array(
-                            'divresponse' => 'ajax-content',
-                            'excludes' => array()
-                        );
-                        listDirectory('uploaded-files/pdfs/' . $data->id, $deleteLk, $config);
-                        echo '</div>';
-                    } else {
-                        errorMsg('No se ha cargado ninguna propuesta');
-                    }
-                }
-                ?>
-            </div>
-        </div>
-
         <div class="card-footer text-muted">
             <?php
                 exit_btn(getUrl('show_estimates', $myController->getUrls()));
             ?>
         </div>
+    </div>
+</div>
+
+<!-- Modal de validación total -->
+<div aria-labelledby="exampleModalLiveLabel" role="dialog" tabindex="-1" class="modal fade show" id="modalAlert">
+    <div role="document" class="modal-dialog">
+        <form id="totalValidationForm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="exampleModalLiveLabel" class="modal-title red-color">Atención <?php icon('attention2', true); ?></h5>
+                    <button aria-label="Close" data-dismiss="modal" class="close" type="button">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <label for="total_checked_note" class="col-12 col-form-label">
+                                    <?php warningMsg("<h6>¡Se ha encontrado otro presupuesto asociado al mismo número de teléfono! Por favor, informa a tu superior.</h6>", true); ?>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button data-dismiss="modal" class="btn btn-secondary" type="button">Salir</button>
+                </div>
+            </div>
+        </form>
     </div>
 </div>

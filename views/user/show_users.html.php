@@ -55,7 +55,7 @@
                     ?>
                     <tr class="<?php echo ($deleted ? 'deleted' : '') . " " . $trClass ?>">
                         <td><?php echo $dbuser->username ?></td>
-                        <td><?php echo $dbuser->usercode ?? '<span style="color: red;">Sin asignar</span>' ?></td>
+                        <td><?php echo $dbuser->getUserstore() == 1 ? ($dbuser->usercode ?? '<span style="color: red;">Sin asignar</span>') : 'No es usuario de tienda' ?></td>
                         <td><?php echo americaDate($dbuser->user_registered); ?></td>
                         <td><?php echo americaDate($dbuser->last_login) ?></td>
                         <td>

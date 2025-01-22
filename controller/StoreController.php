@@ -64,6 +64,14 @@ class StoreController extends StoreModel
                 'controller' => CONTROLLER . "&opt=show_estimates",
                 'friendly' =>  getFriendlyByType('show_estimates', $this->classTypeName),
             ),
+            'ajax_edit_estimate' => array(
+                'controller' => "?controller=store&opt=new_estimate&id=",
+                'friendly' =>  getFriendlyByType('new_estimate', $this->classTypeName),
+            ),
+            'edit_estimate' => array(
+                'controller' => CONTROLLER . "&opt=new_estimate&id=",
+                'friendly' =>  getFriendlyByType('new_estimate', $this->classTypeName),
+            ),
             'new_estimate' => array(
                 'controller' => CONTROLLER . "&opt=new_estimate",
                 'friendly' =>  getFriendlyByType('new_estimate', $this->classTypeName),
@@ -375,7 +383,7 @@ class StoreController extends StoreModel
         // Obtiene el id desde el REQUEST_URI y lo setea en $_GET
         getIdFromRequestUri();
         if (isset($_GET['id'])) {
-            $data = $this->model->getEstimateData();
+            $data = $this->getEstimateData();
         }
 
         if ($data) {

@@ -516,35 +516,26 @@ class StoreModel extends Store
             $filterStore = ' AND p.storeid=' . $user->getStoreid();
         }
 
-        $query = "SELECT * FROM ";
+        $query = "SELECT *, p.id as id FROM ";
         $query .= $this->estimatesTable . " p, " . $this->usersTable . " u ";
         $where = " WHERE " . $firstfilter. " " . $filterStore . $filterDate;
         $orderby = " ORDER BY code ASC, created_on ASC";
         $estimates = $this->wpdb->get_results($query . $where . $orderby);
 
         if (userWithPrivileges() && $estimates) {
-            $pdfparameters = '&commission=' . $_POST['commission'] . '&from=' . $_POST['from'] . '&to=' . $_POST['to'];
+            $pdfparameters = '&commission=' . ($_POST['commission'] ?? "") . '&from=' . $_POST['from'] . '&to=' . $_POST['to'];
             $pdfparameters .= '&month=' . $_POST['month'] . '&year=' . $_POST['year'] . '&store=' . $_POST['store'];
-            $pdfparameters .= '&user=' . $_POST['user'] . '&saletype=' . $_POST['saletype'];
+            $pdfparameters .= '&user=' . $_POST['user'];
             $estimates[0]->pdfparameters = $pdfparameters;
-            //pre($pdfs);
+            //pre($estimates);
+        }
+
+        foreach($estimates as $estimate) {
+            $estimate->comments = [];
+            $estimate->comments = $this->getEstimateComments($estimate->id);
         }
         
-        /*if ($filterCommission != "") {
-            foreach ($estimates as $pdf) {
-            	$variation = new stdClass();
-                $query = "SELECT SUM(total) as positive FROM " . $this->estimatesTable . ' WHERE parentcode = ' . $pdf->id . ' AND total > 0';
-                $variations = $this->wpdb->get_var($query);
-                $variation->positive = $variations;
-				$query = "SELECT SUM(total) as negative FROM " . $this->estimatesTable . ' WHERE parentcode = ' . $pdf->id . ' AND total < 0';
-                $variations = $this->wpdb->get_var($query);
-				$variation->negative = $variations;
-				
-                $pdf->variations =  $variation;
-            }
-        }*/
-
-        echo $query . $where . $orderby;
+        //echo $query . $where . $orderby;
 
         return $estimates;
 
@@ -560,5 +551,46 @@ class StoreModel extends Store
     function getEstimateCommentsTable() {
         return $this->estimateCommentsTable;
     }
-	
+
+    function getEstimateComments($estimateId) {
+        $query = "SELECT * FROM " . $this->estimateCommentsTable . " e JOIN " . $this->usersTable .  " u  ON e.created_by = u.id WHERE estimateid = $estimateId";
+        echo $query;
+        return $this->wpdb->get_results($query);
+    }
+
+    function canIseeTheInitialSale($storeId) {
+        global $user;
+        if(userWithPrivileges() || $user->getStoreId() == $storeId) {
+            return true;
+        }
+
+        return false;
+    }
+
+    function getEstimateData($id = 0) {
+        $estimateId = $id > 0 ? $id : $_GET['id'];
+        $data = $this->wpdb->getOneRow($this->estimatesTable, $estimateId);
+        $data->creator = getUsername($data->created_by); // Ahora lo usamos (getPdfStoreOrder)
+        $data->comments = $this->getNewPdfComments($estimateId, $this->estimateCommentsTable, "estimateid");
+        //$data->products = $this->getEstimateProducts();
+        $data->products = [];
+
+        return $data;
+    }
+
+    function updateEstimate($whereField = 'id') {
+        $response = $this->wpdb->save_edit($this->estimatesTable, false, $whereField);
+        //$response['pdfurl'] = $this->getEstimatePdfUrl($_POST['id'], $_POST['code']);
+        return $response;
+    }
+
+    function checkIfAnotherEstimateRegisteredWithTel($tel) {
+        $query = 'SELECT * FROM ' . $this->estimatesTable . ' WHERE tel="' . $tel. '" LIMIT 1';
+        $data = $this->wpdb->get_results($query);
+        if (count($data) > 0) {
+            return true;
+        }
+
+        return false;
+    }
 }
