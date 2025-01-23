@@ -3,7 +3,7 @@
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-class MailerController {
+class MailerController extends MailerModel {
     private $to;
     private $subject;
     private $message;
@@ -12,6 +12,7 @@ class MailerController {
 
     function __construct($to, $subject, $message, $logo = 'logo-formas-naranja.png')
     {
+        parent::__construct();
         $this->to = $to;
         $this->subject = $subject;
         $this->message = $message;
@@ -21,17 +22,18 @@ class MailerController {
     function sendEmail() {
         $mail = new PHPMailer(true);
         $to = $this->to;
+        $config = $this->getMailerConfig(1);
         
         try {
             $mail->isSMTP();
-            $mail->Host = 'smtp.hostinger.com'; // Cambia al servidor SMTP de tu dominio
+            $mail->Host = $config->host; // Cambia al servidor SMTP de tu dominio
             $mail->SMTPAuth = true;
-            $mail->Username = 'info@riodevs.com';
-            $mail->Password = 'vdf_survey_R200';
+            $mail->Username = $config->user;
+            $mail->Password = $config->password;
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = 587;
         
-            $mail->setFrom('info@riodevs.com', 'Info');
+            $mail->setFrom($config->user, $config->fromName);
             $mail->addAddress("$to");
 
             // Adjuntar imagen como embebida

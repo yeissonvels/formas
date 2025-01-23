@@ -498,7 +498,7 @@
             <span id="dynamictitle"><?php echo $data ? "Modificar $defaultLabel" : "Nueva $defaultLabel" ?></span>
             <?php icon('money', true); ?></h4>
     </div>
-    <div class="card-block">
+    <div class="card-block mt-3">
         <div class="row">
             <div class="col-sm-6">
                 <form id="frm-saledata">

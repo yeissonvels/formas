@@ -94,6 +94,7 @@ class ComposerStaticInit42abba291589bdf4648cbbfbb7ea78be
         'LoadFile' => __DIR__ . '/../..' . '/classes/UploadFile.php',
         'Mailer' => __DIR__ . '/../..' . '/classes/Mailer.php',
         'MailerController' => __DIR__ . '/../..' . '/controller/MailerController.php',
+        'MailerModel' => __DIR__ . '/../..' . '/model/MailerModel.php',
         'Menu' => __DIR__ . '/../..' . '/classes/Menu.php',
         'MenuController' => __DIR__ . '/../..' . '/controller/MenuController.php',
         'MenuItem' => __DIR__ . '/../..' . '/classes/MenuItem.php',

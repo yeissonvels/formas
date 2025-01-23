@@ -30,6 +30,7 @@ return array(
     'LoadFile' => $baseDir . '/classes/UploadFile.php',
     'Mailer' => $baseDir . '/classes/Mailer.php',
     'MailerController' => $baseDir . '/controller/MailerController.php',
+    'MailerModel' => $baseDir . '/model/MailerModel.php',
     'Menu' => $baseDir . '/classes/Menu.php',
     'MenuController' => $baseDir . '/controller/MenuController.php',
     'MenuItem' => $baseDir . '/classes/MenuItem.php',
