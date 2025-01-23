@@ -1,5 +1,6 @@
 <?php if (count($data) > 0) {
     global $user;
+    global $estimateOrigins;
     ?>
     <thead>
     <?php
@@ -36,12 +37,14 @@
         < ?php } ? >
         -->
         <th>Cliente</th>
+        <th>Teléfono</th>
         <th>Importe Total</th>
         <th>Notas</th>
         <th>Archivos</th>
         <th>Creado el</th>
         <th>Creado por</th>
         <th>Tienda</th>
+        <th>Origen del presupuesto</th>
         <th style="display: none;"><?php icon('pdf', true); ?></th>
         <?php
         if ($user->getUseraccounting() == 0 && $user->getUserrepository() == 0) {
@@ -99,7 +102,9 @@
             <td>
                 <?php echo $pdf->customer; ?>
             </td>
-
+            <td>
+                <?php echo $pdf->tel; ?>
+            </td>
             <td>
                 <?php
                     echo numberFormat($pdf->total, true, 2) . "&euro;<br>";
@@ -140,6 +145,7 @@
                 ?>
             </td>
             <td class="text-center"><?php echo getStoreName($pdf->storeid); ?></td>
+            <td class="text-center"><?php echo $estimateOrigins[$pdf->estimateorigin] ?? ''; ?></td>
             <td style="display: none;">
                 <?php
                     $urlpdf = $controller->getEstimatePdfUrl($pdf->id, $pdf->code);

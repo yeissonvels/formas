@@ -36,25 +36,45 @@
     }
 
     function checkIfAnotherEstimateRegisteredWithTel() {
-        $('#tel').keyup(function () {
-            var tel = $("#tel").val();
-            if (tel.length > 4) {
-                $.ajax({
-                    type: "post",
-                    url: '/ajax.php',
-                    data: {
-                        tel: tel,
-                        op: 'checkIfAnotherEstimateRegisteredWithTel',
-                        controller: 'StoreController'
-                    }
-                }).done(function (data) {
-                    // Retorna "si" 0 "no" dependeiendo si el usuario existe
-                    if (data == "si") {
-                        $('#modalAlert').modal('show');
-                    }
-                });
-            }
+        $('#tel').keyup(function (event) {
+            setTelValidations(event);
         });
+
+        $('#tel2').keyup(function (event) {
+            setTelValidations(event);
+        });
+    }
+
+    function setTelValidations(event) {
+        let inputId = event.target.id;
+        let inputSelector = `#${inputId}`;
+        resetValidations(inputSelector);
+        validateTel(inputId, $(inputSelector).val());
+    }
+
+    function validateTel(selector, telValue) {
+        if (telValue.length > 4) {
+            $.ajax({
+                type: "post",
+                url: '/ajax.php',
+                data: {
+                    tel: telValue,
+                    op: 'checkIfAnotherEstimateRegisteredWithTel',
+                    controller: 'StoreController'
+                }
+            }).done(function (data) {
+                // Retorna "si" 0 "no" dependeiendo si el usuario existe
+                if (data == "si") {
+                    $('#btn-save-sale').prop('disabled', true);
+                    addError(`#div_${selector}`, `#${selector}`);
+                    $('#modalAlert').modal('show');
+                } else {
+                    addSuccess(`#div_${selector}`, `#${selector}`);
+                    $('#btn-save-sale').prop('disabled', false);
+                    border_ok(`#${selector}`);
+                }
+            });
+        }
     }
 
     function saveEstimate() {
@@ -78,7 +98,7 @@
                     $('#opt-save-sale').prop('value', 'updateEstimate');
                     $('#id').prop('value', id);
                     $('#estimateId').prop('value', id);
-                    $('#div_img').show(); // Las imágenes se cargan ahora en la sección de documentos adicionales
+                    //$('#div_img').show(); // Las imágenes se cargan ahora en la sección de documentos adicionales
                     $('#div_img2').show();
                     if ($('#saletype').val() == 0) {
                         $('#div_pdf').show();
@@ -596,7 +616,7 @@
                         <label for="code"
                                class="col-sm-2 col-form-label">Número de presupuesto</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control bg-info text-white" name="code" id="code"
+                            <input type="text" class="form-control bg-warning text-white" name="code" id="code"
                                    value="<?php echo $code; ?>" autocomplete="off" disabled>
                         </div>
                     </div>
@@ -647,14 +667,27 @@
                                    value="<?php echo $data ? $data->customer : ''; ?>" <?php echo $disabled; ?>>
                         </div>
                     </div>
-                    
-                    <hr>
+  
                     <div class="form-group row" id="div_tel">
                         <label for="tel"
                                class="col-sm-2 col-form-label">Teléfono</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" name="tel" id="tel" 
                             	onkeyup="allowOnlyNumbers(event);" value="<?php echo $data ? $data->tel : ''; ?>" <?php echo $disabled; ?> >
+                            <div class="invalid-feedback">
+                                Telefóno encontrado en otro prespuesto.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row" id="div_tel2">
+                        <label for="tel2"
+                               class="col-sm-2 col-form-label">Teléfono 2 (opcional)</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="tel2" id="tel2" 
+                            	onkeyup="allowOnlyNumbers(event);" value="<?php echo $data ? $data->tel2 : ''; ?>" <?php echo $disabled; ?> >
+                            <div class="invalid-feedback">
+                                Telefóno encontrado en otro prespuesto.
+                            </div>
                         </div>
                     </div>
                    
@@ -671,7 +704,7 @@
                     <div class="form-group row">
                         <label for="deliveryrange" class="col-sm-2 col-form-label">Origen del presupuesto</label>
                         <div class="col-sm-10">
-                            <select name="estimateorigin" id="estimateorigin" class="form-control" <?php echo $disabled; ?>>
+                            <select name="estimateorigin" id="estimateorigin" class="form-select" <?php echo $disabled; ?>>
                                 <option value="">Seleccione un origen</option>
                                 <?php
                                 global $estimateOrigins;
@@ -845,30 +878,32 @@
     </div>
 </div>
 
-<!-- Modal de validación total -->
-<div aria-labelledby="exampleModalLiveLabel" role="dialog" tabindex="-1" class="modal fade show" id="modalAlert">
+<!-- Modal de alerta para presupuestos encontrados con un mismo número de teléfono que no han finalizado en venta -->
+<div aria-labelledby="exampleModalLiveLabel" role="dialog" tabindex="-1" class="modal fade" id="modalAlert">
     <div role="document" class="modal-dialog">
         <form id="totalValidationForm">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 id="exampleModalLiveLabel" class="modal-title red-color">Atención <?php icon('attention2', true); ?></h5>
-                    <button aria-label="Close" data-dismiss="modal" class="close" type="button">
-                        <span aria-hidden="true">×</span>
-                    </button>
+                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col-lg-12">
                                 <label for="total_checked_note" class="col-12 col-form-label">
-                                    <?php warningMsg("<h6>¡Se ha encontrado otro presupuesto asociado al mismo número de teléfono! Por favor, informa a tu superior.</h6>", true); ?>
+                                    <?php
+                                        $msg = "<h6>Este número de teléfono ya está asociado a otro presupuesto pendiente de conversión a venta.</h6>";
+                                        $msg .= "<h6 class='mt-3'>Por favor, informa a tu superior para verificar la situación.</h6>";
+                                        warningMsg($msg, true); 
+                                    ?>
                                 </label>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button data-dismiss="modal" class="btn btn-secondary" type="button">Salir</button>
+                    <button data-bs-dismiss="modal" class="btn btn-secondary" type="button">Salir</button>
                 </div>
             </div>
         </form>

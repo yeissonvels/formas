@@ -554,7 +554,6 @@ class StoreModel extends Store
 
     function getEstimateComments($estimateId) {
         $query = "SELECT * FROM " . $this->estimateCommentsTable . " e JOIN " . $this->usersTable .  " u  ON e.created_by = u.id WHERE estimateid = $estimateId";
-        echo $query;
         return $this->wpdb->get_results($query);
     }
 
@@ -585,9 +584,10 @@ class StoreModel extends Store
     }
 
     function checkIfAnotherEstimateRegisteredWithTel($tel) {
-        $query = 'SELECT * FROM ' . $this->estimatesTable . ' WHERE tel="' . $tel. '" LIMIT 1';
+        $query = 'SELECT COUNT(*) as total FROM ' . $this->estimatesTable . ' WHERE status = 0 AND (tel="' . $tel. '" OR tel2="' . $tel. '")  LIMIT 1';
         $data = $this->wpdb->get_results($query);
-        if (count($data) > 0) {
+
+        if ($data && is_countable($data) && $data[0]->total == 1) {
             return true;
         }
 

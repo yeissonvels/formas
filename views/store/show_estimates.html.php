@@ -384,7 +384,7 @@
                 <div class="form-group row">
                     <label for="purchasedate" class="col-sm-1 col-form-label">Usuario <?php icon('user', true);?></label>
                     <div class="col-sm-2">
-                        <select name="user" class="form-control">
+                        <select name="user" class="form-select">
                             <option value="">Elije uno</option>
                             <?php
                                 $users = getUsers();
@@ -399,7 +399,7 @@
 
                     <label for="purchasedate" class="col-sm-1 col-form-label">Tienda <?php icon('home', true);?></label>
                     <div class="col-sm-2">
-                        <select name="store" class="form-control">
+                        <select name="store" class="form-select">
                             <option value="">Elija una tienda</option>
                             <option value="all" <?php echo isset($_POST['store']) && $_POST['store'] == "all" ? 'selected="selected"' : "" ?>>Todas</option>
                             <?php
@@ -454,9 +454,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 id="exampleModalLiveLabel" class="modal-title">Anular <span id="typeLabel">venta</span> <?php icon('delete', true); ?></h5>
-                    <button aria-label="Close" data-dismiss="modal" class="close" type="button">
-                        <span aria-hidden="true">×</span>
-                    </button>
+                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="container-fluid">
@@ -475,7 +473,7 @@
                 <div class="modal-footer">
                     <button class="btn btn-primary" type="button" onclick="cancellSale();">Anular <span id="btncancel-Label">venta</span></button>
                     <?php spinner_icon('spinner', 'sp-in-comment', true); ?>
-                    <button data-dismiss="modal" class="btn btn-secondary" type="button">Salir</button>
+                    <button data-bs-dismiss="modal" class="btn btn-secondary" type="button">Salir</button>
                 </div>
             </div>
         </form>

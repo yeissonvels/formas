@@ -1,6 +1,8 @@
 <?php
 
 error_reporting(E_ALL);
+//error_reporting(0);
+
 if (isset($_GET['error'])) {
 	echo "Activamos errores";
 	error_reporting(E_ALL);
@@ -91,7 +93,7 @@ function generateSelectMonth($selectedMonth = "", $onchange = true, $function = 
         $onchangeFunction = 'onchange="' . $function . '"';
     }
     ?>
-    <select id="month" name="month" <?php echo $onchangeFunction; ?> class="form-control">
+    <select id="month" name="month" <?php echo $onchangeFunction; ?> class="form-select">
     	<?php 
     		if ($start == 0) { 
         		echo '<option value="all">Todos</option>';
@@ -293,7 +295,7 @@ function generateSelectYear($firstYear = 2014, $selectedYear = "", $onchange = t
         $onchangeFunction = 'onchange="jQuery(\'#frm1\').submit();"';
     }
     ?>
-    <select id="year" name="year" <?php echo $onchangeFunction; ?> class="form-control">
+    <select id="year" name="year" <?php echo $onchangeFunction; ?> class="form-select">
         <option value="0"><?php echo trans('select_a_year')?></option>
         <?php
         for($i= date('Y'); $i >= $firstYear; $i--) {
@@ -337,7 +339,7 @@ function generateObjectSelect($data, $name, $option, $selected = "", $onchange =
         $onchangeFunction = 'onchange="jQuery(\'#frm1\').submit();"';
     }
 
-    $html = '<select name="' . $name . '" id="' . $name . '" ' . $onchangeFunction . ' class="form-control">';
+    $html = '<select name="' . $name . '" id="' . $name . '" ' . $onchangeFunction . ' class="form-select">';
     $html .=    '<option value="0">' . (in_array($className, $options) ? $optionLabel[$className] : $default) . '</option>';
 
     foreach ($data as $d) {
@@ -366,7 +368,7 @@ function generateObjectSelect($data, $name, $option, $selected = "", $onchange =
 function generateYesNotSelect($name, $selected = "", $showInmediatly = true) {
     $numbers = array('0' => trans('no_select'), '1' => trans('yes_select'));
 
-    $html = '<select name="' . $name . '" id="' . $name . '" class="form-control">';
+    $html = '<select name="' . $name . '" id="' . $name . '" class="form-select">';
 
         foreach ($numbers as $key => $value) {
             if ($key == $selected && $selected != "") {
@@ -2067,7 +2069,6 @@ function createCookie($cname, $cvalue, $exdays = 30) {
 function fillWithZero($number) {
     $length = 3;
     $zero = "";
-    echo strlen($number);
     for($i = strlen($number); $i < $length; $i++) {
         $zero .= '0';
     }

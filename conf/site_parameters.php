@@ -54,7 +54,7 @@ global $saletypes;
 $saletypes = array(
     0 => 'Venta',
     1 => 'Variación',
-    2 => 'Entrega a cuenta de venta'
+    2 => 'Entrega a cuenta de venta',
 );
 
 

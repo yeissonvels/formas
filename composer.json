@@ -1,0 +1,14 @@
+{
+    "autoload":{
+        "classmap": [
+            "classes",
+            "controller",
+            "model",
+            "conf"
+        ]
+    },
+    "require": {
+        "phpmailer/phpmailer": "^6.9",
+        "mpdf/mpdf": "^8.2"
+    }
+}

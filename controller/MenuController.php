@@ -73,13 +73,13 @@ class MenuController extends MenuModel {
         $selectedLang = getLangGetLabelFunction();
         $mainMenu = $this->getActiveMenu($id);
         if ($mainMenu != 0) {
-            $menu = '<nav class="navbar navbar-light navbar-toggleable-md fixed-top">' . PHP_EOL;;
-            $menu .=    '<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">' . PHP_EOL;
-            $menu .=        '<span class="navbar-toggler-icon"></span>' . PHP_EOL;
-            $menu .=    '</button>' . PHP_EOL;
-            $menu .=    '<a class="navbar-brand" href="#">&nbsp;</a>' . PHP_EOL;
-            $menu .=    '<div class="collapse navbar-collapse" id="navbarNavDropdown">' . PHP_EOL;
-            $menu .=        '<ul class="navbar-nav mr-auto">' . PHP_EOL;
+            $menu = '<nav class="navbar navbar-expand-lg bg-body-tertiary">' . PHP_EOL;;
+            $menu .=      '<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">' . PHP_EOL;
+            $menu .=          '<span class="navbar-toggler-icon"></span>' . PHP_EOL;
+            $menu .=      '</button>' . PHP_EOL;
+            $menu .=    '<a class="navbar-brand" href="#"></a>' . PHP_EOL;
+            $menu .=    '<div class="collapse navbar-collapse" id="navbarSupportedContent">' . PHP_EOL;
+            $menu .=        '<ul class="navbar-nav me-auto mb-2 mb-lg-0">' . PHP_EOL;
 
             foreach($mainMenu as $item) {
                 $menu .= $this->createRecursiveMenuOptions($item, $selectedLang);
@@ -118,16 +118,16 @@ class MenuController extends MenuModel {
                 }
 
                 $menu .= '<li class="' . $liclass . '">' . PHP_EOL;
-                $menu .=    '<a class="nav-link dropdown-toggle" href="' . $link . '" ' . $target . ' role="button" id="dropdown' . $id . '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' . $label . PHP_EOL;
+                $menu .=    '<a class="nav-link dropdown-toggle" href="' . $link . '" ' . $target . ' role="button" id="dropdown' . $id . '" data-bs-toggle="dropdown" aria-expanded="false">' . $label . PHP_EOL;
                 if ($item->icon != "") {
-                    $menu .= '<img src="' . UPLOADED_MENU_ICONS_PATH . 'menu' . $item->menuid . '/' . $item->icon . '" class="vert-align-middle">' . PHP_EOL;
+                    $menu .= '<img src="' . UPLOADED_MENU_ICONS_PATH . 'menu' . $item->menuid . '/' . $item->icon . '" class="vert-align-middle">' . PHP_EOL; 
                 }
                 $menu .=    '</a>' . PHP_EOL;
-                $menu .= '<ul class="' . $ulclass . '" aria-labelledby="dropdown' . $id . '">' . PHP_EOL;
+                $menu .= '<ul class="' . $ulclass . '">' . PHP_EOL;
                 if (count($item->getChilds()) > 0){
                     foreach ($item->getChilds() as $subLev) {
                         if ($this->canUseThisOption($subLev->getId(), $subLev->getPermision(), $this->user, $this->jsonPermissions) && $subLev->getActive() > 0) {
-                            $menu .= $this->createRecursiveMenuOptions($subLev, $selectedLang, "dropdown-menu", "dropdown-submenu", "dropdown-item");
+                            $menu .= $this->createRecursiveMenuOptions($subLev, $selectedLang, "dropdown-menu", " ", "dropdown-item");
                         }
                     }
                 }

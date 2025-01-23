@@ -49,7 +49,7 @@
                 </div>
                 <div class="form-group">
                     <label for="province">Provincia</label>
-                    <select name="provinceid" id="provinceid" class="form-control">
+                    <select name="provinceid" id="provinceid" class="form-select">
                         <option value="">Seleccione una provincia</option>
                         <?php
                         $provinces = getProvinces();
@@ -99,7 +99,7 @@
                 </div>
                 <div class="form-group">
                     <label for="exampleSelect1">Activo</label>
-                    <select class="form-control" id="active" name="active">
+                    <select class="form-select" id="active" name="active">
                         <option value="1">SI</option>
                         <option value="0">NO</option>
                     </select>

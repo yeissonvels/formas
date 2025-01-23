@@ -89,16 +89,21 @@ function border_ok(id) {
 
 function addError(div, field) {
     $(div).removeClass("has-success");
-    $(field).removeClass("form-control-success");
-    $(div).addClass("has-danger");
-    $(field).addClass("form-control-danger");
+    $(field).removeClass("is-valid");
+    $(div).addClass("");
+    $(field).addClass("is-invalid");
 }
 
 function addSuccess(div, field) {
     $(div).removeClass("has-danger");
-    $(field).removeClass("form-control-danger");
+    $(field).removeClass("is-invalid");
     $(div).addClass("has-success");
-    $(field).addClass("form-control-success");
+    $(field).addClass("is-valid");
+}
+
+function resetValidations(field) {
+    $(field).removeClass("is-invalid");
+    $(field).removeClass("is-valid");
 }
 
 function scrollingTo(id) {

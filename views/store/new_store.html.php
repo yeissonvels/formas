@@ -48,7 +48,7 @@
                 </div>
                 <div class="form-group">
                     <label for="province">Provincia</label>
-                    <select name="provinceid" id="provinceid" class="form-control">
+                    <select name="provinceid" id="provinceid" class="form-select">
                         <option value="">Seleccione una provincia</option>
                         <?php
                             $provinces = getProvinces();

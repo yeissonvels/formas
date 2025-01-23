@@ -96,7 +96,7 @@
         if ($pdf->saletype == 1) {
             $icon = 'exchange';
         }
-        $html .= $saletypes[$pdf->saletype] . ' ' . icon($icon, false);
+        $html .= ($saletypes[$pdf->saletype] ?? '') . ' ' . icon($icon, false);
 
         $html .= '</td>';
         $html .= '<td ' . $deleted . '>' . americaDate($pdf->saledate, false) . '</td>';

@@ -37,7 +37,7 @@
             <div class="form-group row">
                 <label for="deliveryrange" class="col-sm-1 col-form-label">Quincena</label>
                 <div class="col-sm-2">
-                    <select name="deliveryrange" id="deliveryrange" class="form-control">
+                    <select name="deliveryrange" id="deliveryrange" class="form-select">
                         <option value="">Todas</option>
                         <?php
                             global $deliveryRanges;
@@ -66,7 +66,7 @@
             <div class="form-group row">
                 <label for="store" class="col-sm-1 col-form-label">Tienda <?php icon('home', true);?></label>
                 <div class="col-sm-3 mb-1">
-                    <select name="store" id="store" class="form-control">
+                    <select name="store" id="store" class="form-select">
                         <option value="">Seleccione una tienda</option>
                         <?php
                             $stores = getStores(true);
@@ -78,7 +78,7 @@
                 </div>
                 <label for="status" class="col-sm-1 col-form-label">Estado <?php icon('status', true); ?></label>
                 <div class="col-sm-3">
-                    <select name="status" id="status" class="form-control">
+                    <select name="status" id="status" class="form-select">
                         <option value="">Seleccione un estado</option>
                         <?php
                             global $status;
@@ -92,7 +92,7 @@
             <div class="form-group row">
                 <label for="deliveryzone" class="col-sm-1 col-form-label">Zona <?php icon('map', true); ?></label>
                 <div class="col-sm-3">
-                    <select name="deliveryzone" id="deliveryzone" class="form-control">
+                    <select name="deliveryzone" id="deliveryzone" class="form-select">
                         <option value="">Seleccione una zona</option>
                         <?php
                         $zones = getZones();

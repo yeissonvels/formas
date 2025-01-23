@@ -1,7 +1,7 @@
 <?php
 $html = '<div style="margin-bottom: 10px; font-size: 10px;">';
 $html .=        '<div style="width: 49%; float: left;">';
-$html .=            '<img src="/images/logo-formas-small.png">';
+$html .=            '&nbsp;';
 $html .=        '</div>';
 $html .=        '<div style="width: 49%; float: left; text-align: right;">';
 $html .=         '<b>FORMAS ' . strtoupper($store->getStorename()) . '</b><br>';

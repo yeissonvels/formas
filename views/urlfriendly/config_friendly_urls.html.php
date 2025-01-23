@@ -10,7 +10,7 @@
                 <label for="config"
                        class="col-sm-2 col-form-label">Estado</label>
                 <div class="col-sm-10">
-                    <select class="form-control" name="status" id="status">
+                    <select class="form-select" name="status" id="status">
                         <option value="OFF" <?php echo $data && $data->status == "OFF" ? 'selected="selected"' : '' ?>>OFF</option>
                         <option value="ON"  <?php echo $data && $data->status == "ON" ? 'selected="selected"' : '' ?>>ON</option>
                     </select>

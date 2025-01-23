@@ -65,7 +65,7 @@
             </div>
             <label for="store" class="col-sm-1 col-form-label">Tienda <?php icon('home', true);?></label>
             <div class="col-sm-3 mb-1">
-                <select id="store" class="form-control">
+                <select id="store" class="form-select">
                     <option value="">Seleccione una tienda</option>
                     <?php
                         $stores = getStores(true);

@@ -16,6 +16,7 @@
     <link rel='stylesheet' href='/css/jquery.qtip.css' type='text/css' media='all'/>
     <link rel='stylesheet' href='/css/menu.css' type='text/css' media='all'/>
     <link rel='stylesheet' href='/css/bootstrap.min.css' type='text/css' media='all'/>
+    <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">-->
     <link rel='stylesheet' href='/css/font-awesome.min.css' type='text/css' media='all'/>
     <link rel='stylesheet' href='/css/style.css' type='text/css' media='all'/>
     <script src="/js/jquery_v1.10.2.js"></script>
@@ -103,7 +104,7 @@
         }
     ?>
 
-    <div id="menucontainer" class="mb-5">
+    <div id="menucontainer">
         <?php loadMenu(); ?>
     </div>
     
@@ -114,26 +115,34 @@
     	?>
 	    <div style="background:linear-gradient(to bottom, #ffd8a6, #ffffff);color:white;font-size: 18px;font-weight: bold;text-align:center;padding:10px;">
 	    	<form method="post">
-	    		<?php
-	    		if (!$isAdmLogged){?>
-					<select name="userid">
-		    		<?php
-		    			$users = getUsers();
-						foreach ($users as $us) {
-							if ($us->usermanager == 0) {
-								echo '<option value="' . $us->id . '">' . $us->username . '</option>';
-							} else if (isSuperAdmin()) {
-								echo '<option value="' . $us->id . '">' . $us->username . '</option>';
-							}
-						}
-		    		?>
-		    	</select>
-		    	<?php
-					}
-		    	?>
-		    	<input type="hidden" name="controller" value="user">
-		    	<input type="hidden" name="opt" value="loginAsOtherUser">
-		    	<input type="submit" value="<?php echo $isAdmLogged ? 'Logar como Jefe' : 'Logar' ?>" class="btn btn-success">
+                <div class="row">
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-3">
+                        <?php
+                        if (!$isAdmLogged){?>
+                            <select name="userid" class="form-select">
+                            <?php
+                                $users = getUsers();
+                                foreach ($users as $us) {
+                                    if ($us->usermanager == 0) {
+                                        echo '<option value="' . $us->id . '">' . $us->username . '</option>';
+                                    } else if (isSuperAdmin()) {
+                                        echo '<option value="' . $us->id . '">' . $us->username . '</option>';
+                                    }
+                                }
+                            ?>
+                        </select>
+                        <?php
+                            }
+                        ?>
+                    </div>
+                    <div class="col-sm-1">
+                        <input type="hidden" name="controller" value="user">
+                        <input type="hidden" name="opt" value="loginAsOtherUser">
+                        <input type="submit" value="<?php echo $isAdmLogged ? 'Acceso jefe' : 'Iniciar sesión' ?>" class="btn btn-primary">
+                    </div>
+                </div>
+		    	
 	    	</form>
 	    </div>
 	<?php

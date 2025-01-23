@@ -169,7 +169,7 @@
             <div class="form-group row">
                 <label for="gestor" class="col-sm-2 col-form-label">Tipo de usuario</label>
                 <div class="col-sm-10">
-                    <select name="usertype" id="usertype" class="form-control" onchange="checkUserType()">
+                    <select name="usertype" id="usertype" class="form-select" onchange="checkUserType()">
                         <option value="">Seleccione un tipo</option>
                         <?php
                             global $profileTypes;
@@ -202,7 +202,7 @@
             <div class="form-group row" id="divstores" style="<?php echo $display; ?>">
                 <label for="storeid" class="col-sm-2 col-form-label">Tienda</label>
                 <div class="col-sm-10">
-                    <select name="storeid" id="storeid" class="form-control">
+                    <select name="storeid" id="storeid" class="form-select">
                         <option value="">Seleccione la tienda</option>
                         <?php
                             $stores = getStores(true);
@@ -246,7 +246,7 @@
             <div class="form-group row">
                 <label for="active" class="col-sm-2 col-form-label"><?php echo trans('active_account') ?></label>
                 <div class="col-sm-10">
-                    <select name="active" class="form-control">
+                    <select name="active" class="form-select">
                     	<option value="1" <?php echo $data && $data->active == 1 ? 'selected="selected"' :  ''; ?>>Si</option>
                     	<option value="0" <?php echo $data && $data->active == 0 ? 'selected="selected"' :  ''; ?>>No</option>
                     </select>

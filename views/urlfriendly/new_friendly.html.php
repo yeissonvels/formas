@@ -73,7 +73,7 @@
                 <label for="controllername"
                        class="col-sm-2 col-form-label">Controller</label>
                 <div class="col-sm-10">
-                    <select name="controllername" id="controllername" class="form-control" onchange="getClassMethods()">
+                    <select name="controllername" id="controllername" class="form-select" onchange="getClassMethods()">
                         <option value="">Elija un controlador</option>
                         <?php
                             foreach ($data["controllers"] as $controller) {
@@ -92,7 +92,7 @@
                 <label for="method"
                        class="col-sm-2 col-form-label">Método</label>
                 <div class="col-sm-10">
-                    <select name="method" id="method" class="form-control">
+                    <select name="method" id="method" class="form-select">
                         <option value="">Elija un método</option>
                     <?php
                         if ($data["data"]) {
@@ -113,7 +113,7 @@
                 <label for="type"
                        class="col-sm-2 col-form-label">Tipo</label>
                 <div class="col-sm-10">
-                    <select name="type" id="type" class="form-control">
+                    <select name="type" id="type" class="form-select">
                 <?php
                     global $urlTypes;
                     foreach ($urlTypes as $key => $value) {

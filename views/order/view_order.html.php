@@ -64,7 +64,7 @@
                 <div class="form-group row">
                     <label for="deliveryzone" class="col-sm-2 col-form-label">Zona de entrega</label>
                     <div class="col-sm-10">
-                        <select name="deliveryzone" id="deliveryzone" class="form-control" disabled="disabled">
+                        <select name="deliveryzone" id="deliveryzone" class="form-select" disabled="disabled">
                             <option value="">Seleccione una zona</option>
                             <?php
                                 $zones = getZones();
@@ -94,7 +94,7 @@
                 <div class="form-group row">
                     <label for="deliveryzone" class="col-sm-2 col-form-label">Forma de pago</label>
                     <div class="col-sm-10">
-                        <select name="paymethod" id="paymethod" class="form-control" disabled="disabled">
+                        <select name="paymethod" id="paymethod" class="form-select" disabled="disabled">
                             <option value="">Seleccione una forma de pago</option>
                             <?php
                                 global $paymethods;
@@ -113,7 +113,7 @@
                 <div class="form-group row">
                     <label for="status" class="col-sm-2 col-form-label">Estado</label>
                     <div class="col-sm-10">
-                        <select name="status" id="status" class="form-control" disabled="disabled">
+                        <select name="status" id="status" class="form-select" disabled="disabled">
                             <?php
                                 global $status;
                                 foreach ($status as $key => $value) {
@@ -157,7 +157,7 @@
                                     foreach ($data['data']->getItems() as $item) {
                                         echo '<tr>';
                                         echo    '<td colspan="3">';
-                                        echo        '<select class="form-control products" name="products[]" disabled="disabled">' . PHP_EOL;
+                                        echo        '<select class="form-select products" name="products[]" disabled="disabled">' . PHP_EOL;
                                         foreach ($data['products'] as $product) {
                                             $selected = "";
                                             if ($item->productid == $product->id) {

@@ -187,7 +187,7 @@ class UserController extends UserModel {
 		}
 		
 		echo '<form action="" method="post">';
-		echo '<select name="user">';
+		echo '<select name="user" class="form-select">';
 		foreach($users as $user) {
 			echo '<option value="' . $user->id . '">' . $user->username . '</option>';
 		}

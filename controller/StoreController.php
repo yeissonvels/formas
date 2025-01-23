@@ -400,4 +400,61 @@ class StoreController extends StoreModel
 		$orders = $this->getOrdersToDelete();
 		include($tpl);
 	}
+
+    function notifyNewEstimate($to, $subject, $estimateData) {
+        $message = $this->createNotifyEmailContent($estimateData);
+        $mailController = new MailerController($to, $subject, $message);
+        
+        if($mailController->sendEmail()) {
+            //echo "Ok";
+            // Actualizamos campos emailSent = 1
+        } else {
+            //echo $mailController->getResult();
+        }
+    }
+
+    function createNotifyEmailContent($estimateData) {
+        global $estimateOrigins;
+        $httpHost = HTTP_HOST;
+        $estimateOrigin = $estimateOrigins[$estimateData['estimateorigin']];
+        $id = $estimateData['id'];
+
+        $html = "<img src='cid:imagenCID' alt='Formas' style='width: 150px;'><br><br>";
+
+        $html .= "Te informamos que se ha generado un nuevo presupuesto con los siguientes datos:<br><br>";
+        
+
+        $html .= "<table>";
+        $html .= "<tr><th align='left'>Tienda</th><td>" . $estimateData['store']. "</td></tr>";
+        $html .= "<tr><th align='left'>Usuario</th><td>" . $estimateData['user']. "</td></tr>";
+        $html .= "<tr><th align='left'>Fecha del prespuesto</th><td>" . $estimateData['saledate']. "</td></tr>";
+        $html .= "<tr><th align='left'>Número de prespuesto</th><td>" . $estimateData['code']. "</td></tr>";
+        $html .= "<tr><th align='left'>Titular del presupuesto</th><td>" . $estimateData['customer']. "</td></tr>";
+        $html .= "<tr><th align='left'>Importe del presupuesto</th><td>" . $estimateData['total']. "</td></tr>";
+        $html .= "<tr><th align='left'>Origen del presupuesto</th><td>" .  $estimateOrigin. "</td></tr>";
+        $html .= "</table>";
+
+        $html .= "<br><br>Para consultar información adicional accede a <a href='$httpHost/?controller=store&opt=new_estimate&id=$id'>Formas</a>";
+
+        return $html;
+    }
+
+    /*function testEmail() {
+        global $estimateOrigins;
+        $estimateData = [];
+        echo "Funciona";
+        $httpHost = HTTP_HOST;
+        $estimateOrigin = $estimateOrigins[$estimateData['estimateorigin']];
+
+
+        $html = "Te informamos que se ha generado un nuevo presupuesto. Con los siguientes datos:<br><br>";
+        $html .= "Tienda: " . $estimateData['store']. "<br>";
+        $html .= "Fecha del prespuesto: " . $estimateData['saledate']. "<br>";
+        $html .= "Número de prespuesto: " . $estimateData['code']. "<br>";
+        $html .= "Titular del presupuesto: " . $estimateData['customer']. "<br>";
+        $html .= "Importe del presupuesto: " . $estimateData['estimateorigin']. "<br>";
+        $html .= "Origen del presupuesto: " . $estimateData['estimateorigin']. "<br><br>";
+        $html .= "Para consultar información adicional accede a <a href='$httpHost/?controller=store&opt=new_estimate&id=1'>Formas</a>";
+        $this->notifyNewEstimate($estimateData, "yeisson.velez@gmail.com","Esta es una prueba", $html);
+    }*/
 }

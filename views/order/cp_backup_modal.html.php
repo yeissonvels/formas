@@ -53,7 +53,7 @@
                     <button class="btn btn-primary" type="button" onclick="saveComment(0);">Nuevo comentario</button>
                 <?php } ?>
                 <?php spinner_icon('spinner', 'sp-in-comment', true); ?>
-                <button data-dismiss="modal" class="btn btn-secondary" type="button">Salir</button>
+                <button data-bs-dismiss="modal" class="btn btn-secondary" type="button">Salir</button>
             </div>
         </div>
     </div>

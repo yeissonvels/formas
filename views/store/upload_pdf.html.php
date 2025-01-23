@@ -506,7 +506,7 @@
                         <label for="saletype"
                                class="col-sm-2 col-form-label">Tipo</label>
                         <div class="col-sm-10">
-                            <select name="saletype" id="saletype" class="form-control" <?php echo $disabled; ?> onchange="changeSaleType();">
+                            <select name="saletype" id="saletype" class="form-select" <?php echo $disabled; ?> onchange="changeSaleType();">
                                 <?php
                                 global $saletypes;
                                 foreach ($saletypes as $key => $value) {
@@ -608,7 +608,7 @@
                         <label for="paymethod"
                                class="col-sm-2 col-form-label">Mediante</label>
                         <div class="col-sm-10">
-                            <select name="paymethod" id="paymethod" class="form-control" <?php echo $disabled; ?>>
+                            <select name="paymethod" id="paymethod" class="form-select" <?php echo $disabled; ?>>
                                 <option value="">Elija una opción</option>
                                 <?php
                                 global $paymethods;

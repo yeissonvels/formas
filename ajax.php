@@ -863,7 +863,6 @@ class AjaxRequest
         $conf = new stdClass();
 
         $data = $controller->getEstimates();
-        pre($data);
 
         include($tpl);
     }
@@ -1269,12 +1268,22 @@ class AjaxRequest
         //$_POST['concept'] = escapeSerialized($_POST['concept']);
         $_POST['storeid'] = $user->getStoreId();
         // El formulario de guardado y actualización es el mismo, en el guardado el id viene vacío.
+
+        $mailInfo = $_POST;
         if (isset($_POST['id'])) {
             unset($_POST['id']);
         }
 
-
         $result = $controller->saveEstimate();
+        if($result['saved'] && $result['saved'] == 1) {
+            // Enviamos correo
+            $mailInfo['saledate'] = date('d-m-Y H:i:s');
+            $mailInfo['id'] = $result['lastid'];
+            $mailInfo['store'] = getStoreName($user->getStoreId());
+            $mailInfo['user'] = $user->getUsername();
+            $controller->notifyNewEstimate("yeisson.velez@gmail.com", "Nuevo presupuesto creado", $mailInfo);
+        }
+
         echo json_encode($result);
     }
 
