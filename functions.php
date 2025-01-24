@@ -487,20 +487,20 @@ function edit_icon($show = true) {
  */
 function icon($name, $show = false, $scape = false) {
     $icons = array(
-        'edit' => 'fa-pencil-square-o',
+        'edit' => 'fa-pencil-square',
         'delete' => 'fa-trash',
-        'save' => 'fa-floppy-o',
-        'image' => 'fa-file-image-o',
+        'save' => 'fa-floppy',
+        'image' => 'fa-file-image',
         'user'	=> 'fa-user-circle',
         'logout' => 'fa-power-off',
         'superadmin' => 'fa-user',
-        'pdf' => 'fa-file-pdf-o',
-        'word' => 'fa-file-word-o',
+        'pdf' => 'fa-file-pdf',
+        'word' => 'fa-file-word',
         'plus' => 'fa-plus',
         'cart' => 'fa-shopping-cart',
         'database' => 'fa-database',
         'info' => 'fa-info',
-        'question' => 'fa-question-circle-o',
+        'question' => 'fa-question-circle',
         'empty' => 'fa-times',
         'send' => 'fa-paper-plane',
         'restore' => 'fa-reply',
@@ -511,16 +511,16 @@ function icon($name, $show = false, $scape = false) {
         'phone' => 'fa-phone',
         'truck' => 'fa-truck',
         'delivered' => 'fa-handshake-o',
-        'pending' => 'fa-clock-o',
+        'pending' => 'fa-clock',
         'incidence' => 'fa-wrench', // incidencias
         'ok' => 'fa-thumbs-o-up',
-        'money' => 'fa-money',
+        'money' => 'fa-money-bill-1',
         'map' => 'fa-map-marker',
         'status' => 'fa-recycle',
         'bag' => 'fa-shopping-bag',
         'exchange' => 'fa-exchange',
         'barcode' => 'fa-barcode',
-        'checked' => 'fa-check-square-o',
+        'checked' => 'fa-check-square',
         'email' => 'fa-envelope',
         'search' => 'fa-search',
         'half' => 'fa-hourglass-half',
@@ -528,7 +528,8 @@ function icon($name, $show = false, $scape = false) {
         'sort' => 'fas fa-sort',
         'attention' => 'fa-exclamation-circle',
         'attention2' => 'fa-exclamation-triangle',
-        'estimate' => 'fas fa-file-invoice'
+        'estimate' => 'fas fa-file-invoice',
+        'ceo' => 'fa-user-tie'
     );
 
     if ($scape) {
@@ -1924,7 +1925,7 @@ function createResponseTable($path, $files, $config) {
     $html .=    '<tr>';
     $html .=        '<th>Archivo</th>';
     $html .=        '<th>Fecha de subida</th>';
-    $html .=        '<th>'.delete_icon_js().'</th>';
+    $html .=        '<th>'.icon('delete', false).'</th>';
     $html .=    '</tr>';
     $html .= '</thead>';
 
@@ -1961,7 +1962,7 @@ function createResponseTable($path, $files, $config) {
     
             if ($config['delete']) {
                 $onclick = 'onclick="unlinkFile(\'' . $file . '\', \'' . $path . '\', \'' . $fname . '\',  \'' . $config['divresponse'] . '\', \'' . $config['divresponse'] . $cont . '\')"';
-                $html .= '<a  target="_blank" style="cursor: pointer;" ' . $onclick . ' title="Eliminar">' . delete_icon_js() . '</a><br>';
+                $html .= '<a  target="_blank" style="cursor: pointer; color: red;" ' . $onclick . ' title="Eliminar">' . icon('delete', false) . '</a><br>';
             }
     
             $html .=        '</td>';

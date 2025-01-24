@@ -490,7 +490,9 @@
                         <div id="suggesstion-box" style="position: absolute; z-index: 10000;"></div>
                     </div>
                     <?php if (userWithPrivileges()) { ?>
-	                    <label for="commission" class="col-sm-1 col-form-label">Sólo con propuesta <?php icon('money', true); ?></label>
+	                    <label for="commission" class="col-sm-1 col-form-label">
+                            <h6 class="filter-label-icon">Sólo con propuesta <?php icon('money', true); ?></h6>
+                        </label>
 	                    <div class="col-sm-1">
 	                        <select name="commission" class="form-select">
 	                        	<option value="no">No</option>

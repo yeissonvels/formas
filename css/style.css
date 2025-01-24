@@ -192,7 +192,11 @@ div.form-group.row {
 }
 
 .filter-label-icon {
-    color: #a18262;
+    color: #7c6853;
+}
+
+i.fa {
+    font-size: 18px;
 }
 
 @media (max-width: 992px) {

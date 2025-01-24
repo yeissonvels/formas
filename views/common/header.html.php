@@ -135,10 +135,12 @@
                             }
                         ?>
                     </div>
-                    <div class="col-sm-1">
+                    <div class="col-sm-2">
                         <input type="hidden" name="controller" value="user">
                         <input type="hidden" name="opt" value="loginAsOtherUser">
-                        <input type="submit" value="<?php echo $isAdmLogged ? 'Acceso jefe' : 'Iniciar sesión' ?>" class="btn btn-primary">
+                        <button class="btn btn-primary" type="submit">
+                            <?php echo $isAdmLogged ? ('Acceso jefe ' . icon('ceo', false)) : ('Iniciar sesión ' . icon('user', false)); ?>
+                        </button>
                     </div>
                 </div>
 		    	
@@ -165,13 +167,13 @@
             <div class="col-sm-5 mt-2">
                  <form id="frm-orderview" action="?controller=order&opt=generalOrderView" method="post" onsubmit="return controlGeneralOrderView();">
                     <div class="row">
-                        <div class="col-sm-9">
+                        <div class="col-sm-8">
                             <input type="text" name="searchbox" id="search-box-main" placeholder="Código, nombre del cliente o teléfono" class="form-control" autocomplete="off">
                             <input name="maincode" id="maincode" type="hidden" value="">
                             <div id="suggesstion-box-main" style="position: absolute; z-index: 10000;"></div>
                         </div>
                         <div class="col-sm-3">
-                            <a class="lupa" onclick="$('#frm-orderview').submit();"><?php icon('search', true); ?></a>
+                            <a class="lupa ml-1" onclick="$('#frm-orderview').submit();"><?php icon('search', true); ?></a>
                         </div>
                     </div>
                 </form>

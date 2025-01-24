@@ -80,6 +80,11 @@
         $(config[2]).hide();
     }
 
+    function setEstimate(code) {
+        $('#search-box-code').val(code);
+        $('#search-box-code').trigger('keyup');
+    }
+
     function selectEstimateCode(id, code, configString) {
         let config = configString.split(',');
         $(config[0]).val(code);

@@ -12,8 +12,10 @@
             $html = ""; 
             if($estimates) {
                 foreach($estimates as $estimate) {
+                    $code = $estimate->code;
+                    $fnc = "setEstimate('$code');";
                     $html .= '<tr>';
-                    $html .=    '<td>'.$estimate->code.'</td>';
+                    $html .=    '<td><a href="#" onclick="'.$fnc.'">'.$estimate->code.'</a></td>';
                     $html .=    '<td>'.americaDate($estimate->saledate, false).'</td>';
                     $html .=    '<td>'.$estimate->customer.'</td>';
                     $html .=    '<td>'.numberFormat($estimate->total, true, 2).' €</td>';
