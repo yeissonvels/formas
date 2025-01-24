@@ -3,11 +3,17 @@
     $(document).ready(function(){
         $("#search-box").keyup(function(){
             if ($(this).val() != "" && $(this).val().length > 1) {
+                let config = {
+                    searchBox: '#search-box',
+                    inputId: '#parentcode',
+                    suggestionBox: '#suggesstion-box'
+                };
                 $.ajax({
                     type: "POST",
                     url: "/ajax.php",
                     data: {
                         keyword: $(this).val(),
+                        config: config,
                         op: 'getAutocompleteCode',
                     },
                     beforeSend: function () {
@@ -368,7 +374,9 @@
         <?php update_icon(getUrl('show_pdfs', $myController->getUrls())); ?>
         <form action="<?php echo getUrl('show_pdfs', $myController->getUrls()); ?>" method="post" id="frm1">
             <div class="form-group row">
-                <label for="purchasedate" class="col-sm-1 col-form-label">Mes <?php icon('calendar', true);?></label>
+                <label for="purchasedate" class="col-sm-1 col-form-label">
+                    <h6 class="filter-label-icon">Mes <?php icon('calendar', true);?></h6>
+                </label>
                 <div class="col-sm-2">
                     <?php
                     	if (userWithPrivileges()) {
@@ -380,7 +388,9 @@
                 	?>
                 </div>
                 <?php if (userWithPrivileges()){ ?>
-                <label for="year" class="col-sm-1 col-form-label">Año <?php icon('calendar', true);?></label>
+                <label for="year" class="col-sm-1 col-form-label">
+                    <h6 class="filter-label-icon">Año <?php icon('calendar', true);?></h6>
+                    </label>
                 <div class="col-sm-2">
                     <?php generateSelectYear(2017, "", false); ?>
                 </div>
@@ -401,7 +411,9 @@
             global $user;
             if (isadmin() || $user->getUsermanager() == 1 || $user->getUseraccounting() == 1 || $user->getUserrepository() == 1) { ?>
                 <div class="form-group row">
-                    <label for="purchasedate" class="col-sm-1 col-form-label">Usuario <?php icon('user', true);?></label>
+                    <label for="purchasedate" class="col-sm-1 col-form-label">
+                        <h6 class="filter-label-icon">Usuario <?php icon('user', true);?></h6>
+                    </label>
                     <div class="col-sm-2">
                         <select name="user" class="form-select">
                             <option value="">Elije uno</option>
@@ -416,7 +428,9 @@
                         </select>
                     </div>
 
-                    <label for="purchasedate" class="col-sm-1 col-form-label">Tienda <?php icon('home', true);?></label>
+                    <label for="purchasedate" class="col-sm-1 col-form-label">
+                    <h6 class="filter-label-icon">Tienda <?php icon('home', true);?></h6>
+                    </label>
                     <div class="col-sm-2">
                         <select name="store" class="form-select">
                             <option value="">Elija una tienda</option>
@@ -437,16 +451,22 @@
             <?php } ?>
                 <div class="form-group row">
                     <?php if (userWithPrivileges()) { ?>
-                      <label for="from" class="col-sm-1 col-form-label">Desde <?php icon('calendar', true);?></label>
+                      <label for="from" class="col-sm-1 col-form-label">
+                      <h6 class="filter-label-icon">Desde <?php icon('calendar', true);?></h6>
+                      </label>
                       <div class="col-sm-2">
                           <input type="text" name="from" id="from" class="form-control">
                       </div>
-                      <label for="to" class="col-sm-1 col-form-label">Hasta <?php icon('calendar', true);?></label>
+                      <label for="to" class="col-sm-1 col-form-label">
+                      <h6 class="filter-label-icon">Hasta <?php icon('calendar', true);?></h6>
+                      </label>
                       <div class="col-sm-2">
                           <input type="text" name="to" id="to" class="form-control">
                       </div>
                     <?php } ?>
-                    <label for="to" class="col-sm-1 col-form-label">Tipo <?php icon('exchange', true); ?></label>
+                    <label for="to" class="col-sm-1 col-form-label">
+                        <h6 class="filter-label-icon">Tipo <?php icon('exchange', true); ?></h6>
+                    </label>
                     <div class="col-sm-2">
                         <select name="saletype" class="form-select">
                             <option value="all">Todos</option>
@@ -461,7 +481,9 @@
                 </div>
 
                 <div class="form-group row">
-                    <label for="from" class="col-sm-1 col-form-label">Nº de pedido <?php icon('barcode', true); ?></label>
+                    <label for="from" class="col-sm-1 col-form-label">
+                        <h6 class="filter-label-icon">Nº de pedido <?php icon('barcode', true); ?></h6>
+                    </label>
                     <div class="col-sm-4">
                         <input type="text" id="search-box" class="form-control" placeholder="Código o nombre del cliente">
                         <input type="hidden" name="code" id="code" class="form-control" value="">

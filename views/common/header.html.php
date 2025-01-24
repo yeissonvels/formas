@@ -16,8 +16,7 @@
     <link rel='stylesheet' href='/css/jquery.qtip.css' type='text/css' media='all'/>
     <link rel='stylesheet' href='/css/menu.css' type='text/css' media='all'/>
     <link rel='stylesheet' href='/css/bootstrap.min.css' type='text/css' media='all'/>
-    <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">-->
-    <link rel='stylesheet' href='/css/font-awesome.min.css' type='text/css' media='all'/>
+    <link rel='stylesheet' href='/css/all.min.css' type='text/css' media='all'/>
     <link rel='stylesheet' href='/css/style.css' type='text/css' media='all'/>
     <script src="/js/jquery_v1.10.2.js"></script>
     <script src="/js/jquery.timeTo.js"></script>

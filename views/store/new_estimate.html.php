@@ -576,7 +576,7 @@
         $canEdit = true;
         $disabled = '';
     } else if ($data && !isTimeOver($data->created_on) || $user->getUsermanager() == 1
-        || isAdmin() /*|| $data->salegenerated == 0*/) {
+        || isAdmin() || $data->status == 0 ) {
         $canEdit = true;
         $disabled = '';
     }
@@ -586,11 +586,11 @@
     <div class="card-header">
         <h4 class="card-title">
             <span id="dynamictitle">
-            	<?php echo $data ? "Modificar $defaultLabel" : "Nuevo $defaultLabel" ?>
+            	<?php echo $data ? "Modificar $defaultLabel" : "Nuevo $defaultLabel" ?> <?php icon('estimate', true); ?>
         	</span>
         	<?php
             if ($data) {?>
-                <a href="<?php echo $urlpdf; ?>" id="urltitlepdf" target="_blank" style="font-size: 20px;"><?php icon('pdf', true); ?></a>
+                <!-- <a href="< ?php echo $urlpdf; ?>" id="urltitlepdf" target="_blank" style="font-size: 20px;">< ?php icon('pdf', true); ?></a> -->
             <?php
             }
             ?>

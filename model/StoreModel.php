@@ -249,6 +249,11 @@ class StoreModel extends Store
         return $response;
     }
 
+    function updateEstimateStatus($id) {
+        $query = "UPDATE " . $this->estimatesTable . " SET status = 1 WHERE id = $id";
+        $this->wpdb->query($query);
+    }
+
     function getMyTotalEstimates($createdBy) {
         return $this->wpdb->get_var("SELECT COUNT(*) FROM " . $this->estimatesTable . " WHERE created_by = " . $createdBy);
     }
@@ -388,6 +393,43 @@ class StoreModel extends Store
             //echo $query;
         }
         //echo $query;
+        $codes = $this->wpdb->get_results($query);
+
+        return $codes;
+    }
+
+     /**
+     * @param bool $nocancelled
+     * @return array
+     * 
+     * Obtiene los presupuestos que coinciden con la búsqueda
+     */
+    function getAutocompleteEstimateCode($nocancelled = false) {
+        global $user;
+        $keyword = $_POST['keyword'];
+        $cancelledFilter = '';
+        if ($nocancelled) {
+            $cancelledFilter = ' AND cancelled = 0';
+        }
+        $createdByFilter = 'created_by = ' . $user->getId();
+		
+		/*
+		 * Actualización: 01/03/19.
+		 * Paco solicita que otro usuario perteneciente a la tienda pueda gestionar los pedidos de compañeros.
+		 * 
+		 * 13/05/19 Se vuelve a quitar porque Paco ya no le gusta que otros vean lo de otros.
+		 */
+		 
+        if (isadmin() || $user->getUsermanager() == 1 || $user->getUseraccounting() == 1 || $user->getUserrepository() == 1) {
+            $createdByFilter = 'id > 0';
+        }/* else {
+        	 $createdByFilter = 'id > 0';
+        }*/
+		
+        $query = 'SELECT id, code, saledate, customer FROM ' . $this->estimatesTable;
+        $query .= ' WHERE status = 0 AND ' . $createdByFilter . ' ' . $cancelledFilter;
+        $query .= ' AND (code LIKE "%' . $keyword . '%" OR customer LIKE "%' . $keyword . '%") LIMIT 3;';
+        
         $codes = $this->wpdb->get_results($query);
 
         return $codes;
@@ -566,11 +608,14 @@ class StoreModel extends Store
         return false;
     }
 
-    function getEstimateData($id = 0) {
+    function getEstimateData($id = 0, $comments = true) {
         $estimateId = $id > 0 ? $id : $_GET['id'];
         $data = $this->wpdb->getOneRow($this->estimatesTable, $estimateId);
         $data->creator = getUsername($data->created_by); // Ahora lo usamos (getPdfStoreOrder)
-        $data->comments = $this->getNewPdfComments($estimateId, $this->estimateCommentsTable, "estimateid");
+        if($comments) {
+            $data->comments = $this->getNewPdfComments($estimateId, $this->estimateCommentsTable, "estimateid");
+        }
+       
         //$data->products = $this->getEstimateProducts();
         $data->products = [];
 
@@ -592,5 +637,12 @@ class StoreModel extends Store
         }
 
         return false;
+    }
+
+    function getMyLastEstimates() {
+        global $user;
+        $createdBy = $user->getId();
+        $query = "SELECT * FROM " . $this->estimatesTable . " WHERE status = 0 AND created_by = $createdBy ORDER BY id DESC LIMIT 10";
+        return $this->wpdb->get_results($query);
     }
 }

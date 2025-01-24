@@ -465,7 +465,18 @@ class AjaxRequest
             $code = $controller->getCodeByParentId();
             $_POST['code'] = $code;
         }
+
+        // Obtenemos el código del presupuesto: desde el formulario se envía el id del presupuesto
+        $estimateData = $controller->getEstimateData($_POST['code']);
+        
+        $_POST['code'] = $estimateData->code;
         $result = $controller->saveSale();
+
+
+        if((isset($result['saved']) && $result['saved'] == 1) /*||  (isset($result['updated']) && $result['updated'] == 1)*/) {
+            $controller->updateEstimateStatus($estimateData->id);
+        }
+
         echo json_encode($result);
     }
 
@@ -874,6 +885,7 @@ class AjaxRequest
         }
         $controller = new StoreController();
         $results = $controller->getAutocompleteCode($noCancelled);
+        $config = implode(',', $_POST['config']);
 
         ?>
         <ul id="code-list" class="list-group">
@@ -882,12 +894,49 @@ class AjaxRequest
             foreach($results as $result) {
                 $code = $result->code . ' (' . americaDate($result->saledate, false) . ') ' . $result->customer;
                 ?>
-                <li class="list-group-item cursor-pointer" onClick="selectCode('<?php echo $result->id; ?>', '<?php echo $code; ?>');"><?php echo $code; ?></li>
+                <li class="list-group-item cursor-pointer" onClick="selectCode('<?php echo $result->id; ?>', '<?php echo $code; ?>','<?php echo $config; ?>');"><?php echo $code; ?></li>
             <?php } ?>
         <?php } else { ?>
             <li class="list-group-item cursor-pointer"><span class="red-color">Sin resultados</span></li>
         <?php } ?>
         </ul><?php
+    }
+
+    function getAutocompleteEstimateCode() {
+        $noCancelled = false;
+        if (isset($_POST['nocancelled'])) {
+            $noCancelled = true;
+        }
+        $controller = new StoreController();
+        $results = $controller->getAutocompleteEstimateCode($noCancelled);
+        $config = implode(',', $_POST['config']);
+
+        ?>
+        <ul id="code-list" class="list-group">
+        <?php
+        if (count($results) > 0) {
+            foreach($results as $result) {
+                $code = 'Nº Pre. [' . $result->code . '] - ' . americaDate($result->saledate, false) . ' - ' . $result->customer;
+                ?>
+                <li class="list-group-item cursor-pointer" onClick="selectEstimateCode('<?php echo $result->id; ?>', '<?php echo $code; ?>','<?php echo $config; ?>');"><?php echo $code; ?></li>
+            <?php } ?>
+        <?php } else { ?>
+            <li class="list-group-item cursor-pointer"><span class="red-color">Sin resultados</span></li>
+        <?php } ?>
+        </ul><?php
+    }
+
+    function getEstimateData() {
+        $controller = new StoreController();
+        $estimateData = $controller->getEstimateData($_POST['id']);
+        
+        if($estimateData) {
+            $estimateData->total = numberFormat($estimateData->total, true, 2);
+            echo json_encode($estimateData);
+        } else {
+            echo json_encode([]);
+        }
+        
     }
 	
 	function getAutocompleteProduct() {

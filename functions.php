@@ -504,10 +504,10 @@ function icon($name, $show = false, $scape = false) {
         'empty' => 'fa-times',
         'send' => 'fa-paper-plane',
         'restore' => 'fa-reply',
-        'calendar' => 'fa-calendar',
+        'calendar' => 'fas fa-calendar-day',
         'comments' => 'fa-comments',
         'view' => 'fa-eye',
-        'home' => 'fa-home',
+        'home' => 'fas fa-store',
         'phone' => 'fa-phone',
         'truck' => 'fa-truck',
         'delivered' => 'fa-handshake-o',
@@ -527,7 +527,8 @@ function icon($name, $show = false, $scape = false) {
         'calculator' => 'fa-calculator',
         'sort' => 'fas fa-sort',
         'attention' => 'fa-exclamation-circle',
-        'attention2' => 'fa-exclamation-triangle'
+        'attention2' => 'fa-exclamation-triangle',
+        'estimate' => 'fas fa-file-invoice'
     );
 
     if ($scape) {
@@ -1918,7 +1919,7 @@ function getIconNames() {
 function createResponseTable($path, $files, $config) {
     $cont = 0;
     $icons = getIconNames();
-    $html = '<table class="table">';
+    $html = '<table class="table table-striped">';
     $html .= '<thead>';
     $html .=    '<tr>';
     $html .=        '<th>Archivo</th>';

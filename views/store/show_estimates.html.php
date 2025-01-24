@@ -348,7 +348,7 @@
 </div>
 <div class="card">
     <div class="card-header">
-        <h4 class="card-title">Presupuestos</h4>
+        <h4 class="card-title">Presupuestos <?php icon('estimate', true); ?></h4>
         <span><a href="<?php echo getUrl('new_estimate', $myController->getUrls()); ?>">Nuevo</a></span>
         <?php update_icon(getUrl('show_estimates', $myController->getUrls())); ?>
         <form action="<?php echo getUrl('show_estimates', $myController->getUrls()); ?>" method="post" id="frm1">
