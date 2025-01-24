@@ -9,11 +9,18 @@
         $("#search-box").keyup(function(){
             $('#parentcode').prop("value", "");
             if ($(this).val() != "") {
+                let config = {
+                    searchBox: '#search-box',
+                    inputId: '#parentcode',
+                    suggestionBox: '#suggesstion-box'
+                };
+
                 $.ajax({
                     type: "POST",
                     url: "/ajax.php",
                     data: {
                         keyword: $(this).val(),
+                        config: config,
                         nocancelled: 'yes',
                         op: 'getAutocompleteCode',
                     },
@@ -31,12 +38,79 @@
                 $("#suggesstion-box").html("");
             }
         });
+
+        $("#search-box-code").keyup(function(){
+            $('#code').prop("value", "");
+            codeValidated = false;
+            if ($(this).val() != "") {
+                let config = {
+                    searchBox: '#search-box-code',
+                    inputId: '#code',
+                    suggestionBox: '#suggesstion-box-code'
+                };
+                $.ajax({
+                    type: "POST",
+                    url: "/ajax.php",
+                    data: {
+                        keyword: $(this).val(),
+                        config: config,
+                        nocancelled: 'yes',
+                        op: 'getAutocompleteEstimateCode',
+                    },
+                    beforeSend: function () {
+                        //$("#search-box").css("background","#FFF url(LoaderIcon.gif) no-repeat 165px");
+                    },
+                    success: function (data) {
+                        $("#suggesstion-box-code").show();
+                        $("#suggesstion-box-code").html(data);
+                        $("#search-box-code").css("background", "#FFF");
+
+                    }
+                });
+            } else {
+                $("#suggesstion-box-code").html("");
+            }
+        });
     });
 
-    function selectCode(id, code) {
-        $("#search-box").val(code);
-        $("#parentcode").val(id);
-        $("#suggesstion-box").hide();
+    function selectCode(id, code, configString) {
+        let config = configString.split(',');
+        $(config[0]).val(code);
+        $(config[1]).val(id);
+        $(config[2]).hide();
+    }
+
+    function setEstimate(code) {
+        $('#search-box-code').val(code);
+        $('#search-box-code').trigger('keyup');
+    }
+
+    function selectEstimateCode(id, code, configString) {
+        let config = configString.split(',');
+        $(config[0]).val(code);
+        $(config[1]).val(id);
+        $(config[2]).hide();
+        codeValidated = true;
+
+        $.ajax({
+            type: "POST",
+            url: "/ajax.php",
+            data: {
+                id: id,
+                config: config,
+                nocancelled: 'yes',
+                op: 'getEstimateData',
+            },
+            beforeSend: function () {
+                //$("#search-box").css("background","#FFF url(LoaderIcon.gif) no-repeat 165px");
+            },
+            success: function (data) {
+                let estimateData = JSON.parse(data);
+                $('#customer').prop('value', estimateData['customer']);
+                $('#total').prop('value', estimateData['total']);
+                console.log(estimateData);
+            }
+        });
     }
 
     function checkSaleData() {
@@ -77,7 +151,7 @@
 
     function saveSale() {
         if ($('#saletype').val() == 0) {
-            comprobate = Array('#saledate', '#code', '#customer', '#total', '#payed', '#paymethod');
+            comprobate = Array('#saledate', '#code', '#search-box-code', '#customer', '#total', '#payed', '#paymethod');
         } else {
             border_ok('#payed');
             comprobate = Array('#saledate', '#parentcode', '#total');
@@ -498,7 +572,7 @@
             <span id="dynamictitle"><?php echo $data ? "Modificar $defaultLabel" : "Nueva $defaultLabel" ?></span>
             <?php icon('money', true); ?></h4>
     </div>
-    <div class="card-block">
+    <div class="card-block mt-3">
         <div class="row">
             <div class="col-sm-6">
                 <form id="frm-saledata">
@@ -506,7 +580,7 @@
                         <label for="saletype"
                                class="col-sm-2 col-form-label">Tipo</label>
                         <div class="col-sm-10">
-                            <select name="saletype" id="saletype" class="form-control" <?php echo $disabled; ?> onchange="changeSaleType();">
+                            <select name="saletype" id="saletype" class="form-select" <?php echo $disabled; ?> onchange="changeSaleType();">
                                 <?php
                                 global $saletypes;
                                 foreach ($saletypes as $key => $value) {
@@ -556,12 +630,29 @@
                         $displayCode = 'display: none;';
                     }
                     ?>
-                    <div class="form-group row" id="div_code" style="<?php echo $displayCode; ?>">
+                    <!--<div class="form-group row" id="div_code" style="< ?php echo $displayCode; ?>">
                         <label for="code"
                                class="col-sm-2 col-form-label">Nº de pedido</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" name="code" id="code" onkeyup="checkCode();"
-                                   value="<?php echo $data ? $data->code : ''; ?>" <?php echo $disabled; ?>>
+                                   value="< ?php echo $data ? $data->code : ''; ?>" < ?php echo $disabled; ?>>
+                        </div>
+                    </div>-->
+
+                    <?php
+                        $codeValue = "";
+                        if ($data && $data->saletype == 0) {
+                            $codeValue = $data->code . ' (' . americaDate($data->saledate, false) . ') ' . $data->customer;
+                        }
+                    ?>
+
+                    <div class="form-group row" id="div_code" style="<?php echo $displayCode; ?>">
+                        <label for="code"
+                               class="col-sm-2 col-form-label">Nº de pedido</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="search-box-code" placeholder="Código o nombre del cliente"  class="form-control" value="<?php echo $codeValue; ?>" autocomplete="off"/>
+                            <input type="hidden" name="code" id="code" value="<?php echo $data ? $data->code: ''; ?>" autocomplete="off">
+                            <div id="suggesstion-box-code" style="position: absolute; z-index: 10000;"></div>
                         </div>
                     </div>
                     <?php
@@ -608,7 +699,7 @@
                         <label for="paymethod"
                                class="col-sm-2 col-form-label">Mediante</label>
                         <div class="col-sm-10">
-                            <select name="paymethod" id="paymethod" class="form-control" <?php echo $disabled; ?>>
+                            <select name="paymethod" id="paymethod" class="form-select" <?php echo $disabled; ?>>
                                 <option value="">Elija una opción</option>
                                 <?php
                                 global $paymethods;
@@ -644,10 +735,16 @@
                 </form>
             </div>
             <!-- Columna derecha -->
-            <?php
-                $commentsDisplay = $data ? 'block' : 'none';
-            ?>
             <div class="col-sm-6">
+                <?php
+                    $commentsDisplay = $data ? 'block' : 'none';
+                ?>
+                <div class="modal-body">
+                    <h6>Mis últimos presupuestos <?php icon('estimate', true); ?></h6>
+                    <?php 
+                        $myController->showMyLastEstimates();
+                    ?>
+                </div>
                 <div class="modal-body" style="display: <?php echo $commentsDisplay?>;" id="commentsdiv">
                     <div class="container-fluid">
                         <div class="row">

@@ -30,7 +30,7 @@
                         <button class="btn btn-primary" type="button" onclick="saveComment(1);">Nuevo comentario</button>
                     <?php } ?>
                     <?php spinner_icon('spinner', 'sp-cus-comment', true); ?>
-                    <button data-dismiss="modal" class="btn btn-secondary" type="button">Salir</button>
+                    <button data-bs-dismiss="modal" class="btn btn-secondary" type="button">Salir</button>
                 </div>
             </div>
         </div>
@@ -81,7 +81,7 @@
                     <button class="btn btn-primary" type="button" onclick="saveComment(0);">Nuevo comentario</button>
                 <?php } ?>
                 <?php spinner_icon('spinner', 'sp-in-comment', true); ?>
-                <button data-dismiss="modal" class="btn btn-secondary" type="button" onclick="checkChangeStatusNoComment();">Salir</button>
+                <button data-bs-dismiss="modal" class="btn btn-secondary" type="button" onclick="checkChangeStatusNoComment();">Salir</button>
             </div>
         </div>
     </div>
@@ -133,7 +133,7 @@
             </div>
             <div class="modal-footer">
                 <?php spinner_icon('spinner', 'sp-in-comment', true); ?>
-                <button data-dismiss="modal" class="btn btn-secondary" type="button">Salir</button>
+                <button data-bs-dismiss="modal" class="btn btn-secondary" type="button">Salir</button>
             </div>
         </div>
     </div>

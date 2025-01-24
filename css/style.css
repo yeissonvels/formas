@@ -16,6 +16,10 @@ a.lupa:hover {
     color: blue !important;
 }
 
+a {
+    text-decoration: none !important;
+}
+
 #search-box-main {
     width: 105%;
 }
@@ -26,6 +30,10 @@ a.lupa:hover {
 
 .navbar li a {
     color: #c85d2b !important;
+}
+
+li.nav-item.dropdown > a {
+    font-size: 13px;
 }
 
 h4 {
@@ -173,6 +181,22 @@ nav a  {
 
 .input-large {
 	width: 450px;
+}
+
+div.form-group.row {
+    margin-bottom: 10px;
+}
+
+.card-header {
+    margin-bottom: 1rem;
+}
+
+.filter-label-icon {
+    color: #7c6853;
+}
+
+i.fa {
+    font-size: 18px;
 }
 
 @media (max-width: 992px) {

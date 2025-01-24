@@ -41,7 +41,7 @@ if ($editing) {
     function moreInternProducts(target) {
         var html = '<tr id="inproduct' + internProducts + '" class="table-success">';
         html +=     '<td class="w-50">';
-        html += '<select class="form-control products" id="inselect' + internProducts + '" name="products[]">';
+        html += '<select class="form-select products" id="inselect' + internProducts + '" name="products[]">';
         html +=         '<option value="">Seleccione un producto</option>';
         <?php
         if (isset($ajaxProducts)) {
@@ -53,7 +53,7 @@ if ($editing) {
         html +=         '</select>';
         html +=     '</td>';
         html +=     '<td class="w-50">';
-        html += '<select class="form-control categories" id="incategory' + internProducts + '" name="categories[]">';
+        html += '<select class="form-select categories" id="incategory' + internProducts + '" name="categories[]">';
         html +=         '<option value="">Seleccione un producto</option>';
         <?php
         if (isset($ajaxCategories)) {
@@ -159,7 +159,7 @@ if ($editing) {
                 <div class="form-group row">
                     <label for="incidencetype" class="col-sm-3 col-form-label">Tipo</label>
                     <div class="col-sm-9">
-                        <select id="incidencetype" name="incidencetype" class="form-control" <?php echo $incidenceDisabled; ?>>
+                        <select id="incidencetype" name="incidencetype" class="form-select" <?php echo $incidenceDisabled; ?>>
                             <?php
                             global $incidenceTypes;
                             foreach ($incidenceTypes as $key => $value) {
@@ -190,7 +190,7 @@ if ($editing) {
                 <div class="form-group row">
                     <label for="status" class="col-sm-3 col-form-label">Estado</label>
                     <div class="col-sm-9">
-                        <select id="incidencestatus" name="status" class="form-control" onchange="checkChangeIncidenceStatus();" <?php echo $incidenceDisabled; ?>>
+                        <select id="incidencestatus" name="status" class="form-select" onchange="checkChangeIncidenceStatus();" <?php echo $incidenceDisabled; ?>>
                             <?php
                             global $incidencestatus;
                             foreach ($incidencestatus as $key => $value) {
@@ -291,7 +291,7 @@ if ($editing) {
                         foreach ($ajaxincidence->internProducts as $item) {
                             echo '<tr id="product' . $i . '" class="table-success">';
                             echo    '<td class="w-50">';
-                            echo        '<select class="form-control products" name="products[]" id="inselect' . $i . '"' . $incidenceDisabled . '>' . PHP_EOL;
+                            echo        '<select class="form-select products" name="products[]" id="inselect' . $i . '"' . $incidenceDisabled . '>' . PHP_EOL;
                             echo            '<option value="">Seleccione un producto</option>' . PHP_EOL;
                             foreach ($ajaxProducts as $product) {
                                 $selected = "";
@@ -303,7 +303,7 @@ if ($editing) {
                             echo        '</select>' . PHP_EOL;
                             echo    '</td>' . PHP_EOL;
                             echo    '<td class="w-50">';
-                            echo        '<select class="form-control categories" name="categories[]" id="incategory' . $i . '" ' . $incidenceDisabled . '>' . PHP_EOL;
+                            echo        '<select class="form-select categories" name="categories[]" id="incategory' . $i . '" ' . $incidenceDisabled . '>' . PHP_EOL;
                             echo            '<option value="">Seleccione una categoría</option>' . PHP_EOL;
                             foreach ($ajaxCategories as $category) {
                                 $selected = "";
@@ -349,7 +349,7 @@ if ($editing) {
                         ?>
                         <tr class="table-success">
                             <td class="w-50">
-                                <select class="form-control products" name="products[]" id="inselect1" <?php echo $incidenceDisabled; ?>>
+                                <select class="form-select products" name="products[]" id="inselect1" <?php echo $incidenceDisabled; ?>>
                                     <option value="">Seleccione un producto</option>
                                     <?php
                                     if (isset($ajaxProducts)) {
@@ -362,7 +362,7 @@ if ($editing) {
                                 </select>
                             </td>
                             <td class="w-50">
-                                <select class="form-control products" name="categories[]" id="incategorie1" <?php echo $incidenceDisabled; ?>>
+                                <select class="form-select products" name="categories[]" id="incategorie1" <?php echo $incidenceDisabled; ?>>
                                     <option value="">Seleccione una categoria</option>
                                     <?php
                                     if (isset($ajaxCategories)) {
@@ -476,7 +476,7 @@ if ($editing) {
                     </td>
                     <td>Provincia</td>
                     <td class="w-50">
-                        <select name="provinceid" id="inci-provinceid" class="form-control" <?php echo $incidenceDisabled; ?>>
+                        <select name="provinceid" id="inci-provinceid" class="form-select" <?php echo $incidenceDisabled; ?>>
                             <option value="">Provincia</option>
                             <?php
                             $provinces = getProvinces();

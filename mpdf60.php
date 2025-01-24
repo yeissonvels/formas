@@ -1,6 +1,9 @@
 <?php
+ini_set('max_execution_time', '300');
+ini_set("pcre.backtrack_limit", "15000000");
+
 require('functions.php');
-include("mpdf60/mpdf.php");
+require __DIR__ . '/vendor/autoload.php';
 
 /*error_reporting(E_ALL);
 ini_set("display_errors", 1);*/
@@ -23,7 +26,7 @@ if (isset($_GET['controller'])) {
             $method = $_GET['opt'];
             if (method_exists($controller, $method)) {
                 $html = "";
-                $mpdf =  new mPDF('c');
+                $mpdf = new \Mpdf\Mpdf();
                 $mpdf->mirrorMargins = 1;
                 $mpdf->SetDisplayMode('fullpage','two');
                 $html = createHeader();
@@ -34,8 +37,14 @@ if (isset($_GET['controller'])) {
                 $mpdf->setWatermarkText(getWaterMark(), 0.1);
                 $mpdf->showWatermarkText = true;
 
-                $mpdf->WriteHTML($html);
-                $mpdf->Output(getFileName(), 'I');
+                try {
+                    $mpdf->WriteHTML($html);
+                } catch (\Mpdf\MpdfException $e) {
+                }
+                try {
+                    $mpdf->Output(getFileName(), 'I');
+                } catch (\Mpdf\MpdfException $e) {
+                }
                 exit;
             } else {
                 echo 'Error: no existe el metodo "' . $_GET['opt'] . '" ';
@@ -92,10 +101,13 @@ function debug($pdf) {
 
 function createHeader() {
     $header = "";
-    if (isset($_GET['logo']) && $_GET['logo'] != "") {
+    $newLogo = getLogo();
+
+    //if (isset($_GET['logo']) && $_GET['logo'] != "") {
+    if($newLogo !== "") {
         $monthLabel = '';
         $header .= '<div style="margin-bottom: 10px;">';
-        $header .=      '<img src="' . $_GET['logo'] . '">';
+        $header .=      '<img src="' . $newLogo . '" style="width: 250px;">';
         if (isset($_GET['pdfTitel'])) {
             if (isset($_GET['month'])) {
                 if ($_GET['month'] == 'all') {
@@ -131,4 +143,8 @@ function getWaterMark() {
     if (isset($_GET['waterMark']) && $_GET['waterMark'] != "") {
         return $_GET['waterMark'];
     }
+}
+
+function getLogo() {
+    return HTTP_HOST . '/images/logo-formas-naranja.png';
 }

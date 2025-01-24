@@ -150,7 +150,7 @@
     function moreProducts(target) {
         var html = '<tr id="product' + products + '" class="table-success">';
         html +=     '<td>';
-        html += '<select class="form-control products" id="select' + products + '" name="products[]">';
+        html += '<select class="form-select products" id="select' + products + '" name="products[]">';
         html +=         '<option value="">Seleccione un producto</option>';
         <?php
         foreach ($data['products'] as $product) {
@@ -160,7 +160,7 @@
         html +=         '</select>';
         html +=     '</td>';
         html +=     '<td>';
-        html += '<select class="form-control categories" id="category' + products + '" name="categories[]">';
+        html += '<select class="form-select categories" id="category' + products + '" name="categories[]">';
         html +=         '<option value="">Seleccione un producto</option>';
         <?php
         foreach ($data['categories'] as $category) {
@@ -733,7 +733,7 @@
                 <div class="form-group row">
                     <label for="deliveryrange" class="col-sm-2 col-form-label">Fecha de entrega</label>
                     <div class="col-sm-10">
-                        <select name="deliveryrange" id="deliveryrange" class="form-control" <?php echo $disabled; ?>>
+                        <select name="deliveryrange" id="deliveryrange" class="form-select" <?php echo $disabled; ?>>
                             <option value="">Seleccione un rango</option>
                             <?php
                                 global $deliveryRanges;
@@ -751,7 +751,7 @@
                 <div class="form-group row">
                     <label for="deliverymonth" class="col-sm-2 col-form-label">Mes de entrega</label>
                     <div class="col-sm-10">
-                        <select name="deliverymonth" id="deliverymonth" class="form-control" <?php echo $disabled; ?>>
+                        <select name="deliverymonth" id="deliverymonth" class="form-select" <?php echo $disabled; ?>>
                             <option value="">Seleccione un mes</option>
                             <?php
                             for ($i = 1; $i < 13; $i++) {
@@ -768,7 +768,7 @@
                 <div class="form-group row">
                     <label for="deliveryzone" class="col-sm-2 col-form-label">Zona de entrega</label>
                     <div class="col-sm-10">
-                        <select name="deliveryzone" id="deliveryzone" class="form-control" <?php echo $disabled; ?>>
+                        <select name="deliveryzone" id="deliveryzone" class="form-select" <?php echo $disabled; ?>>
                             <option value="">Seleccione una zona</option>
                             <?php
                                 $zones = getZones();
@@ -808,7 +808,7 @@
                 <div class="form-group row">
                     <label for="deliveryzone" class="col-sm-2 col-form-label">Estado del pago</label>
                     <div class="col-sm-10">
-                        <select name="pendingstatus" id="pendingstatus" class="form-control" <?php echo $disabled; ?>>
+                        <select name="pendingstatus" id="pendingstatus" class="form-select" <?php echo $disabled; ?>>
                             <?php
                             global $pandingstatus;
                             foreach ($pandingstatus as $key => $value) {
@@ -825,7 +825,7 @@
                 <div class="form-group row">
                     <label for="deliveryzone" class="col-sm-2 col-form-label">Mediante</label>
                     <div class="col-sm-10">
-                        <select name="paymethod" id="paymethod" class="form-control" <?php echo $disabled; ?>>
+                        <select name="paymethod" id="paymethod" class="form-select" <?php echo $disabled; ?>>
                             <option value="">Seleccione una forma de pago</option>
                             <?php
                             global $paymethods;
@@ -849,7 +849,7 @@
                 <div class="form-group row">
                     <label for="status" class="col-sm-2 col-form-label">Estado de pedido</label>
                     <div class="col-sm-10">
-                        <select id="status" name="status" class="form-control" onchange="checkChangeStatus();" <?php echo !$data['data'] ? 'disabled="disabled"' : $disabled; ?>>
+                        <select id="status" name="status" class="form-select" onchange="checkChangeStatus();" <?php echo !$data['data'] ? 'disabled="disabled"' : $disabled; ?>>
                             <?php
                                 global $status;
                                 foreach ($status as $key => $value) {

@@ -42,7 +42,7 @@
             <div>
             	<div class="form-group">
 	                <label for="productname">Acabado</label>
-	                <select class="form-control" name="finishid" id="finishid">
+	                <select class="form-select" name="finishid" id="finishid">
 	                	<option value="">Acabado</option>
 	                	<?php
 	                		$finishes = $myController->getJsonFinishes();
@@ -61,7 +61,7 @@
 
             <div class="form-group">
                 <label for="active">Activo</label>
-                <select class="form-control" name="active">
+                <select class="form-select" name="active">
                     <option value="1" <?php echo($data && $data->active == 1 ? 'selected="selected"' : ''); ?>>Si</option>
                     <option value="0" <?php echo($data && $data->active == 0 ? 'selected="selected"' : ''); ?>>No</option>
                 </select>

@@ -3,11 +3,17 @@
     $(document).ready(function(){
         $("#search-box").keyup(function(){
             if ($(this).val() != "" && $(this).val().length > 1) {
+                let config = {
+                    searchBox: '#search-box',
+                    inputId: '#parentcode',
+                    suggestionBox: '#suggesstion-box'
+                };
                 $.ajax({
                     type: "POST",
                     url: "/ajax.php",
                     data: {
                         keyword: $(this).val(),
+                        config: config,
                         op: 'getAutocompleteCode',
                     },
                     beforeSend: function () {
@@ -368,7 +374,9 @@
         <?php update_icon(getUrl('show_pdfs', $myController->getUrls())); ?>
         <form action="<?php echo getUrl('show_pdfs', $myController->getUrls()); ?>" method="post" id="frm1">
             <div class="form-group row">
-                <label for="purchasedate" class="col-sm-1 col-form-label">Mes <?php icon('calendar', true);?></label>
+                <label for="purchasedate" class="col-sm-1 col-form-label">
+                    <h6 class="filter-label-icon">Mes <?php icon('calendar', true);?></h6>
+                </label>
                 <div class="col-sm-2">
                     <?php
                     	if (userWithPrivileges()) {
@@ -380,7 +388,9 @@
                 	?>
                 </div>
                 <?php if (userWithPrivileges()){ ?>
-                <label for="year" class="col-sm-1 col-form-label">Año <?php icon('calendar', true);?></label>
+                <label for="year" class="col-sm-1 col-form-label">
+                    <h6 class="filter-label-icon">Año <?php icon('calendar', true);?></h6>
+                    </label>
                 <div class="col-sm-2">
                     <?php generateSelectYear(2017, "", false); ?>
                 </div>
@@ -401,9 +411,11 @@
             global $user;
             if (isadmin() || $user->getUsermanager() == 1 || $user->getUseraccounting() == 1 || $user->getUserrepository() == 1) { ?>
                 <div class="form-group row">
-                    <label for="purchasedate" class="col-sm-1 col-form-label">Usuario <?php icon('user', true);?></label>
+                    <label for="purchasedate" class="col-sm-1 col-form-label">
+                        <h6 class="filter-label-icon">Usuario <?php icon('user', true);?></h6>
+                    </label>
                     <div class="col-sm-2">
-                        <select name="user" class="form-control">
+                        <select name="user" class="form-select">
                             <option value="">Elije uno</option>
                             <?php
                                 $users = getUsers();
@@ -416,9 +428,11 @@
                         </select>
                     </div>
 
-                    <label for="purchasedate" class="col-sm-1 col-form-label">Tienda <?php icon('home', true);?></label>
+                    <label for="purchasedate" class="col-sm-1 col-form-label">
+                    <h6 class="filter-label-icon">Tienda <?php icon('home', true);?></h6>
+                    </label>
                     <div class="col-sm-2">
-                        <select name="store" class="form-control">
+                        <select name="store" class="form-select">
                             <option value="">Elija una tienda</option>
                             <option value="all" <?php echo isset($_POST['store']) && $_POST['store'] == "all" ? 'selected="selected"' : "" ?>>Todas</option>
                             <?php
@@ -437,18 +451,24 @@
             <?php } ?>
                 <div class="form-group row">
                     <?php if (userWithPrivileges()) { ?>
-                      <label for="from" class="col-sm-1 col-form-label">Desde <?php icon('calendar', true);?></label>
+                      <label for="from" class="col-sm-1 col-form-label">
+                      <h6 class="filter-label-icon">Desde <?php icon('calendar', true);?></h6>
+                      </label>
                       <div class="col-sm-2">
                           <input type="text" name="from" id="from" class="form-control">
                       </div>
-                      <label for="to" class="col-sm-1 col-form-label">Hasta <?php icon('calendar', true);?></label>
+                      <label for="to" class="col-sm-1 col-form-label">
+                      <h6 class="filter-label-icon">Hasta <?php icon('calendar', true);?></h6>
+                      </label>
                       <div class="col-sm-2">
                           <input type="text" name="to" id="to" class="form-control">
                       </div>
                     <?php } ?>
-                    <label for="to" class="col-sm-1 col-form-label">Tipo <?php icon('exchange', true); ?></label>
+                    <label for="to" class="col-sm-1 col-form-label">
+                        <h6 class="filter-label-icon">Tipo <?php icon('exchange', true); ?></h6>
+                    </label>
                     <div class="col-sm-2">
-                        <select name="saletype" class="form-control">
+                        <select name="saletype" class="form-select">
                             <option value="all">Todos</option>
                             <?php
                                 global $saletypes;
@@ -461,16 +481,20 @@
                 </div>
 
                 <div class="form-group row">
-                    <label for="from" class="col-sm-1 col-form-label">Nº de pedido <?php icon('barcode', true); ?></label>
+                    <label for="from" class="col-sm-1 col-form-label">
+                        <h6 class="filter-label-icon">Nº de pedido <?php icon('barcode', true); ?></h6>
+                    </label>
                     <div class="col-sm-4">
                         <input type="text" id="search-box" class="form-control" placeholder="Código o nombre del cliente">
                         <input type="hidden" name="code" id="code" class="form-control" value="">
                         <div id="suggesstion-box" style="position: absolute; z-index: 10000;"></div>
                     </div>
                     <?php if (userWithPrivileges()) { ?>
-	                    <label for="commission" class="col-sm-1 col-form-label">Sólo con propuesta <?php icon('money', true); ?></label>
+	                    <label for="commission" class="col-sm-1 col-form-label">
+                            <h6 class="filter-label-icon">Sólo con propuesta <?php icon('money', true); ?></h6>
+                        </label>
 	                    <div class="col-sm-1">
-	                        <select name="commission" class="form-control">
+	                        <select name="commission" class="form-select">
 	                        	<option value="no">No</option>
 	                        	<option value="yes">Si</option>
 	                        </select>
@@ -487,15 +511,13 @@
 </div>
 
 <!-- Modal de validación total -->
-<div aria-labelledby="exampleModalLiveLabel" role="dialog" tabindex="-1" class="modal fade show" id="checkTotal">
+<div aria-labelledby="exampleModalLiveLabel" role="dialog" tabindex="-1" class="modal fade" id="checkTotal">
     <div role="document" class="modal-dialog">
         <form id="totalValidationForm">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 id="exampleModalLiveLabel" class="modal-title">Validar total <?php icon('money', true); ?></h5>
-                    <button aria-label="Close" data-dismiss="modal" class="close" type="button">
-                        <span aria-hidden="true">×</span>
-                    </button>
+                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="container-fluid">
@@ -520,7 +542,7 @@
                 <div class="modal-footer">
                     <button class="btn btn-primary" type="button" onclick="checkTotal();">Guardar validación</button>
                     <?php spinner_icon('spinner', 'sp-in-comment', true); ?>
-                    <button data-dismiss="modal" class="btn btn-secondary" type="button">Salir</button>
+                    <button data-bs-dismiss="modal" class="btn btn-secondary" type="button">Salir</button>
                 </div>
             </div>
         </form>
@@ -528,15 +550,13 @@
 </div>
 
 <!-- Modal de validación abono -->
-<div aria-labelledby="exampleModalLiveLabel" role="dialog" tabindex="-1" class="modal fade show" id="checkPayment">
+<div aria-labelledby="exampleModalLiveLabel" role="dialog" tabindex="-1" class="modal fade" id="checkPayment">
     <div role="document" class="modal-dialog">
         <form id="validationForm">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 id="exampleModalLiveLabel" class="modal-title">Validar pago <?php icon('money', true); ?></h5>
-                    <button aria-label="Close" data-dismiss="modal" class="close" type="button">
-                        <span aria-hidden="true">×</span>
-                    </button>
+                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="container-fluid">
@@ -561,7 +581,7 @@
                 <div class="modal-footer">
                     <button class="btn btn-primary" type="button" onclick="checkPayment();">Guardar confirmación</button>
                     <?php spinner_icon('spinner', 'sp-in-comment', true); ?>
-                    <button data-dismiss="modal" class="btn btn-secondary" type="button">Salir</button>
+                    <button data-bs-dismiss="modal" class="btn btn-secondary" type="button">Salir</button>
                 </div>
             </div>
         </form>
@@ -569,15 +589,13 @@
 </div>
 
 <!-- Modal de comisión -->
-<div aria-labelledby="exampleModalLiveLabel" role="dialog" tabindex="-1" class="modal fade show" id="checkcommission">
+<div aria-labelledby="exampleModalLiveLabel" role="dialog" tabindex="-1" class="modal fade" id="checkcommission">
     <div role="document" class="modal-dialog">
         <form id="commissionForm">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 id="exampleModalLiveLabel" class="modal-title">Validar propuesta <?php icon('money', true); ?></h5>
-                    <button aria-label="Close" data-dismiss="modal" class="close" type="button">
-                        <span aria-hidden="true">×</span>
-                    </button>
+                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="container-fluid">
@@ -600,7 +618,7 @@
                 <div class="modal-footer">
                     <button class="btn btn-primary" type="button" onclick="checkPaymentcommission();">Guardar validación de propuesta</button>
                     <?php spinner_icon('spinner', 'sp-in-comment', true); ?>
-                    <button data-dismiss="modal" class="btn btn-secondary" type="button">Salir</button>
+                    <button data-bs-dismiss="modal" class="btn btn-secondary" type="button">Salir</button>
                 </div>
             </div>
         </form>
@@ -608,15 +626,13 @@
 </div>
 
 <!-- Modal de cancelación -->
-<div aria-labelledby="exampleModalLiveLabel" role="dialog" tabindex="-1" class="modal fade show" id="cancelSale">
+<div aria-labelledby="exampleModalLiveLabel" role="dialog" tabindex="-1" class="modal fade" id="cancelSale">
     <div role="document" class="modal-dialog">
         <form id="cancelForm">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 id="exampleModalLiveLabel" class="modal-title">Anular <span id="typeLabel">venta</span> <?php icon('delete', true); ?></h5>
-                    <button aria-label="Close" data-dismiss="modal" class="close" type="button">
-                        <span aria-hidden="true">×</span>
-                    </button>
+                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="container-fluid">
@@ -635,7 +651,7 @@
                 <div class="modal-footer">
                     <button class="btn btn-primary" type="button" onclick="cancellSale();">Anular <span id="btncancel-Label">venta</span></button>
                     <?php spinner_icon('spinner', 'sp-in-comment', true); ?>
-                    <button data-dismiss="modal" class="btn btn-secondary" type="button">Salir</button>
+                    <button data-bs-dismiss="modal" class="btn btn-secondary" type="button">Salir</button>
                 </div>
             </div>
         </form>
@@ -643,15 +659,13 @@
 </div>
 
 <!-- Modal de validación pendiente de pago -->
-<div aria-labelledby="exampleModalLiveLabel" role="dialog" tabindex="-1" class="modal fade show" id="checkPendingPay">
+<div aria-labelledby="exampleModalLiveLabel" role="dialog" tabindex="-1" class="modal fade" id="checkPendingPay">
     <div role="document" class="modal-dialog">
         <form id="pendingPayAdjustForm">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 id="exampleModalLiveLabel" class="modal-title">Ajustar pendiente de pago <?php icon('money', true); ?></h5>
-                    <button aria-label="Close" data-dismiss="modal" class="close" type="button">
-                        <span aria-hidden="true">×</span>
-                    </button>
+                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="container-fluid">
@@ -676,7 +690,7 @@
                                 <div class="form-group row">
                                     <label for="total_checked_on" class="col-sm-4 col-form-label">Mediante</label>
                                     <div class="col-sm-8">
-                                        <select name="paymethod" id="pendingpay_method" class="form-control">
+                                        <select name="paymethod" id="pendingpay_method" class="form-select">
                                             <option value="">Elija una opción</option>
                                             <?php
                                             global $paymethods;
@@ -708,7 +722,7 @@
                         <label id="adjust-lbl">Guardar</label> ajuste
                     </button>
                     <?php spinner_icon('spinner', 'sp-in-adjust', true); ?>
-                    <button data-dismiss="modal" class="btn btn-secondary" type="button">Salir</button>
+                    <button data-bs-dismiss="modal" class="btn btn-secondary" type="button">Salir</button>
                 </div>
             </div>
         </form>

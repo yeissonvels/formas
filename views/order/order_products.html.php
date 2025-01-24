@@ -76,7 +76,7 @@
                             foreach ($data['data']->getItems() as $item) {
                                 echo '<tr id="product' . $i . '" class="table-success">';
                                 echo    '<td>';
-                                echo        '<select class="form-control products" name="products[]" id="select' . $i . '"' . $disabled . '>' . PHP_EOL;
+                                echo        '<select class="form-select products" name="products[]" id="select' . $i . '"' . $disabled . '>' . PHP_EOL;
                                 echo            '<option value="">Seleccione un producto</option>' . PHP_EOL;
                                 foreach ($data['products'] as $product) {
                                     $selected = "";
@@ -88,7 +88,7 @@
                                 echo        '</select>' . PHP_EOL;
                                 echo    '</td>' . PHP_EOL;
                                 echo    '<td>';
-                                echo        '<select class="form-control categories" name="categories[]" id="category' . $i . '" ' . $disabled . '>' . PHP_EOL;
+                                echo        '<select class="form-select categories" name="categories[]" id="category' . $i . '" ' . $disabled . '>' . PHP_EOL;
                                 echo            '<option value="">Seleccione una categoría</option>' . PHP_EOL;
                                 foreach ($data['categories'] as $category) {
                                     $selected = "";
@@ -134,7 +134,7 @@
                             ?>
                             <tr class="table-success">
                                 <td>
-                                    <select class="form-control products" name="products[]" id="select1" <?php echo $disabled; ?>>
+                                    <select class="form-select products" name="products[]" id="select1" <?php echo $disabled; ?>>
                                         <option value="">Seleccione un producto</option>
                                         <?php
                                         foreach ($data['products'] as $product) {
@@ -144,7 +144,7 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <select class="form-control categories" name="categories[]" id="categorie1" <?php echo $disabled; ?>>
+                                    <select class="form-select categories" name="categories[]" id="categorie1" <?php echo $disabled; ?>>
                                         <option value="">Seleccione una categoria</option>
                                         <?php
                                         foreach ($data['categories'] as $category) {

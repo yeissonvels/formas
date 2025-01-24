@@ -42,6 +42,13 @@ class AjaxRequest
 
         } else if (isset($_POST['op']) || isset($_POST['opt'])) {
             $request = isset($_POST['op']) ? $_POST['op'] : $_POST['opt'];
+
+            // Nuevo 2025: evitamos tener que crear una opción en el array
+            if (method_exists($this, $request)) {
+                $this->$request();
+                exit;
+            }
+
             $options = array(
                 'savepdf' => 'savePdf',
                 'uploadIcon' => 'uploadIcon',
@@ -53,6 +60,7 @@ class AjaxRequest
                 'listDir' => 'listFilesFromDir',
                 'saveUserPermissions' => 'saveUserPermissions',
                 'comprobateUsername' => 'comprobateUsername',
+                'comprobateUsercode' => 'comprobateUsercode',
                 'comprobateEmail' => 'comprobateEmail',
                 'saveMenuPermissions' => 'saveMenuPermissions',
                 'getClassMethods' => 'getClassMethods',
@@ -102,7 +110,7 @@ class AjaxRequest
                 'updateAdjustPendingPay' => 'updateAdjustPendingPay'
             );
 
-            if (method_exists($this, $options[$request])) {
+            if (isset($options[$request]) && method_exists($this, $options[$request])) {
                 $method = $options[$request];
                 $this->$method();
             } else {
@@ -192,26 +200,6 @@ class AjaxRequest
         uploadIcon2();
     }
 
-    function getTruckIncomes()
-    {
-        $user = $this->user;
-        $criteria = $_GET['search'];
-
-        $income = new IncomeModel();
-
-        $result = $income->getIncomesByAjaxSearch($criteria);
-        $view_path = getGetValue('controller_view_path');
-
-        include($view_path . '/show_incomes.html.php');
-        incomesComplementTable($result, $criteria);
-    }
-
-    function saveAdvancePayment()
-    {
-        $model = new AdvanceController();
-        $model->saveAdvancePayment();
-    }
-
     function uploadFiles($dir, $id, $pdfname = "", $showmsg)
     {
         require_once "classes/UploadFile.php";
@@ -240,7 +228,7 @@ class AjaxRequest
         }
 
         $loader = new LoadFile($options);
-        return $loader->uploadFiles(false, $id, $pdfname, $showmsg);
+        return $loader->uploadFiles($pdfname, $showmsg, false);
 
     }
 
@@ -256,7 +244,7 @@ class AjaxRequest
         );
 
         $loader = new LoadFile($options);
-        $loader->uploadFiles(true);
+        $loader->uploadFiles('', '', false);
 
     }
 
@@ -314,6 +302,18 @@ class AjaxRequest
         $controller = new $_POST['controller']();
 
         if ($controller->existUsername($username)) {
+            echo "si";
+        } else {
+            echo "no";
+        }
+    }
+
+    function comprobateUsercode()
+    {
+        $usercode = $_POST['usercode'];
+        $controller = new $_POST['controller']();
+
+        if ($controller->existUsercode($usercode)) {
             echo "si";
         } else {
             echo "no";
@@ -465,7 +465,18 @@ class AjaxRequest
             $code = $controller->getCodeByParentId();
             $_POST['code'] = $code;
         }
+
+        // Obtenemos el código del presupuesto: desde el formulario se envía el id del presupuesto
+        $estimateData = $controller->getEstimateData($_POST['code']);
+        
+        $_POST['code'] = $estimateData->code;
         $result = $controller->saveSale();
+
+
+        if((isset($result['saved']) && $result['saved'] == 1) /*||  (isset($result['updated']) && $result['updated'] == 1)*/) {
+            $controller->updateEstimateStatus($estimateData->id);
+        }
+
         echo json_encode($result);
     }
 
@@ -845,6 +856,28 @@ class AjaxRequest
         include($tpl);
     }
 
+    function getStoreProfilDateFilter() {
+        // Si es enero o febrero como a los empleados les ocultamos el filtro de año,
+        // en el selector les hemos activado noviembre y diciembre para que puedan acceder
+        // a ventas del año anterior
+        if (date('m') < 3) {
+            if (!userWithPrivileges() && $_POST['month'] >= 11) {
+                $_POST['year'] = date('Y') - 1;
+            }
+        }
+    }
+
+    function searchEstimates() {
+        $tpl = VIEWS_PATH . "store/dynamic_estimates" . VIEW_EXT;
+        $controller = new StoreController();
+        $this->getStoreProfilDateFilter();
+        $conf = new stdClass();
+
+        $data = $controller->getEstimates();
+
+        include($tpl);
+    }
+
     function getAutocompleteCode() {
         $noCancelled = false;
         if (isset($_POST['nocancelled'])) {
@@ -852,6 +885,7 @@ class AjaxRequest
         }
         $controller = new StoreController();
         $results = $controller->getAutocompleteCode($noCancelled);
+        $config = implode(',', $_POST['config']);
 
         ?>
         <ul id="code-list" class="list-group">
@@ -860,12 +894,49 @@ class AjaxRequest
             foreach($results as $result) {
                 $code = $result->code . ' (' . americaDate($result->saledate, false) . ') ' . $result->customer;
                 ?>
-                <li class="list-group-item cursor-pointer" onClick="selectCode('<?php echo $result->id; ?>', '<?php echo $code; ?>');"><?php echo $code; ?></li>
+                <li class="list-group-item cursor-pointer" onClick="selectCode('<?php echo $result->id; ?>', '<?php echo $code; ?>','<?php echo $config; ?>');"><?php echo $code; ?></li>
             <?php } ?>
         <?php } else { ?>
             <li class="list-group-item cursor-pointer"><span class="red-color">Sin resultados</span></li>
         <?php } ?>
         </ul><?php
+    }
+
+    function getAutocompleteEstimateCode() {
+        $noCancelled = false;
+        if (isset($_POST['nocancelled'])) {
+            $noCancelled = true;
+        }
+        $controller = new StoreController();
+        $results = $controller->getAutocompleteEstimateCode($noCancelled);
+        $config = implode(',', $_POST['config']);
+
+        ?>
+        <ul id="code-list" class="list-group">
+        <?php
+        if (count($results) > 0) {
+            foreach($results as $result) {
+                $code = 'Nº Pre. [' . $result->code . '] - ' . americaDate($result->saledate, false) . ' - ' . $result->customer;
+                ?>
+                <li class="list-group-item cursor-pointer" onClick="selectEstimateCode('<?php echo $result->id; ?>', '<?php echo $code; ?>','<?php echo $config; ?>');"><?php echo $code; ?></li>
+            <?php } ?>
+        <?php } else { ?>
+            <li class="list-group-item cursor-pointer"><span class="red-color">Sin resultados</span></li>
+        <?php } ?>
+        </ul><?php
+    }
+
+    function getEstimateData() {
+        $controller = new StoreController();
+        $estimateData = $controller->getEstimateData($_POST['id']);
+        
+        if($estimateData) {
+            $estimateData->total = numberFormat($estimateData->total, true, 2);
+            echo json_encode($estimateData);
+        } else {
+            echo json_encode([]);
+        }
+        
     }
 	
 	function getAutocompleteProduct() {
@@ -1232,6 +1303,153 @@ class AjaxRequest
 		$_POST['pending_payed_on'] = from_calendar_to_date($_POST['pending_payed_on']);
         $result = $controller->updateSale();
         echo json_encode($result);
+    }
+
+    function saveEstimate() {
+        global $user;
+        $controller = new StoreController();
+        $_POST['saledate'] = from_calendar_to_date($_POST['saledate']);
+
+        //$_POST['storeid'] = $user->getStoreid();
+        
+        $_POST['created_on'] = date('Y-m-d H:i:s');
+        $_POST['created_by'] = $user->getId();
+        //$_POST['concept'] = escapeSerialized($_POST['concept']);
+        $_POST['storeid'] = $user->getStoreId();
+        // El formulario de guardado y actualización es el mismo, en el guardado el id viene vacío.
+
+        $mailInfo = $_POST;
+        if (isset($_POST['id'])) {
+            unset($_POST['id']);
+        }
+
+        $result = $controller->saveEstimate();
+        if($result['saved'] && $result['saved'] == 1) {
+            // Enviamos correo
+            $mailInfo['saledate'] = date('d-m-Y H:i:s');
+            $mailInfo['id'] = $result['lastid'];
+            $mailInfo['store'] = getStoreName($user->getStoreId());
+            $mailInfo['user'] = $user->getUsername();
+            $controller->notifyNewEstimate("yeisson.velez@gmail.com", "Nuevo presupuesto creado", $mailInfo);
+        }
+
+        echo json_encode($result);
+    }
+
+    function saveEstimateComment() {
+        global $user;
+        $tpl = VIEWS_PATH . 'store/pdf_comments' . VIEW_EXT;
+        $_POST['created_by'] = $user->getId();
+        $_POST['created_on'] = date('Y-m-d H:i:s');
+        $controller = new StoreController();
+        $table = $controller->getEstimateCommentsTable();
+        $controller->saveComment($table);
+        $data = new stdClass();
+        $_GET['id'] = $_POST['estimateid'];
+        $data->comments =  $controller->getNewPdfComments(0, $table, "estimateid");
+        include ($tpl);
+    }
+
+    /**
+     * En principio se había pensado para imágenes pero ahora es posible subir rt, doc, docx
+     */
+    function uploadEstimateDocument() {
+        $alloweds = array('png', 'PNG', 'jpg', 'JPG', 'doc', 'docx', 'rtf', 'pdf');
+        $docs = array('doc', 'docx', 'rtf', 'pdf');
+        $imageType = $_POST['imageType'];
+        unset($_POST['imageType']);
+
+        if ($imageType == 'primary') {
+            $dir = array('', 'secondary');
+        } else {
+            array_push($alloweds, 'rtf');
+            array_push($alloweds, 'doc');
+            array_push($alloweds, 'docx');
+            $dir = array('estimates', 'secondary');
+        }
+
+        $orderid = $_POST['orderid'];
+        $aux = $_FILES['file-0']['name'];
+        $fileExt = explode('.', $aux);
+        $fileExt = $fileExt[1];
+
+        // Si no es imagen mostramos un error
+        if (!in_array($fileExt, $alloweds)) {
+            if ($imageType == 'primary') {
+                $result['sucess'] = 0;
+                $result['html'] = errorMsg("Error al subir el archivo! ¿Es correcto el formato (png, jpg)?", false);
+                echo json_encode($result);
+            } else {
+                errorMsg("Error al subir el archivo! ¿Es correcto el formato (png, jpg)?");
+            }
+            exit;
+        }
+
+
+        $iName = 'Imagen_';
+        $fExt = getFileExtension($fileExt);
+        if (in_array($fExt, $docs)) {
+            $iName = 'Documento_';
+        }
+
+
+        $imageName = $iName . $orderid . "-" . date('d_m_Y-H_i_s') . "." . $fileExt;
+        $response = $this->uploadFiles($dir, $orderid, $imageName, false);
+        unset($_POST['orderid']);
+
+        if ($response) {
+            // La imagen principal la guardamos en la raiz images/orderid
+            if ($imageType == "primary") {
+                $controller = new StoreController();
+                // Obtenemos los comentarios anteriores
+                $_POST['id'] = $orderid;
+                $_POST['image'] = $imageName;
+
+                // Nos vale la función updatePdfCode para actualizar el nombre del pdf
+                //$controller->updatePdfCode();
+
+                $html = 'Archivo cargado correctamente: ';
+                $path = '/uploaded-files/' . $dir . '/' . $orderid . '/' . $imageName;
+                $html .= '<a href="' . $path . '" target="_blank">' . icon('image', false) . '</a><br><br>';
+                //$html .= '<input type="button" class="btn btn-success" value="Enviar PDF al almacén" onclick="confirmSend(' . $orderid . ')">';
+
+                $result['success'] = 1;
+                $result['html'] = confirmationMessage($html, false);
+                echo json_encode($result);
+            } else {
+                // La imagen principal la guardamos en la raiz images/orderid/secondary
+                $config = array(
+                    'divresponse' => $_POST['divresponse'],
+                    'excludes' => array()
+                );
+                listDirectoryTableFormat('uploaded-files/estimates/' . $orderid . '/secondary', true, $config);
+            }
+        } else {
+            $result['sucess'] = 0;
+            $result['html'] = errorMsg("Error al subir el archivo! ¿Es correcto el formato (png, jpg)?", false);
+        }
+    }
+
+    function updateEstimate() {
+        $controller = new StoreController();
+        $_POST['saledate'] = from_calendar_to_date($_POST['saledate']);
+        if (isset($_POST['total'])) {
+            $_POST['total'] = formatNumberToDB($_POST['total']);
+        }
+
+        $result = $controller->updateEstimate();
+        echo json_encode($result);
+    }
+
+    function checkIfAnotherEstimateRegisteredWithTel() {
+        $tel = $_POST['tel'];
+        $controller = new $_POST['controller']();
+
+        if ($controller->checkIfAnotherEstimateRegisteredWithTel($tel)) {
+            echo "si";
+        } else {
+            echo "no";
+        }
     }
 }
 

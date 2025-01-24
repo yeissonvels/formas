@@ -132,7 +132,7 @@
                 } else if ($pdf->saletype == 3) {
                     $icon = 'calculator';
                 }
-                echo $saletypes[$pdf->saletype] . ' ' . icon($icon, false);
+                echo ($saletypes[$pdf->saletype] ?? '') . ' ' . icon($icon, false);
                 ?>
             </td>
             <td><?php echo americaDate($pdf->saledate, false); ?></td>
@@ -195,7 +195,7 @@
                         } else {
                             echo '<span class="red-color">No validado<br>';
                             if ($user->getUserrepository() != 1) {
-                                echo '<input type="button" value="Validar total" class="btn btn-success" style="font-size: 8px;" data-target="#checkTotal" data-toggle="modal" onclick="setTotalId(' . $pdf->id . ')">';
+                                echo '<input type="button" value="Validar total" class="btn btn-success" style="font-size: 8px;" data-bs-target="#checkTotal" data-bs-toggle="modal" onclick="setTotalId(' . $pdf->id . ')">';
                             }
 
                         }
@@ -215,14 +215,14 @@
                                 $title .= '<b>Nota: </b>' . $pdf->accounting_checked_note;
                                 $html = '<a class="withqtip cursor-pointer" title="' . $title . '">' . icon('checked') . ' ' . icon('comments') . '</a>';
                                 if (!isTimeOver($pdf->accounting_checked_system_date) || $user->getUsermanager() == 1) {
-                                    $html .= '<br><a class="cursor-pointer" data-target="#checkPayment" data-toggle="modal" onclick="changeValidate(' . $pdf->id . ');">Cambiar' . icon('edit') . '</a>';
+                                    $html .= '<br><a class="cursor-pointer" data-bs-target="#checkPayment" data-bs-toggle="modal" onclick="changeValidate(' . $pdf->id . ');">Cambiar' . icon('edit') . '</a>';
                                     $html .= '<br><a class="cursor-pointer red-color" onclick="deleteValidation(' . $pdf->id . ');">Eliminar' . icon('delete') . '</a>';
                                 }
                                 echo $html;
                             } else {
                                 echo '<span class="red-color">No validado</span><br>';
                                 if ($user->getUserrepository() != 1) {
-                                    echo '<input type="button" value="Validar pago" class="btn btn-success" style="font-size: 8px;" data-target="#checkPayment" data-toggle="modal" onclick="setPaymentId(' . $pdf->id . ')">';
+                                    echo '<input type="button" value="Validar pago" class="btn btn-success" style="font-size: 8px;" data-bs-target="#checkPayment" data-bs-toggle="modal" onclick="setPaymentId(' . $pdf->id . ')">';
                                 }
 
                             }
@@ -314,7 +314,7 @@
                         } else {
                             $commison =  '<br><span class="red-color">No validada</span>';
                             if (isadmin() || $user->getUsermanager() == 1 && !$cancelled) {
-                                $commison .= '<input type="button" value="Validar propuesta" class="btn btn-success" style="font-size: 8px;" data-target="#checkcommission" data-toggle="modal" onclick="setcommissionId(' . $pdf->id . ')">';
+                                $commison .= '<input type="button" value="Validar propuesta" class="btn btn-success" style="font-size: 8px;" data-bs-target="#checkcommission" data-bs-toggle="modal" onclick="setcommissionId(' . $pdf->id . ')">';
                             }
                             echo $commison;
                         }
@@ -365,7 +365,7 @@
                             }
                         } else {
                             $myCode = $_POST['code'] != "" ? $_POST['code'] : $pdf->parentcode;
-                            echo '<br><a href="#" onclick="setAdjustid(' . $myCode . ', \''. $pdf->code .'\', \'update\', ' . $pdf->id . ')" data-toggle="modal" data-target="#checkPendingPay" title="Ajustar pendiente de pago">' . icon('calculator') . '</a>';
+                            echo '<br><a href="#" onclick="setAdjustid(' . $myCode . ', \''. $pdf->code .'\', \'update\', ' . $pdf->id . ')" data-bs-toggle="modal" data-bs-target="#checkPendingPay" title="Ajustar pendiente de pago">' . icon('calculator') . '</a>';
                         }
                     }
                     ?>
@@ -374,7 +374,7 @@
             if (isadmin() || $user->getUsermanager() == 1) {
                 echo '<td id="td-delete-' . $pdf->id . '">';
                 if (!$cancelled && $pdf->saletype != 3) {
-                    echo '<a class="cursor-pointer red-color" data-target="#cancelSale" data-toggle="modal" onclick="setSaleToCancelId(\'' . $pdf->code . '\', '. $pdf->id . ', '. $pdf->saletype .');">' . icon('delete', false) . '</a>';
+                    echo '<a class="cursor-pointer red-color" data-bs-target="#cancelSale" data-bs-toggle="modal" onclick="setSaleToCancelId(\'' . $pdf->code . '\', '. $pdf->id . ', '. $pdf->saletype .');">' . icon('delete', false) . '</a>';
                 }
                 echo '</td>';
             }
@@ -437,7 +437,7 @@
                 echo '<b>' . $totalPending . ' &euro;</b>';
                 if (isadmin() || $user->getUsermanager() == 1 || $user->getUseraccounting() == 1) {
                     if ($_POST['code'] != "" && $totalPending != 0 && !$existAdjust) {
-                        echo '<br><button onclick="setAdjustid(' . $_POST['code'] . ', \''. $data[0]->code .'\', \'save\', 0)" data-toggle="modal" data-target="#checkPendingPay" value="Ajustar" class="btn btn-primary" title="Ajustar pendiente de pago">' . icon('calculator') . '</button>';
+                        echo '<br><button onclick="setAdjustid(' . $_POST['code'] . ', \''. $data[0]->code .'\', \'save\', 0)" data-bs-toggle="modal" data-bs-target="#checkPendingPay" value="Ajustar" class="btn btn-primary" title="Ajustar pendiente de pago">' . icon('calculator') . '</button>';
                     }
                 }
             ?>

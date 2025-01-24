@@ -311,7 +311,7 @@
                                class="col-sm-2 col-form-label"><?php echo trans('link_friendly')?></label>
                         <div class="col-sm-10">
                             <!--<input type="text" class="form-control" id="link_friendly"> -->
-                            <select id="link_friendly" class="form-control">
+                            <select id="link_friendly" class="form-select">
                             <?php
                                 echo '<option value="0">Ninguno</option>';
                                 foreach ($friendlyUrls as $url) {
@@ -325,7 +325,7 @@
                         <label for="parent"
                                class="col-sm-2 col-form-label"><?php echo trans('parent') ?></label>
                         <div class="col-sm-10">
-                            <select id="parent" class="form-control">
+                            <select id="parent" class="form-select">
                                 <option value="0">Root</option>
                                 <?php
                                 foreach ($parents as $parent){
@@ -348,7 +348,7 @@
                         <label for="permision"
                                class="col-sm-2 col-form-label"><?php echo trans('privileges') ?></label>
                         <div class="col-sm-10">
-                            <select name="permision" id="permision" class="form-control">
+                            <select name="permision" id="permision" class="form-select">
                                 <option value="1" selected="selected">Con permisos</option>
                                 <option value="0">Sin permisos</option>
                             </select>
@@ -359,7 +359,7 @@
                                class="col-sm-2 col-form-label"><?php echo trans('position') ?></label>
                         <div class="col-sm-10">
                             <!-- <input type="text" class="form-control" id="position"> -->
-                            <select name="position" id="position" class="form-control">
+                            <select name="position" id="position" class="form-select">
                                 <option value="">Posición</option>
                                 <?php
                                     for ($i = 0; $i <= $totalItems; $i++ ) {

@@ -120,7 +120,7 @@ class WPDB {
         $comprobate = $this->get_row($select);
         $result = FALSE; // Se inicializa a False la variable que será devuelta si la operación es exitosa por que el dato no existe
 
-        if (count($comprobate) == 0) {
+        if ($comprobate === NULL) {
             $this->query($insert);
             if ($showmsg) {
                 confirmationMessage(trans('db_data_saved'));
@@ -162,8 +162,9 @@ class WPDB {
 
         //Comprobar si el dato ya existe en el sistema
         $comprobate = $this->get_row($select);
+
         $result = FALSE; // Se inicializa a False la variable que será devuelta si la operación es exitosa por que el dato no existe
-        if (count($comprobate) == 0) {
+        if ($comprobate === NULL) {
             //echo $update;
             $this->query($update);
             if ($showmsg) {
@@ -279,7 +280,6 @@ class WPDB {
      */
     function getOneRow($table,$id) {
         $query = 'SELECT * FROM ' . $table . ' WHERE id=' . $id . ' LIMIT 1';
-
         return $this->get_row($query);
     }
 
@@ -451,6 +451,10 @@ class WPDB {
 
     function getWhere() {
         return $this->where;
+    }
+
+    function getLinker() {
+        return $this->linker;
     }
 }
 

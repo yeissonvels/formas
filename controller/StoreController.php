@@ -60,6 +60,22 @@ class StoreController extends StoreModel
                 'controller' => CONTROLLER . "&opt=show_pdfs",
                 'friendly' =>  getFriendlyByType('show_pdfs', $this->classTypeName),
             ),
+            'show_estimates' => array(
+                'controller' => CONTROLLER . "&opt=show_estimates",
+                'friendly' =>  getFriendlyByType('show_estimates', $this->classTypeName),
+            ),
+            'ajax_edit_estimate' => array(
+                'controller' => "?controller=store&opt=new_estimate&id=",
+                'friendly' =>  getFriendlyByType('new_estimate', $this->classTypeName),
+            ),
+            'edit_estimate' => array(
+                'controller' => CONTROLLER . "&opt=new_estimate&id=",
+                'friendly' =>  getFriendlyByType('new_estimate', $this->classTypeName),
+            ),
+            'new_estimate' => array(
+                'controller' => CONTROLLER . "&opt=new_estimate",
+                'friendly' =>  getFriendlyByType('new_estimate', $this->classTypeName),
+            ),
             'send_pdf' => array(
                 'controller' => CONTROLLER . "&opt=send_pdf&id=",
                 'friendly' =>  getFriendlyByType('show_pdfs', $this->classTypeName),
@@ -154,6 +170,12 @@ class StoreController extends StoreModel
     function show_pdfs($msg = "") {
         $pdfs = [];
         $tpl = VIEWS_PATH_CONTROLLER . "show_pdfs" . VIEW_EXT;
+        loadTemplate($tpl, $pdfs, $msg, $this);
+    }
+
+    function show_estimates($msg = "") {
+        $pdfs = [];
+        $tpl = VIEWS_PATH_CONTROLLER . "show_estimates" . VIEW_EXT;
         loadTemplate($tpl, $pdfs, $msg, $this);
     }
 	
@@ -354,6 +376,23 @@ class StoreController extends StoreModel
         $tpl = VIEWS_PATH_CONTROLLER . "new_store_order" . VIEW_EXT;
         loadTemplate($tpl, $data, '', $this);
 	}
+
+    function new_estimate() {
+        $data = false;
+        $parent = array();
+        // Obtiene el id desde el REQUEST_URI y lo setea en $_GET
+        getIdFromRequestUri();
+        if (isset($_GET['id'])) {
+            $data = $this->getEstimateData();
+        }
+
+        if ($data) {
+            $data->parent = $parent;
+        }
+
+        $tpl = VIEWS_PATH_CONTROLLER . "new_estimate" . VIEW_EXT;
+        loadTemplate($tpl, $data, '', $this);
+    }
 	
 	function getPdfsToDelete() {
 		$tpl = VIEWS_PATH_CONTROLLER . 'pdfs_to_delete' . VIEW_EXT;
@@ -361,4 +400,61 @@ class StoreController extends StoreModel
 		$orders = $this->getOrdersToDelete();
 		include($tpl);
 	}
+
+    function notifyNewEstimate($to, $subject, $estimateData) {
+        $message = $this->createNotifyEmailContent($estimateData);
+        $mailController = new MailerController($to, $subject, $message);
+        
+        // Como acabamos de crear el presupuesto no tenemos el id en $_POST pero si en $estimate
+        $_POST['id'] = $estimateData['id'];
+
+        if($mailController->sendEmail()) {
+            $this->updateEmailSentField();
+            //echo "Ok";
+            // Actualizamos campos emailSent = 1
+        } else {
+            //echo $mailController->getResult();
+        }
+    }
+
+    function updateEmailSentField() {
+        $_POST['email_sent'] = 1;
+        $this->updateEstimate();
+    }
+
+    function createNotifyEmailContent($estimateData) {
+        global $estimateOrigins;
+        $httpHost = HTTP_HOST;
+        $estimateOrigin = $estimateOrigins[$estimateData['estimateorigin']];
+        $id = $estimateData['id'];
+
+        $html = "<img src='cid:imagenCID' alt='Formas' style='width: 150px;'><br><br>";
+
+        $html .= "Te informamos que se ha generado un nuevo presupuesto con los siguientes datos:<br><br>";
+        
+
+        $html .= "<table>";
+        $html .= "<tr><th align='left'>Tienda</th><td>" . $estimateData['store']. "</td></tr>";
+        $html .= "<tr><th align='left'>Usuario</th><td>" . $estimateData['user']. "</td></tr>";
+        $html .= "<tr><th align='left'>Fecha del prespuesto</th><td>" . $estimateData['saledate']. "</td></tr>";
+        $html .= "<tr><th align='left'>Número de prespuesto</th><td>" . $estimateData['code']. "</td></tr>";
+        $html .= "<tr><th align='left'>Titular del presupuesto</th><td>" . $estimateData['customer']. "</td></tr>";
+        $html .= "<tr><th align='left'>Teléfono</th><td>" . $estimateData['tel']. "</td></tr>";
+        $html .= "<tr><th align='left'>Teléfono 2</th><td>" . $estimateData['tel2']. "</td></tr>";
+        $html .= "<tr><th align='left'>Importe del presupuesto</th><td>" . $estimateData['total']. " €</td></tr>";
+        $html .= "<tr><th align='left'>Origen del presupuesto</th><td>" .  $estimateOrigin. "</td></tr>";
+        $html .= "</table>";
+
+        $html .= "<br><br>Para consultar información adicional accede a <a href='$httpHost/?controller=store&opt=new_estimate&id=$id'>Formas</a>";
+
+        return $html;
+    }
+
+   function showMyLastEstimates() {
+        $estimates = $this->getMyLastEstimates();
+        $tpl = VIEWS_PATH_CONTROLLER . "my_last_estimates" . VIEW_EXT;
+        include($tpl);
+   }
+
+
 }

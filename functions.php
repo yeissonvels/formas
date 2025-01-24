@@ -1,4 +1,8 @@
 <?php
+
+error_reporting(E_ALL);
+//error_reporting(0);
+
 if (isset($_GET['error'])) {
 	echo "Activamos errores";
 	error_reporting(E_ALL);
@@ -89,7 +93,7 @@ function generateSelectMonth($selectedMonth = "", $onchange = true, $function = 
         $onchangeFunction = 'onchange="' . $function . '"';
     }
     ?>
-    <select id="month" name="month" <?php echo $onchangeFunction; ?> class="form-control">
+    <select id="month" name="month" <?php echo $onchangeFunction; ?> class="form-select">
     	<?php 
     		if ($start == 0) { 
         		echo '<option value="all">Todos</option>';
@@ -291,7 +295,7 @@ function generateSelectYear($firstYear = 2014, $selectedYear = "", $onchange = t
         $onchangeFunction = 'onchange="jQuery(\'#frm1\').submit();"';
     }
     ?>
-    <select id="year" name="year" <?php echo $onchangeFunction; ?> class="form-control">
+    <select id="year" name="year" <?php echo $onchangeFunction; ?> class="form-select">
         <option value="0"><?php echo trans('select_a_year')?></option>
         <?php
         for($i= date('Y'); $i >= $firstYear; $i--) {
@@ -335,7 +339,7 @@ function generateObjectSelect($data, $name, $option, $selected = "", $onchange =
         $onchangeFunction = 'onchange="jQuery(\'#frm1\').submit();"';
     }
 
-    $html = '<select name="' . $name . '" id="' . $name . '" ' . $onchangeFunction . ' class="form-control">';
+    $html = '<select name="' . $name . '" id="' . $name . '" ' . $onchangeFunction . ' class="form-select">';
     $html .=    '<option value="0">' . (in_array($className, $options) ? $optionLabel[$className] : $default) . '</option>';
 
     foreach ($data as $d) {
@@ -364,7 +368,7 @@ function generateObjectSelect($data, $name, $option, $selected = "", $onchange =
 function generateYesNotSelect($name, $selected = "", $showInmediatly = true) {
     $numbers = array('0' => trans('no_select'), '1' => trans('yes_select'));
 
-    $html = '<select name="' . $name . '" id="' . $name . '" class="form-control">';
+    $html = '<select name="' . $name . '" id="' . $name . '" class="form-select">';
 
         foreach ($numbers as $key => $value) {
             if ($key == $selected && $selected != "") {
@@ -483,45 +487,49 @@ function edit_icon($show = true) {
  */
 function icon($name, $show = false, $scape = false) {
     $icons = array(
-        'edit' => 'fa-pencil-square-o',
+        'edit' => 'fa-pencil-square',
         'delete' => 'fa-trash',
-        'save' => 'fa-floppy-o',
-        'image' => 'fa-file-image-o',
+        'save' => 'fa-floppy',
+        'image' => 'fa-file-image',
         'user'	=> 'fa-user-circle',
         'logout' => 'fa-power-off',
         'superadmin' => 'fa-user',
-        'pdf' => 'fa-file-pdf-o',
-        'word' => 'fa-file-word-o',
+        'pdf' => 'fa-file-pdf',
+        'word' => 'fa-file-word',
         'plus' => 'fa-plus',
         'cart' => 'fa-shopping-cart',
         'database' => 'fa-database',
         'info' => 'fa-info',
-        'question' => 'fa-question-circle-o',
+        'question' => 'fa-question-circle',
         'empty' => 'fa-times',
         'send' => 'fa-paper-plane',
         'restore' => 'fa-reply',
-        'calendar' => 'fa-calendar',
+        'calendar' => 'fas fa-calendar-day',
         'comments' => 'fa-comments',
         'view' => 'fa-eye',
-        'home' => 'fa-home',
+        'home' => 'fas fa-store',
         'phone' => 'fa-phone',
         'truck' => 'fa-truck',
         'delivered' => 'fa-handshake-o',
-        'pending' => 'fa-clock-o',
+        'pending' => 'fa-clock',
         'incidence' => 'fa-wrench', // incidencias
         'ok' => 'fa-thumbs-o-up',
-        'money' => 'fa-money',
+        'money' => 'fa-money-bill-1',
         'map' => 'fa-map-marker',
         'status' => 'fa-recycle',
         'bag' => 'fa-shopping-bag',
         'exchange' => 'fa-exchange',
         'barcode' => 'fa-barcode',
-        'checked' => 'fa-check-square-o',
+        'checked' => 'fa-check-square',
         'email' => 'fa-envelope',
         'search' => 'fa-search',
         'half' => 'fa-hourglass-half',
         'calculator' => 'fa-calculator',
         'sort' => 'fas fa-sort',
+        'attention' => 'fa-exclamation-circle',
+        'attention2' => 'fa-exclamation-triangle',
+        'estimate' => 'fas fa-file-invoice',
+        'ceo' => 'fa-user-tie'
     );
 
     if ($scape) {
@@ -1132,20 +1140,17 @@ function getGetValue($name) {
  *
  */
 function getFilterDate($month, $year, $trueDate = FALSE, $selector = "", $fieldname = "created_on", $allyear = true) {
-
     if ($trueDate) {
-        if ($month > 0 && $year > 0) {
+        if($allyear && $month === "all") {
+            $filterdate = ' AND ' . $selector . '.' . $fieldname . ' BETWEEN "' . date('Y') . '-1-1" AND "' . date('Y') . '-12-31" ';
+        } else if ($month > 0 && $year > 0) {
             $filterdate = ' AND  ' . $selector . '.' . $fieldname . ' BETWEEN "' . $year . '-' . $month . '-1" AND "' . $year . '-' . $month . '-31" ';
         } else if ($month > 0 && $year == 0) {
             $filterdate = ' AND  ' . $selector . '.' . $fieldname . ' BETWEEN "' . date('Y') . '-' .$month . '-1" AND "' . date('Y') . '-' . $month . '-31" ';
         } else if ($month == 0 && $year > 0) {
             $filterdate = ' AND ' . $selector . '.' . $fieldname . ' BETWEEN "' . $year . '-1-1" AND "' . $year . '-12-31" ';
         } else {
-            if ($allyear) {
-                $filterdate = ' AND  ' . $selector . '.' . $fieldname . ' BETWEEN "' . date('Y') . '-1-1" AND "' . date('Y') . '-12-31" ';
-            } else {
-                $filterdate = ' AND  ' . $selector . '.' . $fieldname . ' BETWEEN "' . date('Y') . '-' . date('m') . '-1" AND "' . date('Y') . '-' . date('m') . '-31" ';
-            }
+            $filterdate = ' AND  ' . $selector . '.' . $fieldname . ' BETWEEN "' . date('Y') . '-' . date('m') . '-1" AND "' . date('Y') . '-' . date('m') . '-31" ';
          }
     } else {
         if ($month > 0 && $year > 0) {
@@ -1254,6 +1259,10 @@ if (!function_exists('pre')) {
  */
 if (!function_exists('americaDate')) {
     function americaDate($date, $time = TRUE) {
+        if($date === NULL) {
+            return '';
+        }
+
         $lang = $_SESSION['lang'];
 
         if (!$lang || $lang == 'es') {
@@ -1307,13 +1316,18 @@ function unsetMenu() {
  */
 function from_calendar_to_date($calendar) {
     $lang = $_SESSION['lang'];
+    $time =  ' 00:00:00';
+
+    if(strpos($calendar, ':') !== false) {
+        $time = '';
+    }
 
     if ($lang == 'es') {
 
-        return implode('-', array_reverse(explode('/', $calendar))) . ' 00:00:00';
+        return implode('-', array_reverse(explode('/', $calendar))) . $time;
     } else if($lang == 'de') {
 
-        return implode('-', array_reverse(explode('.', $calendar))) . ' 00:00:00';
+        return implode('-', array_reverse(explode('.', $calendar))) . $time;
     } else if ($lang == 'en'){
 
         return $calendar;
@@ -1836,6 +1850,138 @@ function listDirectory($path, $delete = false, $config = array('divresponse' => 
     }
 }
 
+/**
+ * $delete = si queremos mostrar un enlace para borrar los archivos
+ * Funcion usada en varios contextos
+ *
+ * $config: configuraciones especiales
+ * $config['divresponse'] div en el que debemos mostrar la respuesta
+ * $config['excludes'] archivos que queremos excluir
+ */
+function listDirectoryTableFormat($path, $delete = false, $config = array('divresponse' => '', 'excludes' => array())) {
+    $notAlloweds = array('.', '..', 'index.php');
+    $cont = 0;
+	$excludes = 0;
+    $files = [];
+
+    if (file_exists($path)) {
+        $dir = opendir($path);
+        while ($file = readdir($dir)) {
+            if (!in_array($file, $notAlloweds)) {
+            	$fname = $file;
+            	$ext =  getFileExtension($fname);
+                $file = $path . '/' . $fname;
+
+                if (!in_array($fname, $config['excludes'])) {
+                    $fileDate = filectime($file);
+                    $humanFileDate = date("Y-m-d H:i:s", filectime($file));
+                    $files[] = [$fileDate, $humanFileDate, $fname, $ext];
+
+                    $cont++;
+                } else {
+                	$excludes++;
+                }
+            }
+        }
+    }
+
+    // Ordenar por fecha descendente
+    $files = sortDescendingArray($files);
+    $config['delete'] = $delete;
+    $html = createResponseTable($path, $files, $config);
+   
+    echo $html;
+}
+
+function sortDescendingArray($array) {
+    usort($array, function ($a, $b) {
+        return $b[0] <=> $a[0]; // Comparar el primer elemento (timestamps)
+    });
+
+    return $array;
+}
+
+function sortAscendingArray() {
+    usort($array, function ($a, $b) {
+        return $a[0] <=> $b[0]; // Comparar el primer elemento (timestamps)
+    });
+}
+
+function getIconNames() {
+    return array(
+        'rtf' => 'word',
+        'doc' => 'word',
+        'docx' => 'word',
+        'pdf' => 'pdf',
+        'png' => 'image'
+    );
+}
+
+function createResponseTable($path, $files, $config) {
+    $cont = 0;
+    $icons = getIconNames();
+    $html = '<table class="table table-striped">';
+    $html .= '<thead>';
+    $html .=    '<tr>';
+    $html .=        '<th>Archivo</th>';
+    $html .=        '<th>Fecha de subida</th>';
+    $html .=        '<th>'.icon('delete', false).'</th>';
+    $html .=    '</tr>';
+    $html .= '</thead>';
+
+    $html .= '<tbody>';
+
+    if(is_array($files) && count($files) > 0) {
+        foreach($files as $file) {
+            $fname = $file[2];
+            $ext =  $file[3];
+            $file = $path . '/' . $fname;
+    
+            $html .=    '<tr id="' . $config['divresponse'] . $cont . '">';
+            $html .=        '<td>';
+            
+            if (array_key_exists($ext, $icons)) {
+                $qtip = false;
+                $type = $icons[$ext];
+            } else {
+                $qtip = true;
+                $type = 'image';
+            }
+    
+            if ($qtip) {
+                $html .= '<a href="' . $file . '" target="_blank" title="<img src=\'' . $file . '\'>" class="withqtip-no-close">' . icon($type, false) . '</a>';
+            } else {
+                $html .= '<a href="' . $file . '" target="_blank">' . icon($type, false) . '</a>';
+            }
+    
+            $html .= " " . $fname;
+    
+            $html .=        '</td>';
+            $html .=        '<td>'.date("Y-m-d H:i:s", filectime($file)) ?? ''.'</td>';
+            $html .=        '<td>';
+    
+            if ($config['delete']) {
+                $onclick = 'onclick="unlinkFile(\'' . $file . '\', \'' . $path . '\', \'' . $fname . '\',  \'' . $config['divresponse'] . '\', \'' . $config['divresponse'] . $cont . '\')"';
+                $html .= '<a  target="_blank" style="cursor: pointer; color: red;" ' . $onclick . ' title="Eliminar">' . icon('delete', false) . '</a><br>';
+            }
+    
+            $html .=        '</td>';
+            $fileDate = filectime($file);
+            $humanFileDate = date("Y-m-d H:i:s", filectime($file));
+            $files[] = [$fileDate, $humanFileDate, $fname];
+    
+            $cont++;
+        }
+    } else {
+        $html .= '<tr><td colspan="3">No se han encontrado archivos!</td></tr>';
+    }
+
+    $html .=    '</tbody>';
+    $html .= '</table>';
+
+    return $html;
+}
+
 function getFileExtension($fname) {
     $aux = explode('.', $fname);
     $ext = count($aux) - 1;
@@ -1920,6 +2066,26 @@ function createCookie($cname, $cvalue, $exdays = 30) {
 </script>
 
 <?php
+}
+
+function fillWithZero($number) {
+    $length = 3;
+    $zero = "";
+    for($i = strlen($number); $i < $length; $i++) {
+        $zero .= '0';
+    }
+
+    return $zero.$number;
+}
+
+function getEstimateCode($totalEstimates, $user) {
+    $totalEstimates++;
+    return fillWithZero($totalEstimates) . " " . $user->getUserCode() . " " . $user->getStoreId() . " " . date('y');
+}
+
+function escapeSerialized($aSerialized) {
+    global $wpdb;
+    return mysqli_real_escape_string($wpdb->getLinker(), serialize($aSerialized));
 }
 
 ?>

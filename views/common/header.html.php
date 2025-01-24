@@ -16,7 +16,7 @@
     <link rel='stylesheet' href='/css/jquery.qtip.css' type='text/css' media='all'/>
     <link rel='stylesheet' href='/css/menu.css' type='text/css' media='all'/>
     <link rel='stylesheet' href='/css/bootstrap.min.css' type='text/css' media='all'/>
-    <link rel='stylesheet' href='/css/font-awesome.min.css' type='text/css' media='all'/>
+    <link rel='stylesheet' href='/css/all.min.css' type='text/css' media='all'/>
     <link rel='stylesheet' href='/css/style.css' type='text/css' media='all'/>
     <script src="/js/jquery_v1.10.2.js"></script>
     <script src="/js/jquery.timeTo.js"></script>
@@ -103,7 +103,7 @@
         }
     ?>
 
-    <div id="menucontainer" class="mb-5">
+    <div id="menucontainer">
         <?php loadMenu(); ?>
     </div>
     
@@ -112,28 +112,38 @@
 		
     	if (isSuperAdmin() || (is_object($user) && $user->getUsermanager() == 1) || $isAdmLogged) { 
     	?>
-	    <div style="background:gray;color:white;font-size: 18px;font-weight: bold;text-align:center;padding:10px;">
+	    <div style="background:linear-gradient(to bottom, #ffd8a6, #ffffff);color:white;font-size: 18px;font-weight: bold;text-align:center;padding:10px;">
 	    	<form method="post">
-	    		<?php
-	    		if (!$isAdmLogged){?>
-					<select name="userid">
-		    		<?php
-		    			$users = getUsers();
-						foreach ($users as $us) {
-							if ($us->usermanager == 0) {
-								echo '<option value="' . $us->id . '">' . $us->username . '</option>';
-							} else if (isSuperAdmin()) {
-								echo '<option value="' . $us->id . '">' . $us->username . '</option>';
-							}
-						}
-		    		?>
-		    	</select>
-		    	<?php
-					}
-		    	?>
-		    	<input type="hidden" name="controller" value="user">
-		    	<input type="hidden" name="opt" value="loginAsOtherUser">
-		    	<input type="submit" value="<?php echo $isAdmLogged ? 'Logar como Jefe' : 'Logar' ?>" class="btn btn-success">
+                <div class="row">
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-3">
+                        <?php
+                        if (!$isAdmLogged){?>
+                            <select name="userid" class="form-select">
+                            <?php
+                                $users = getUsers();
+                                foreach ($users as $us) {
+                                    if ($us->usermanager == 0) {
+                                        echo '<option value="' . $us->id . '">' . $us->username . '</option>';
+                                    } else if (isSuperAdmin()) {
+                                        echo '<option value="' . $us->id . '">' . $us->username . '</option>';
+                                    }
+                                }
+                            ?>
+                        </select>
+                        <?php
+                            }
+                        ?>
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="hidden" name="controller" value="user">
+                        <input type="hidden" name="opt" value="loginAsOtherUser">
+                        <button class="btn btn-primary" type="submit">
+                            <?php echo $isAdmLogged ? ('Acceso jefe ' . icon('ceo', false)) : ('Iniciar sesión ' . icon('user', false)); ?>
+                        </button>
+                    </div>
+                </div>
+		    	
 	    	</form>
 	    </div>
 	<?php
@@ -157,13 +167,13 @@
             <div class="col-sm-5 mt-2">
                  <form id="frm-orderview" action="?controller=order&opt=generalOrderView" method="post" onsubmit="return controlGeneralOrderView();">
                     <div class="row">
-                        <div class="col-sm-9">
+                        <div class="col-sm-8">
                             <input type="text" name="searchbox" id="search-box-main" placeholder="Código, nombre del cliente o teléfono" class="form-control" autocomplete="off">
                             <input name="maincode" id="maincode" type="hidden" value="">
                             <div id="suggesstion-box-main" style="position: absolute; z-index: 10000;"></div>
                         </div>
                         <div class="col-sm-3">
-                            <a class="lupa" onclick="$('#frm-orderview').submit();"><?php icon('search', true); ?></a>
+                            <a class="lupa ml-1" onclick="$('#frm-orderview').submit();"><?php icon('search', true); ?></a>
                         </div>
                     </div>
                 </form>

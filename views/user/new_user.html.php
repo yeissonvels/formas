@@ -1,10 +1,11 @@
 <script>
     var usernameValidated = <?php echo ($data && $data->getUsername() != "" ? 'true' : 'false' ); ?>;
+    var usercodeValidated = <?php echo ($data && $data->getUsercode() != "" ? 'true' : 'false' ); ?>;
 
     $(document).ready(function () {
         $('#username').keyup(function () {
             var username = $("#username").val();
-            if (username.length > 1) {
+            if (username.length > 1) { 
                 $.ajax({
                     type: "post",
                     url: '/ajax.php',
@@ -21,8 +22,36 @@
                         usernameValidated = false;
                     } else {
                         addSuccess('#div_user_login', '#username');
+                        border_ok('#username')
                         $('#user_login_response').html("Usuario disponible");
                         usernameValidated = true;
+                    }
+                });
+            }
+        });
+
+        $('#usercode').keyup(function () {
+            var usercode = $("#usercode").val();
+            if (usercode.length > 1) {
+                $.ajax({
+                    type: "post",
+                    url: '/ajax.php',
+                    data: {
+                        usercode: usercode,
+                        op: 'comprobateUsercode',
+                        controller: 'UserController'
+                    }
+                }).done(function (data) {
+                    // Retorna "si" 0 "no" dependeiendo si el usuario existe
+                    if (data == "si") {
+                        addError('#div_user_code', '#usercode');
+                        $('#user_code_response').html("El código ya existe");
+                        usercodeValidated = false;
+                    } else {
+                        addSuccess('#div_user_code', '#usercode');
+                        border_ok('#usercode');
+                        $('#user_code_response').html("Código disponible");
+                        usercodeValidated = true;
                     }
                 });
             }
@@ -53,6 +82,14 @@
                 });
             }
         });
+
+        $('#usertype').change(function() {
+            border_ok('#usertype');
+        });
+
+        $('#storeid').change(function() {
+            border_ok('#storeid');
+        });
     });
 
     function check_new_user() {
@@ -61,6 +98,7 @@
             comprobate = Array('#username', '#user_pass', '#repeat_user_pass', '#usertype');
             if (selecteduser == 0) {
                 comprobate.push('#storeid');
+                comprobate.push('#usercode');
             }
 
         } else {
@@ -72,6 +110,7 @@
 
             if (selecteduser == 0) {
                 comprobate.push('#storeid');
+                comprobate.push('#usercode');
             }
 
             if ($('#user_pass').val() != $('#repeat_user_pass').val()) {
@@ -83,7 +122,7 @@
         }
 
         // Devuelve true si todos los campos han sido completados
-        if (checkNoEmpty(comprobate) && usernameValidated) {
+        if (checkNoEmpty(comprobate) && usernameValidated && usercodeValidated) {
             return true;
         } else {
             alert(completeRequiredFields);
@@ -95,11 +134,16 @@
         var userType = $('#usertype').val();
         if (userType == 0) {
             $('#divstores').show('slow');
+            $('#div_user_code').show('slow');
         } else {
             border_ok('#storeid');
             $('#divstores').hide('slow');
+            $('#div_user_code').hide('slow');
+            usercodeValidated = true;
         }
     }
+
+
 
 </script>
 <div class="card">
@@ -116,6 +160,73 @@
                     <input type="text" class="form-control" name="username" id="username" placeholder=""
                            value="<?php echo($data ? $data->getUsername() : ''); ?>">
                     <div id="user_login_response" class="form-control-feedback"></div>
+                </div>
+            </div>
+            <?php
+                $userStore = ($data && $data->getUserstore() == 1) ? true : false;
+                $display = $userStore ? "" : "display: none;";
+            ?>
+            <div class="form-group row">
+                <label for="gestor" class="col-sm-2 col-form-label">Tipo de usuario</label>
+                <div class="col-sm-10">
+                    <select name="usertype" id="usertype" class="form-select" onchange="checkUserType()">
+                        <option value="">Seleccione un tipo</option>
+                        <?php
+                            global $profileTypes;
+                            foreach ($profileTypes as $key => $value) {
+                                $selected = "";
+                                if ($data) {
+                                    // Usuario de tienda
+                                    if ($key == 0 && $userStore) {
+                                        $selected = 'selected="selected"';
+                                    } else if ($key == 1 && $data->getUserRepository() == 1) {
+                                        // Usuario de almacén
+                                        $selected = 'selected="selected"';
+                                    } else if ($key == 2 && $data->getUsermanager() == 1) {
+                                        // Usuario Jefe
+                                        $selected = 'selected="selected"';
+                                    } else if ($key == 3 && $data->getUseraccounting() == 1) {
+                                        // Usuario Jefe
+                                        $selected = 'selected="selected"';
+                                    }
+                                }
+
+                                echo '<option value="' . $key . '" ' . $selected . '>' . $value[1] . '</option>';
+
+                            }
+                        ?>
+                    </select>
+
+                </div>
+            </div>
+            <div class="form-group row" id="divstores" style="<?php echo $display; ?>">
+                <label for="storeid" class="col-sm-2 col-form-label">Tienda</label>
+                <div class="col-sm-10">
+                    <select name="storeid" id="storeid" class="form-select">
+                        <option value="">Seleccione la tienda</option>
+                        <?php
+                            $stores = getStores(true);
+                            foreach ($stores as $store) {
+                                $selected = "";
+                                if ($data) {
+                                    // Usuario de tienda
+                                    if ($data->getStoreid() == $store['id']) {
+                                        $selected = 'selected="selected"';
+                                    }
+                                }
+                                echo '<option value="' . $store['id'] . '" ' . $selected . '>' . $store['name'] . '</option>';
+                            }
+                        ?>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row" id="div_user_code" style="<?php echo $display; ?>">
+                <label for="user_code"
+                       class="col-sm-2 col-form-label"><?php echo trans('usercode') ?> (sólo números)</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="usercode" id="usercode" placeholder=""
+                           value="<?php echo($data ? $data->getUsercode() : ''); ?>" onkeyup="allowOnlyNumbers(event);">
+                    <div id="user_code_response" class="form-control-feedback"></div>
                 </div>
             </div>
             <div class="form-group row">
@@ -135,7 +246,7 @@
             <div class="form-group row">
                 <label for="active" class="col-sm-2 col-form-label"><?php echo trans('active_account') ?></label>
                 <div class="col-sm-10">
-                    <select name="active" class="form-control">
+                    <select name="active" class="form-select">
                     	<option value="1" <?php echo $data && $data->active == 1 ? 'selected="selected"' :  ''; ?>>Si</option>
                     	<option value="0" <?php echo $data && $data->active == 0 ? 'selected="selected"' :  ''; ?>>No</option>
                     </select>
@@ -173,64 +284,7 @@
                     <?php
                 }
             ?>
-            <?php
-                $userStore = ($data && $data->getUserstore() == 1) ? true : false;
-                $display = $userStore ? "" : "display: none;";
-            ?>
-            <div class="form-group row">
-                <label for="gestor" class="col-sm-2 col-form-label">Tipo de usuario</label>
-                <div class="col-sm-10">
-                    <select name="usertype" id="usertype" class="form-control" onchange="checkUserType()">
-                        <option value="">Seleccione un tipo</option>
-                        <?php
-                            global $profileTypes;
-                            foreach ($profileTypes as $key => $value) {
-                                $selected = "";
-                                if ($data) {
-                                    // Usuario de tienda
-                                    if ($key == 0 && $userStore) {
-                                        $selected = 'selected="selected"';
-                                    } else if ($key == 1 && $data->getUserRepository() == 1) {
-                                        // Usuario de almacén
-                                        $selected = 'selected="selected"';
-                                    } else if ($key == 2 && $data->getUsermanager() == 1) {
-                                        // Usuario Jefe
-                                        $selected = 'selected="selected"';
-                                    } else if ($key == 3 && $data->getUseraccounting() == 1) {
-                                        // Usuario Jefe
-                                        $selected = 'selected="selected"';
-                                    }
-                                }
-
-                                echo '<option value="' . $key . '" ' . $selected . '>' . $value[1] . '</option>';
-
-                            }
-                        ?>
-                    </select>
-
-                </div>
-            </div>
-            <div class="form-group row" id="divstores" style="<?php echo $display; ?>">
-                <label for="storeid" class="col-sm-2 col-form-label">Tienda</label>
-                <div class="col-sm-10">
-                    <select name="storeid" id="storeid" class="form-control">
-                        <option value="">Seleccione la tienda</option>
-                        <?php
-                            $stores = getStores(true);
-                            foreach ($stores as $store) {
-                                $selected = "";
-                                if ($data) {
-                                    // Usuario de tienda
-                                    if ($data->getStoreid() == $store['id']) {
-                                        $selected = 'selected="selected"';
-                                    }
-                                }
-                                echo '<option value="' . $store['id'] . '" ' . $selected . '>' . $store['name'] . '</option>';
-                            }
-                        ?>
-                    </select>
-                </div>
-            </div>
+            
             <div class="form-group row">
                 <input type="hidden" name="opt" id="opt"
                        value="<?php echo $data ? 'save_edit_user' : 'save_user' ?>">

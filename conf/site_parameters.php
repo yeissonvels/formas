@@ -54,7 +54,7 @@ global $saletypes;
 $saletypes = array(
     0 => 'Venta',
     1 => 'Variación',
-    2 => 'Entrega a cuenta de venta'
+    2 => 'Entrega a cuenta de venta',
 );
 
 
@@ -83,4 +83,13 @@ $paymethods = array(
     2 => 'Metálico',
     3 => 'Crédito aprobado',
     4 => 'Cheque'
+);
+
+global $estimateOrigins;
+$estimateOrigins = array(
+    0 => 'Cliente anterior',
+    1 => 'Cliente recomendado',
+    2 => 'Cliente nuevo web',
+    3 => 'Cliente nuevo publicidad',
+    4 => 'Cliente nuevo proximidad'
 );

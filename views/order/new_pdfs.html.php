@@ -33,7 +33,7 @@
             <label for="month" class="col-sm-1 col-form-label">Filtros <?php icon('calendar', true);?></label>
             <div class="col-sm-3 mb-1">
                 <form action="" method="post" id="frm1">
-                    <select id="filter" name="filter" class="form-control" onchange="if($(this).val() != '') {$('#frm1').submit();}">
+                    <select id="filter" name="filter" class="form-select" onchange="if($(this).val() != '') {$('#frm1').submit();}">
                         <option value="">Seleccione una opción</option>
                         <option value="all" <?php echo isset($_POST['filter']) && $_POST['filter'] == "all" ? 'selected' : '' ?>>Todos</option>
                         <option value="onlywithpdf" <?php echo isset($_POST['filter']) && $_POST['filter'] == "onlywithpdf" ? 'selected' : '' ?>>Sólo con propuestas</option>

@@ -89,16 +89,21 @@ function border_ok(id) {
 
 function addError(div, field) {
     $(div).removeClass("has-success");
-    $(field).removeClass("form-control-success");
-    $(div).addClass("has-danger");
-    $(field).addClass("form-control-danger");
+    $(field).removeClass("is-valid");
+    $(div).addClass("");
+    $(field).addClass("is-invalid");
 }
 
 function addSuccess(div, field) {
     $(div).removeClass("has-danger");
-    $(field).removeClass("form-control-danger");
+    $(field).removeClass("is-invalid");
     $(div).addClass("has-success");
-    $(field).addClass("form-control-success");
+    $(field).addClass("is-valid");
+}
+
+function resetValidations(field) {
+    $(field).removeClass("is-invalid");
+    $(field).removeClass("is-valid");
 }
 
 function scrollingTo(id) {
@@ -108,7 +113,7 @@ function scrollingTo(id) {
 }
 
 function validar(string) { // Borra los caracteres no numéricos entrados en tiempo real
-    for (var i=0, output='', validos="0123456789."; i<string.length; i++){
+    for (var i=0, output='', validos="0123456789.,"; i<string.length; i++){
         if (validos.indexOf(string.charAt(i)) != -1) {
             output += string.charAt(i);
         }
@@ -132,6 +137,11 @@ function validarNumeros(string) { // Borra los caracteres no numéricos entrados
         }
     }
     return output;
+}
+
+function allowOnlyNumbers(event) {
+    const input = event.target; // Obtiene el elemento que activó el evento
+    input.value = input.value.replace(/\D/g, ''); // Elimina todo lo que no sea un dígito
 }
 
 function redirect(url) {
@@ -366,6 +376,7 @@ function loadOrdersWidget() {
 
 function addCommas(id, n) {
     n = n.toString();
+    n = validar(n);
     commas = n.split(".");
     ncommas = commas.length;
 

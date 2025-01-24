@@ -44,7 +44,7 @@
             <div class="form-group row">
                 <label for="product" class="col-sm-1 col-form-label">Producto</label>
                 <div class="col-sm-2">
-                    <select id="product" name="product" class="form-control">
+                    <select id="product" name="product" class="form-select">
                         <option value="">Seleccione</option>
                         <?php
                             $categories = getCategories(true);

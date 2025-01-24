@@ -37,7 +37,7 @@
     function moreInternProducts(target) {
         var html = '<tr id="inproduct' + internProducts + '" class="table-success">';
         html +=     '<td class="w-50">';
-        html += '<select class="form-control products" id="inselect' + internProducts + '" name="products[]">';
+        html += '<select class="form-select products" id="inselect' + internProducts + '" name="products[]">';
         html +=         '<option value="">Seleccione un producto</option>';
         <?php
             if (isset($ajaxProducts)) {
@@ -49,7 +49,7 @@
         html +=         '</select>';
         html +=     '</td>';
         html +=     '<td class="w-50">';
-        html += '<select class="form-control categories" id="incategory' + internProducts + '" name="categories[]">';
+        html += '<select class="form-select categories" id="incategory' + internProducts + '" name="categories[]">';
         html +=         '<option value="">Seleccione un producto</option>';
         <?php
         if (isset($ajaxCategories)) {
@@ -344,7 +344,7 @@
                 <div class="form-group row">
                     <label for="incidencetype" class="col-sm-3 col-form-label">Tipo</label>
                     <div class="col-sm-9">
-                        <select id="incidencetype" name="incidencetype" class="form-control" <?php echo $incidenceDisabled; ?>>
+                        <select id="incidencetype" name="incidencetype" class="form-select" <?php echo $incidenceDisabled; ?>>
                             <?php
                             global $incidenceTypes;
                             foreach ($incidenceTypes as $key => $value) {
@@ -361,7 +361,7 @@
                 <div class="form-group row">
                     <label for="store" class="col-sm-3 col-form-label">Tienda</label>
                     <div class="col-sm-9">
-                        <select name="store" id="store" class="form-control">
+                        <select name="store" id="store" class="form-select">
                             <option value="">Selecciona</option>
                             <?php
                                 $stores = getStores(true);
@@ -379,7 +379,7 @@
                 <div class="form-group row">
                     <label for="store" class="col-sm-3 col-form-label">Zona de entrega</label>
                     <div class="col-sm-9">
-                        <select name="deliveryzone" id="deliveryzone" class="form-control">
+                        <select name="deliveryzone" id="deliveryzone" class="form-select">
                             <option value="">Selecciona</option>
                             <?php
                             $zones = getZones(true);
@@ -411,7 +411,7 @@
                 <div class="form-group row">
                     <label for="status" class="col-sm-3 col-form-label">Estado</label>
                     <div class="col-sm-9">
-                        <select id="incidencestatus" name="status" class="form-control" onchange="checkChangeIncidenceStatus();" <?php echo $incidenceDisabled; ?>>
+                        <select id="incidencestatus" name="status" class="form-select" onchange="checkChangeIncidenceStatus();" <?php echo $incidenceDisabled; ?>>
                             <?php
                             global $incidencestatus;
                             foreach ($incidencestatus as $key => $value) {
@@ -511,7 +511,7 @@
                         foreach ($ajaxincidence->internProducts as $item) {
                             echo '<tr id="product' . $i . '" class="table-success">';
                             echo    '<td class="w-50">';
-                            echo        '<select class="form-control products" name="products[]" id="inselect' . $i . '"' . $incidenceDisabled . '>' . PHP_EOL;
+                            echo        '<select class="form-select products" name="products[]" id="inselect' . $i . '"' . $incidenceDisabled . '>' . PHP_EOL;
                             echo            '<option value="">Seleccione un producto</option>' . PHP_EOL;
                             foreach ($ajaxProducts as $product) {
                                 $selected = "";
@@ -523,7 +523,7 @@
                             echo        '</select>' . PHP_EOL;
                             echo    '</td>' . PHP_EOL;
                             echo    '<td class="w-50">';
-                            echo        '<select class="form-control categories" name="categories[]" id="incategory' . $i . '" ' . $incidenceDisabled . '>' . PHP_EOL;
+                            echo        '<select class="form-select categories" name="categories[]" id="incategory' . $i . '" ' . $incidenceDisabled . '>' . PHP_EOL;
                             echo            '<option value="">Seleccione una categoría</option>' . PHP_EOL;
                             foreach ($ajaxCategories as $category) {
                                 $selected = "";
@@ -569,7 +569,7 @@
                         ?>
                         <tr class="table-success">
                             <td class="w-50">
-                                <select class="form-control products" name="products[]" id="inselect1" <?php echo $incidenceDisabled; ?>>
+                                <select class="form-select products" name="products[]" id="inselect1" <?php echo $incidenceDisabled; ?>>
                                     <option value="">Seleccione un producto</option>
                                     <?php
                                         if (isset($ajaxProducts)) {
@@ -582,7 +582,7 @@
                                 </select>
                             </td>
                             <td class="w-50">
-                                <select class="form-control products" name="categories[]" id="incategorie1" <?php echo $incidenceDisabled; ?>>
+                                <select class="form-select products" name="categories[]" id="incategorie1" <?php echo $incidenceDisabled; ?>>
                                     <option value="">Seleccione una categoria</option>
                                     <?php
                                         if (isset($ajaxCategories)) {
@@ -702,7 +702,7 @@
                     </td>
                     <td>Provincia</td>
                     <td class="w-50">
-                        <select name="provinceid" id="inci-provinceid" class="form-control" <?php echo $incidenceDisabled; ?>>
+                        <select name="provinceid" id="inci-provinceid" class="form-select" <?php echo $incidenceDisabled; ?>>
                             <option value="">Provincia</option>
                             <?php
                                 $provinces = getProvinces();

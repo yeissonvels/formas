@@ -61,7 +61,7 @@
 				<?php if (userWithPrivileges()) { ?>
 					<label for="commission" class="col-sm-1 col-form-label">Sólo con propuesta <?php icon('money', true); ?></label>
 					<div class="col-sm-1">
-						<select name="commission" class="form-control">
+						<select name="commission" class="form-select">
 							<option value="no">No</option>
 							<option value="yes">Si</option>
 						</select>

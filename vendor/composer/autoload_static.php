@@ -6,25 +6,66 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit42abba291589bdf4648cbbfbb7ea78be
 {
+    public static $files = array (
+        '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
+        'db356362850385d08a5381de2638b5fd' => __DIR__ . '/..' . '/mpdf/mpdf/src/functions.php',
+    );
+
     public static $prefixLengthsPsr4 = array (
-        'S' => 
+        's' => 
         array (
-            'Spipu\\Html2Pdf\\' => 15,
+            'setasign\\Fpdi\\' => 14,
         ),
         'P' => 
         array (
+            'Psr\\Log\\' => 8,
+            'Psr\\Http\\Message\\' => 17,
             'PHPMailer\\PHPMailer\\' => 20,
+        ),
+        'M' => 
+        array (
+            'Mpdf\\PsrLogAwareTrait\\' => 22,
+            'Mpdf\\PsrHttpMessageShim\\' => 24,
+            'Mpdf\\' => 5,
+        ),
+        'D' => 
+        array (
+            'DeepCopy\\' => 9,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'Spipu\\Html2Pdf\\' => 
+        'setasign\\Fpdi\\' => 
         array (
-            0 => __DIR__ . '/..' . '/spipu/html2pdf/src',
+            0 => __DIR__ . '/..' . '/setasign/fpdi/src',
+        ),
+        'Psr\\Log\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/log/src',
+        ),
+        'Psr\\Http\\Message\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
         'PHPMailer\\PHPMailer\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
+        ),
+        'Mpdf\\PsrLogAwareTrait\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mpdf/psr-log-aware-trait/src',
+        ),
+        'Mpdf\\PsrHttpMessageShim\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mpdf/psr-http-message-shim/src',
+        ),
+        'Mpdf\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mpdf/mpdf/src',
+        ),
+        'DeepCopy\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
         ),
     );
 
@@ -35,6 +76,7 @@ class ComposerStaticInit42abba291589bdf4648cbbfbb7ea78be
         'ArticleCategory' => __DIR__ . '/../..' . '/classes/ArticleCategory.php',
         'ArticleCategoryController' => __DIR__ . '/../..' . '/controller/ArticleCategoryController.php',
         'ArticleCategoryModel' => __DIR__ . '/../..' . '/model/ArticleCategoryModel.php',
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Config' => __DIR__ . '/../..' . '/conf/Config.php',
         'Controller' => __DIR__ . '/../..' . '/classes/Controller.php',
         'ControllerController' => __DIR__ . '/../..' . '/controller/ControllerController.php',
@@ -42,7 +84,6 @@ class ComposerStaticInit42abba291589bdf4648cbbfbb7ea78be
         'Customer' => __DIR__ . '/../..' . '/classes/Customer.php',
         'CustomerController' => __DIR__ . '/../..' . '/controller/CustomerController.php',
         'CustomerModel' => __DIR__ . '/../..' . '/model/CustomerModel.php',
-        'Datamatrix' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/barcodes/datamatrix.php',
         'DeliveryZone' => __DIR__ . '/../..' . '/classes/DeliveryZone.php',
         'DeliveryZoneController' => __DIR__ . '/../..' . '/controller/DeliveryZoneController.php',
         'DeliveryZoneModel' => __DIR__ . '/../..' . '/model/DeliveryZoneModel.php',
@@ -52,6 +93,8 @@ class ComposerStaticInit42abba291589bdf4648cbbfbb7ea78be
         'InstallerModel' => __DIR__ . '/../..' . '/model/InstallerModel.php',
         'LoadFile' => __DIR__ . '/../..' . '/classes/UploadFile.php',
         'Mailer' => __DIR__ . '/../..' . '/classes/Mailer.php',
+        'MailerController' => __DIR__ . '/../..' . '/controller/MailerController.php',
+        'MailerModel' => __DIR__ . '/../..' . '/model/MailerModel.php',
         'Menu' => __DIR__ . '/../..' . '/classes/Menu.php',
         'MenuController' => __DIR__ . '/../..' . '/controller/MenuController.php',
         'MenuItem' => __DIR__ . '/../..' . '/classes/MenuItem.php',
@@ -60,29 +103,16 @@ class ComposerStaticInit42abba291589bdf4648cbbfbb7ea78be
         'OrderController' => __DIR__ . '/../..' . '/controller/OrderController.php',
         'OrderModel' => __DIR__ . '/../..' . '/model/OrderModel.php',
         'PDF' => __DIR__ . '/../..' . '/classes/PDF.php',
-        'PDF417' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/barcodes/pdf417.php',
         'Product' => __DIR__ . '/../..' . '/classes/Product.php',
         'ProductController' => __DIR__ . '/../..' . '/controller/ProductController.php',
         'ProductModel' => __DIR__ . '/../..' . '/model/ProductModel.php',
         'Province' => __DIR__ . '/../..' . '/classes/Province.php',
         'ProvinceController' => __DIR__ . '/../..' . '/controller/ProvinceController.php',
         'ProvinceModel' => __DIR__ . '/../..' . '/model/ProvinceModel.php',
-        'QRcode' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/barcodes/qrcode.php',
         'Role' => __DIR__ . '/../..' . '/classes/Role.php',
         'Store' => __DIR__ . '/../..' . '/classes/Store.php',
         'StoreController' => __DIR__ . '/../..' . '/controller/StoreController.php',
         'StoreModel' => __DIR__ . '/../..' . '/model/StoreModel.php',
-        'TCPDF' => __DIR__ . '/..' . '/tecnickcom/tcpdf/tcpdf.php',
-        'TCPDF2DBarcode' => __DIR__ . '/..' . '/tecnickcom/tcpdf/tcpdf_barcodes_2d.php',
-        'TCPDFBarcode' => __DIR__ . '/..' . '/tecnickcom/tcpdf/tcpdf_barcodes_1d.php',
-        'TCPDF_COLORS' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/tcpdf_colors.php',
-        'TCPDF_FILTERS' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/tcpdf_filters.php',
-        'TCPDF_FONTS' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/tcpdf_fonts.php',
-        'TCPDF_FONT_DATA' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/tcpdf_font_data.php',
-        'TCPDF_IMAGES' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/tcpdf_images.php',
-        'TCPDF_IMPORT' => __DIR__ . '/..' . '/tecnickcom/tcpdf/tcpdf_import.php',
-        'TCPDF_PARSER' => __DIR__ . '/..' . '/tecnickcom/tcpdf/tcpdf_parser.php',
-        'TCPDF_STATIC' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/tcpdf_static.php',
         'Translator' => __DIR__ . '/../..' . '/classes/Translator.php',
         'UrlFriendly' => __DIR__ . '/../..' . '/classes/UrlFriendly.php',
         'UrlFriendlyController' => __DIR__ . '/../..' . '/controller/UrlFriendlyController.php',

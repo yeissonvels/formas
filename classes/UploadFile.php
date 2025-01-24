@@ -29,7 +29,7 @@ class LoadFile
         $this->setAlloweds();
     }
 
-    function uploadFiles($resize = false, $id, $pdfname = "", $showmsg = true) {
+    function uploadFiles($pdfname = "", $showmsg = true, $resize = false) {
         $upload = false;
         $response = "Archivos cargados: <br>";
         $errors = "";
