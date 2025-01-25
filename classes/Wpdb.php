@@ -15,9 +15,14 @@ class WPDB {
     private $where = array();
 
     function __construct() {
-        //print_r($_SERVER);
         if (LOCALHOST) {
-            $conf = new Config(CONFIG_PATH . 'config_localhost.php');
+            $confLocal = 'config_localhost.php';
+            if (strpos(HTTP_HOST, "desarrollo.formas.local.com") !== false) {
+                $confLocal = 'config_localhost_desarrollo.php';
+            }
+            $conf = new Config(CONFIG_PATH . $confLocal);
+        } else if(strpos(HTTP_HOST, "formas.riodevs.com") !== false) {
+            $conf = new Config(CONFIG_PATH . 'config_riodevs.php');
         } else {
             $conf = new Config(CONFIG_PATH . 'config_prod.php');
         }
