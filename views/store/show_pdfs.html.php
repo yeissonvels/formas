@@ -369,9 +369,11 @@
 </div>
 <div class="card">
     <div class="card-header">
-        <h4 class="card-title">Ventas <?php icon('money', true); ?></h4>
-        <span><a href="<?php echo getUrl('upload_pdf', $myController->getUrls()); ?>">Nueva</a></span>
+        <h4 class="card-title">Ventas registradas <?php icon('money', true); ?></h4>
+        <hr class="hr-separator">
+        <span><a href="<?php echo getUrl('upload_pdf', $myController->getUrls()); ?>"><?php echo icon('save', true);?></a></span>
         <?php update_icon(getUrl('show_pdfs', $myController->getUrls())); ?>
+        <hr class="hr-separator">
         <form action="<?php echo getUrl('show_pdfs', $myController->getUrls()); ?>" method="post" id="frm1">
             <div class="form-group row">
                 <label for="purchasedate" class="col-sm-1 col-form-label">
