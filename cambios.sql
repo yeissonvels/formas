@@ -4,6 +4,7 @@ ALTER TABLE `ge_pdfs` CHANGE `dni` `dni` VARCHAR(14) CHARACTER SET latin1 COLLAT
 
 ALTER TABLE `ge_pdfs` CHANGE `cancelled` `cancelled` INT(11) NOT NULL DEFAULT '0';
 ALTER TABLE `ge_pdfs` CHANGE `pdf_yet_printed` `pdf_yet_printed` INT(11) NOT NULL DEFAULT '0' COMMENT 'Nos permite controlar si la propuesta de pedido ya se imprimio', CHANGE `pending_payed_on` `pending_payed_on` DATETIME NULL DEFAULT NULL;
+ALTER TABLE `ge_pdfs` ADD `tel` VARCHAR(60) NULL DEFAULT NULL AFTER `customer`;
 
 -- TABLA USUARIOS 
 ALTER TABLE `ge_users` CHANGE `last_login` `last_login` DATETIME NULL DEFAULT NULL;

@@ -199,6 +199,10 @@ i.fa {
     font-size: 18px;
 }
 
+.hr-separator {
+    width: 25%;
+}
+
 @media (max-width: 992px) {
     .dropdown-menu {
         /* width: 50%; */

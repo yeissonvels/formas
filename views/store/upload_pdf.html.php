@@ -31,7 +31,6 @@
                         $("#suggesstion-box").show();
                         $("#suggesstion-box").html(data);
                         $("#search-box").css("background", "#FFF");
-
                     }
                 });
             } else {
@@ -39,8 +38,8 @@
             }
         });
 
-        $("#search-box-code").keyup(function(){
-            $('#code').prop("value", "");
+        $("#search-box-code").keyup(function () {
+        $('#code').prop("value", "");
             codeValidated = false;
             if ($(this).val() != "") {
                 let config = {
@@ -48,27 +47,38 @@
                     inputId: '#code',
                     suggestionBox: '#suggesstion-box-code'
                 };
-                $.ajax({
-                    type: "POST",
-                    url: "/ajax.php",
-                    data: {
-                        keyword: $(this).val(),
-                        config: config,
-                        nocancelled: 'yes',
-                        op: 'getAutocompleteEstimateCode',
-                    },
-                    beforeSend: function () {
-                        //$("#search-box").css("background","#FFF url(LoaderIcon.gif) no-repeat 165px");
-                    },
-                    success: function (data) {
-                        $("#suggesstion-box-code").show();
-                        $("#suggesstion-box-code").html(data);
-                        $("#search-box-code").css("background", "#FFF");
 
-                    }
+                // Retornar una promesa
+                return new Promise((resolve, reject) => {
+                    $.ajax({
+                        type: "POST",
+                        url: "/ajax.php",
+                        data: {
+                            keyword: $(this).val(),
+                            config: config,
+                            nocancelled: 'yes',
+                            op: 'getAutocompleteEstimateCode',
+                        },
+                        beforeSend: function () {
+                            // Opción para mostrar algo durante la carga (comentada en tu código original)
+                            // $("#search-box-code").css("background", "#FFF url(LoaderIcon.gif) no-repeat 165px");
+                        },
+                        success: function (data) {
+                            $("#suggesstion-box-code").show();
+                            $("#suggesstion-box-code").html(data);
+                            $("#search-box-code").css("background", "#FFF");
+                            resolve(data); // Resolver con los datos recibidos
+                        },
+                        error: function (xhr, status, error) {
+                            reject(error); // Rechazar en caso de error
+                        }
+                    });
                 });
             } else {
                 $("#suggesstion-box-code").html("");
+
+                // Retornar una promesa ya resuelta si el input está vacío
+                return Promise.resolve('empty');
             }
         });
     });
@@ -80,9 +90,21 @@
         $(config[2]).hide();
     }
 
-    function setEstimate(code) {
-        $('#search-box-code').val(code);
-        $('#search-box-code').trigger('keyup');
+    function setEstimate(estimate) {
+        // Asegurarse de que estimate es un JSON válido
+        if (typeof estimate === 'string') {
+            estimate = JSON.parse(estimate);
+        }
+        console.log("Estimate ID:", estimate.id);
+        console.log("Customer:", estimate.customer);
+        // Resto de la lógica para manejar la estimación
+        $('#code').prop('value', estimate.id);
+        codeValidated = true;
+        $('#search-box-code').prop('value', estimate.code);
+        $('#customer').prop('value', estimate.customer);
+        $('#tel').prop('value', estimate.tel);
+        $('#total').prop('value', estimate.total);
+        
     }
 
     function selectEstimateCode(id, code, configString) {
@@ -107,6 +129,7 @@
             success: function (data) {
                 let estimateData = JSON.parse(data);
                 $('#customer').prop('value', estimateData['customer']);
+                $('#tel').prop('value', estimateData['tel']);
                 $('#total').prop('value', estimateData['total']);
                 console.log(estimateData);
             }
@@ -667,6 +690,14 @@
                         <div class="col-sm-10">
                             <input type="text" class="form-control" name="customer" id="customer"
                                    value="<?php echo $data ? $data->customer : ''; ?>" <?php echo $disabled; ?>>
+                        </div>
+                    </div>
+                    <div class="form-group row" id="div_telefono" style="<?php echo $displayCustomer; ?>">
+                        <label for="tel"
+                               class="col-sm-2 col-form-label">Teléfono</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="tel" id="tel"
+                                   value="<?php echo $data ? $data->tel : ''; ?>" <?php echo $disabled; ?>>
                         </div>
                     </div>
                     <div class="form-group row" id="div_total">

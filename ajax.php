@@ -915,11 +915,15 @@ class AjaxRequest
         <ul id="code-list" class="list-group">
         <?php
         if (count($results) > 0) {
+            $i = 0;
             foreach($results as $result) {
                 $code = 'Nº Pre. [' . $result->code . '] - ' . americaDate($result->saledate, false) . ' - ' . $result->customer;
                 ?>
-                <li class="list-group-item cursor-pointer" onClick="selectEstimateCode('<?php echo $result->id; ?>', '<?php echo $code; ?>','<?php echo $config; ?>');"><?php echo $code; ?></li>
-            <?php } ?>
+                <li id="auto-estimate-<?php echo $i; ?>" class="list-group-item cursor-pointer " onClick="selectEstimateCode('<?php echo $result->id; ?>', '<?php echo $code; ?>','<?php echo $config; ?>');"><?php echo $code; ?></li>
+            <?php 
+                    $i++;
+                } 
+            ?>
         <?php } else { ?>
             <li class="list-group-item cursor-pointer"><span class="red-color">Sin resultados</span></li>
         <?php } ?>

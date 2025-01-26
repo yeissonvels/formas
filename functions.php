@@ -489,7 +489,7 @@ function icon($name, $show = false, $scape = false) {
     $icons = array(
         'edit' => 'fa-pencil-square',
         'delete' => 'fa-trash',
-        'save' => 'fa-floppy',
+        'save' => 'fa-floppy-disk',
         'image' => 'fa-file-image',
         'user'	=> 'fa-user-circle',
         'logout' => 'fa-power-off',
@@ -529,7 +529,8 @@ function icon($name, $show = false, $scape = false) {
         'attention' => 'fa-exclamation-circle',
         'attention2' => 'fa-exclamation-triangle',
         'estimate' => 'fas fa-file-invoice',
-        'ceo' => 'fa-user-tie'
+        'ceo' => 'fa-user-tie',
+        'update' => 'fa-solid fa-rotate'
     );
 
     if ($scape) {
@@ -650,7 +651,7 @@ function delete_icon_js() {
 function update_icon($url) {
     ?>
     <a href="<?php echo $url; ?>" title="<?php echo trans('update_page'); ?>">
-        <img src="<?php echo ICONS_PATH ?>update.jpg">
+        <?php icon('update', true); ?>
     </a>
 <?php
 
