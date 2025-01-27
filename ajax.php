@@ -467,14 +467,14 @@ class AjaxRequest
         }
 
         // Obtenemos el código del presupuesto: desde el formulario se envía el id del presupuesto
-        $estimateData = $controller->getEstimateData($_POST['code']);
+        $estimateData = $controller->getEstimateDataByCode($_POST['code']);
         
         $_POST['code'] = $estimateData->code;
         $result = $controller->saveSale();
 
 
         if((isset($result['saved']) && $result['saved'] == 1) /*||  (isset($result['updated']) && $result['updated'] == 1)*/) {
-            $controller->updateEstimateStatus($estimateData->id);
+            $controller->updateEstimateStatus($estimateData->id, 1);
         }
 
         echo json_encode($result);
@@ -484,23 +484,64 @@ class AjaxRequest
         //$_POST['salecomment'] = strip_tags(str_ireplace('"', "''", $_POST['salecomment']));
         $_POST['saledate'] = from_calendar_to_date($_POST['saledate']);
         $controller = new StoreController();
+
+        // OJO: nueva funcionalidad 2025
+        // Obtenemos los datos actuales de la venta
+       
+        $currentSaleData = $controller->getSaleData($_POST['id']);
+
+        // Obtenemos los datos del presupuesto actual vinculado con la venta
+        $currentEstimateData = $controller->getEstimateDataByCode($currentSaleData->code);
+
+        // Obtenemos el código del presupuesto, desde el formulario se envía el id del presupuesto.
+        $estimateData = $controller->getEstimateDataByCode($_POST['code']);
+
+
         if ($_POST['saletype'] != 0) {
             $code = $controller->getCodeByParentId();
             $_POST['code'] = $code;
         } else {
+            $_POST['code'] = $estimateData->code;
             $_POST["parentcode"] = "";
         }
+
+        $estimateChanged = false;
+
+        // OJO: nueva funcionalidad 2025
+        if($currentSaleData->code !== $estimateData->code) {
+            $estimateChanged = true;
+            //echo "Estamos cambiando el código de la venta (presupuesto)<br>";
+            //echo "Old: " . $currentSaleData->code . " Nuevo: " . $estimateData->code;
+            // Actualizamos el campo status = 0 en el presupuesto elegido anteriormente
+            $controller->updateEstimateStatus($currentEstimateData->id, 0);
+
+            //pre("currentEstimateData");
+            //pre($currentEstimateData);
+
+            // Actualizamos el campo status = 1 en el nuevo presupuesto
+            $controller->updateEstimateStatus($estimateData->id, 1);
+
+            //pre("estimateData");
+            //pre($estimateData);
+        } else {
+            //echo "No estamos cambiando el código de la venta (presupuesto)<br>";
+        }
+
         $result = $controller->updateSale();
         // Verificamos si han cambiado el código del pdf y si existe un pedido asociado actualizamos el código
         $pdfid = $_POST['id'];
         $code = $_POST['code'];
         $controller = new OrderController();
         $orderinfo = $controller->getOrderByPdfId($pdfid);
+
         if ($orderinfo) {
             if ($orderinfo[0]->code != $code) {
                 $controller->updateOrderCode($code, $pdfid);
             }
         }
+
+        $result['estimatechanged'] = $estimateChanged;
+
         echo json_encode($result);
     }
 
@@ -919,7 +960,7 @@ class AjaxRequest
             foreach($results as $result) {
                 $code = 'Nº Pre. [' . $result->code . '] - ' . americaDate($result->saledate, false) . ' - ' . $result->customer;
                 ?>
-                <li id="auto-estimate-<?php echo $i; ?>" class="list-group-item cursor-pointer " onClick="selectEstimateCode('<?php echo $result->id; ?>', '<?php echo $code; ?>','<?php echo $config; ?>');"><?php echo $code; ?></li>
+                <li id="auto-estimate-<?php echo $i; ?>" class="list-group-item cursor-pointer " onClick="selectEstimateCode('<?php echo $result->code; ?>', '<?php echo $code; ?>','<?php echo $config; ?>');"><?php echo $code; ?></li>
             <?php 
                     $i++;
                 } 
@@ -932,7 +973,7 @@ class AjaxRequest
 
     function getEstimateData() {
         $controller = new StoreController();
-        $estimateData = $controller->getEstimateData($_POST['id']);
+        $estimateData = $controller->getEstimateDataByCode($_POST['estimatecode']);
         
         if($estimateData) {
             $estimateData->total = numberFormat($estimateData->total, true, 2);
@@ -1155,7 +1196,7 @@ class AjaxRequest
         $result = $controller->updatePdfCode();
         if ($result['updated'] == 1) {
             $html =  '<span class="red-color">No validado<br>';
-            $html .= '<input type="button" value="Validar total" class="btn btn-success" style="font-size: 8px;" data-target="#checkTotal" data-toggle="modal" onclick="setTotalId(' . $_POST['id'] . ')">';
+            $html .= '<input type="button" value="Validar total" class="btn btn-success" style="font-size: 10px;" data-target="#checkTotal" data-toggle="modal" onclick="setTotalId(' . $_POST['id'] . ')">';
             $response['updated'] = $result['updated'];
             $response['html'] = $html;
         } else {
@@ -1174,7 +1215,7 @@ class AjaxRequest
         $result = $controller->updatePdfCode();
         if ($result['updated'] == 1) {
             $html =  '<span class="red-color">No validado<br>';
-            $html .= '<input type="button" value="Validar pago" class="btn btn-success" style="font-size: 8px;" data-target="#checkPayment" data-toggle="modal" onclick="setPaymentId(' . $_POST['id'] . ')">';
+            $html .= '<input type="button" value="Validar pago" class="btn btn-success" style="font-size: 10px;" data-target="#checkPayment" data-toggle="modal" onclick="setPaymentId(' . $_POST['id'] . ')">';
             $response['updated'] = $result['updated'];
             $response['html'] = $html;
         } else {
@@ -1192,7 +1233,7 @@ class AjaxRequest
         $result = $controller->updatePdfCode();
         if ($result['updated'] == 1) {
             $html =  '<span class="red-color">No validada<br>';
-            $html .= '<input type="button" value="Validar propuesta" class="btn btn-success" style="font-size: 8px;" data-target="#checkcommission" data-toggle="modal" onclick="setcommissionId(' . $_POST['id'] . ')">';
+            $html .= '<input type="button" value="Validar propuesta" class="btn btn-success" style="font-size: 10px;" data-target="#checkcommission" data-toggle="modal" onclick="setcommissionId(' . $_POST['id'] . ')">';
             $response['updated'] = $result['updated'];
             $response['html'] = $html;
         } else {

@@ -510,7 +510,7 @@ function icon($name, $show = false, $scape = false) {
         'home' => 'fas fa-store',
         'phone' => 'fa-phone',
         'truck' => 'fa-truck',
-        'delivered' => 'fa-handshake-o',
+        'delivered' => 'fa-handshake',
         'pending' => 'fa-clock',
         'incidence' => 'fa-wrench', // incidencias
         'ok' => 'fa-thumbs-o-up',
@@ -1795,6 +1795,9 @@ function loadMenu() {
  * $config['excludes'] archivos que queremos excluir
  */
 function listDirectory($path, $delete = false, $config = array('divresponse' => '', 'excludes' => array())) {
+    if(!isset($config['disabled'])) {
+        $config['disabled'] = false;
+    }
     $notAlloweds = array('.', '..', 'index.php');
     $icons = array(
         'rtf' => 'word',
@@ -1832,9 +1835,9 @@ function listDirectory($path, $delete = false, $config = array('divresponse' => 
                         echo '<a href="' . $file . '" target="_blank">' . icon($type, false) . '</a>';
                     }
 
-                    if ($delete) {
+                    if ($delete && !$config['disabled']) {
                         $onclick = 'onclick="unlinkFile(\'' . $file . '\', \'' . $path . '\', \'' . $fname . '\',  \'' . $config['divresponse'] . '\', \'' . $config['divresponse'] . $cont . '\')"';
-                        echo '<a  target="_blank" style="cursor: pointer;" ' . $onclick . ' title="Eliminar">' . delete_icon_js() . '</a><br>';
+                        echo '<a  class="red-color" target="_blank" style="cursor: pointer;" ' . $onclick . ' title="Eliminar">' . icon('delete', false) . '</a><br>';
                     }
                     echo '</span>';
 

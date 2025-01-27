@@ -201,23 +201,24 @@
             </div>
             <div class="col-sm-3 text-widget">
                 <div class="inline-block">
-                    <?php echo trans('hello') ?>, <?php echo $user->getUsername(); ?>
-                </div>
-                <div class="inline-block logout">
-                    <a href="<?php echo $logoutUrl; ?>" title="<?php echo trans('logout') ?>"
-                       class="ab-item"><?php icon('logout', true); ?><?php echo trans('logout') ?></a>
+                    <?php echo '<span class="filter-label-icon">'. icon('user', false) . '</span> ' . trans('hello') ?>, <?php echo $user->getUsername(); ?>
                 </div>
                 <div>
                 	<?php
                 	if (isSuperAdmin() || (is_object($user) && $user->getUsermanager() == 1) || $isAdmLogged) { ?>
-                		<a href="?controller=store&opt=getPdfsToDelete" style="text-decoration: none; cursor: default;"><img src="<?php echo ICONS_PATH ?>calendar.png" class="vert-align-middle">
+                		<a href="?controller=store&opt=getPdfsToDelete" style="text-decoration: none; cursor: default;">
+                            <span class="filter-label-icon"><?php icon('calendar', true); ?></span>
                 		</a>
                 	<?php } else { ?>
-                		<img src="<?php echo ICONS_PATH ?>calendar.png" class="vert-align-middle">
-                	<?php } ?>
-                    
-                    <b><?php echo trans('last_login') ?>
-                        : </b> <?php echo americaDate($user->getLastLogin(), $_SESSION['lang']); ?>
+                		<span class="filter-label-icon"><?php icon('calendar', true); ?></span>
+                	<?php }
+                        echo trans('last_login') ?>:  <?php echo americaDate($user->getLastLogin(), $_SESSION['lang']); 
+                    ?>
+                </div>
+                <div class="inline-block logout">
+                    <a href="<?php echo $logoutUrl; ?>" title="<?php echo trans('logout') ?>"
+                       class="ab-item"><?php icon('logout', true); ?><?php echo trans('logout') ?>
+                    </a>
                 </div>
             </div>
         </div>

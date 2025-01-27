@@ -195,7 +195,7 @@
                         } else {
                             echo '<span class="red-color">No validado<br>';
                             if ($user->getUserrepository() != 1) {
-                                echo '<input type="button" value="Validar total" class="btn btn-success" style="font-size: 8px;" data-bs-target="#checkTotal" data-bs-toggle="modal" onclick="setTotalId(' . $pdf->id . ')">';
+                                echo '<input type="button" value="Validar total" class="btn btn-success" style="font-size: 10px;" data-bs-target="#checkTotal" data-bs-toggle="modal" onclick="setTotalId(' . $pdf->id . ')">';
                             }
 
                         }
@@ -222,7 +222,7 @@
                             } else {
                                 echo '<span class="red-color">No validado</span><br>';
                                 if ($user->getUserrepository() != 1) {
-                                    echo '<input type="button" value="Validar pago" class="btn btn-success" style="font-size: 8px;" data-bs-target="#checkPayment" data-bs-toggle="modal" onclick="setPaymentId(' . $pdf->id . ')">';
+                                    echo '<input type="button" value="Validar pago" class="btn btn-success" style="font-size: 10px;" data-bs-target="#checkPayment" data-bs-toggle="modal" onclick="setPaymentId(' . $pdf->id . ')">';
                                 }
 
                             }
@@ -314,7 +314,7 @@
                         } else {
                             $commison =  '<br><span class="red-color">No validada</span>';
                             if (isadmin() || $user->getUsermanager() == 1 && !$cancelled) {
-                                $commison .= '<input type="button" value="Validar propuesta" class="btn btn-success" style="font-size: 8px;" data-bs-target="#checkcommission" data-bs-toggle="modal" onclick="setcommissionId(' . $pdf->id . ')">';
+                                $commison .= '<input type="button" value="Validar propuesta" class="btn btn-success" style="font-size: 10px;" data-bs-target="#checkcommission" data-bs-toggle="modal" onclick="setcommissionId(' . $pdf->id . ')">';
                             }
                             echo $commison;
                         }

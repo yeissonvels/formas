@@ -894,7 +894,6 @@
                                 <label for="total_checked_note" class="col-12 col-form-label">
                                     <?php
                                         $msg = "<h6>Este número de teléfono ya está asociado a otro presupuesto pendiente de conversión a venta.</h6>";
-                                        $msg .= "<h6 class='mt-3'>Por favor, informa a tu superior para verificar la situación.</h6>";
                                         warningMsg($msg, true); 
                                     ?>
                                 </label>

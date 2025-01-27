@@ -1,12 +1,10 @@
 <!-- Modal de comentarios clientes -->
-<div aria-labelledby="exampleModalLiveLabel" role="dialog" tabindex="-1" class="modal fade show" id="customerComments">
+<div aria-labelledby="exampleModalLiveLabel" role="dialog" tabindex="-1" class="modal fade" id="customerComments">
     <div role="document" class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 id="exampleModalLiveLabel" class="modal-title">Conversaciones con el cliente <?php icon('phone', true); ?></h5>
-                <button aria-label="Close" data-dismiss="modal" class="close" type="button">
-                    <span aria-hidden="true">×</span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="container-fluid">
@@ -39,14 +37,12 @@
 
 <!-- Modal de comentarios internos -->
 
-<div aria-labelledby="exampleModalLiveLabel" role="dialog" tabindex="-1" class="modal fade show" id="ourComments">
+<div aria-labelledby="exampleModalLiveLabel" role="dialog" tabindex="-1" class="modal fade" id="ourComments">
     <div role="document" class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 id="exampleModalLiveLabel" class="modal-title">Comentarios internos <?php icon('comments', true); ?></h5>
-                <button aria-label="Close" data-dismiss="modal" class="close" type="button" onclick="checkChangeStatusNoComment();">
-                    <span aria-hidden="true">×</span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="checkChangeStatusNoComment();"></button>
             </div>
             <div class="modal-body">
                 <div class="container-fluid">
@@ -89,14 +85,12 @@
 
 
 <!-- Modal de incidencias -->
-<div aria-labelledby="exampleModalLiveLabel" role="dialog" tabindex="-1" class="modal fade show" id="incidences">
+<div aria-labelledby="exampleModalLiveLabel" role="dialog" tabindex="-1" class="modal fade" id="incidences">
     <div role="document" class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 id="exampleModalLiveLabel" class="modal-title">Incidencias <?php icon('incidence', true); ?></h5>
-                <button aria-label="Close" data-dismiss="modal" class="close" type="button">
-                    <span aria-hidden="true">×</span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="container-fluid">
@@ -104,13 +98,13 @@
                         <div class="col-lg-12">
                             <ul class="nav nav-tabs" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link active" href="#tab-incidences" role="tab" data-toggle="tab" id="inci-lk">Incidencias</a>
+                                    <a class="nav-link active" href="#tab-incidences" role="tab" data-bs-toggle="tab" id="inci-lk">Incidencias</a>
                                 </li>
                                 <li class="nav-item" style="display: none;">
-                                    <a class="nav-link" href="#tab-newincidence" role="tab" data-toggle="tab" id="editinci-lk">Editar</a>
+                                    <a class="nav-link" href="#tab-newincidence" role="tab" data-bs-toggle="tab" id="editinci-lk">Editar</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#tab-newincidence" role="tab" data-toggle="tab" id="newinci-lk" onclick="editIncidence(0, idnew)">Nueva</a>
+                                    <a class="nav-link" href="#tab-newincidence" role="tab" data-bs-toggle="tab" id="newinci-lk" onclick="editIncidence(0, idnew)">Nueva</a>
                                 </li>
                             </ul>
                             <!-- Tab panes -->
