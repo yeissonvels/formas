@@ -1,7 +1,7 @@
 <div class="card">
     <div class="card-header">
         <h4 class="card-title">Acabados</h4>
-        <span><a href="<?php echo getUrl('new_finish', $myController->getUrls()) ?>"><?php echo "Nuevo"; ?></a></span>
+        <span><a href="<?php echo getUrl('new_finish', $myController->getUrls()) ?>"><?php icon('save', true); ?></a></span>
         <?php update_icon(getUrl('show_finishes', $myController->getUrls())); ?>
     </div>
     <div class="card-block">

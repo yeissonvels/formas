@@ -10,10 +10,9 @@ class MailerController extends MailerModel {
     private $result = '';
     private $logo = '';
 
-    function __construct($to, $subject, $message, $logo = 'logo-formas-naranja.png')
+    function __construct($subject, $message, $logo = 'logo-formas-naranja.png')
     {
         parent::__construct();
-        $this->to = $to;
         $this->subject = $subject;
         $this->message = $message;
         $this->logo = $logo;
@@ -21,8 +20,9 @@ class MailerController extends MailerModel {
 
     function sendEmail() {
         $mail = new PHPMailer(true);
-        $to = $this->to;
         $config = $this->getMailerConfig(1);
+        $to = $config->_to;
+        $cc = $config->_cc;
         
         try {
             $mail->isSMTP();
@@ -34,10 +34,10 @@ class MailerController extends MailerModel {
             $mail->Port = 587;
         
             $mail->setFrom($config->user, $config->fromName);
-            $mail->addAddress("$to");
+            $mail->addAddress($to);
+            $mail->addCC($cc);
 
             // Adjuntar imagen como embebida
-            $embeddedImagen = 
             $mail->addEmbeddedImage((IMAGES_DIR . $this->logo), 'imagenCID');
         
             $mail->isHTML(true);

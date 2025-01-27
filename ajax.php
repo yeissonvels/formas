@@ -1375,7 +1375,7 @@ class AjaxRequest
             $mailInfo['id'] = $result['lastid'];
             $mailInfo['store'] = getStoreName($user->getStoreId());
             $mailInfo['user'] = $user->getUsername();
-            $controller->notifyNewEstimate("yeisson.velez@gmail.com", "Nuevo presupuesto creado", $mailInfo);
+            $controller->notifyNewEstimate($mailInfo);
         }
 
         echo json_encode($result);
