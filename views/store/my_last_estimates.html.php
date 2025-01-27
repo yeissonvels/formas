@@ -1,4 +1,4 @@
-<table class="table">
+<table class="table" id="myLastEstimates">
     <thead>
         <tr>
             <th>Nº presupuesto</th>
@@ -29,7 +29,7 @@
                     $html .= '</tr>';
                 }
             } else {
-                $html .= '<tr><td colspan="5">No hay estimaciones disponibles</td></tr>';
+                $html .= '<tr class="table-warning"><td colspan="5">¡No se han encontrado presupuestos pendientes!</td></tr>';
             }
             echo $html;
             

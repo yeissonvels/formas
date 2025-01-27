@@ -4,6 +4,7 @@
 <script>
     var id = "<?php echo $data ? $data->id : ''; ?>";
     var codeValidated = <?php  echo $data && $data->code ? 'true' : 'false' ?>;
+    let modalValidated = <?php  echo $data && $data->code ? 'true' : 'false' ?>;
 
     $(document).ready(function(){
         $("#search-box").keyup(function(){
@@ -39,15 +40,15 @@
         });
 
         $("#search-box-code").keyup(function () {
-        $('#code').prop("value", "");
+            $('#code').prop("value", "");
             codeValidated = false;
+            modalValidated = false;
             if ($(this).val() != "") {
                 let config = {
                     searchBox: '#search-box-code',
                     inputId: '#code',
                     suggestionBox: '#suggesstion-box-code'
                 };
-
                 // Retornar una promesa
                 return new Promise((resolve, reject) => {
                     $.ajax({
@@ -98,27 +99,27 @@
         console.log("Estimate ID:", estimate.id);
         console.log("Customer:", estimate.customer);
         // Resto de la lógica para manejar la estimación
-        $('#code').prop('value', estimate.id);
+        $('#code').prop('value', estimate.code);
         codeValidated = true;
         $('#search-box-code').prop('value', estimate.code);
         $('#customer').prop('value', estimate.customer);
         $('#tel').prop('value', estimate.tel);
+        $('#tel2').prop('value', estimate.tel2);
         $('#total').prop('value', estimate.total);
         
     }
 
-    function selectEstimateCode(id, code, configString) {
+    function selectEstimateCode(code, fullCode, configString) {
         let config = configString.split(',');
-        $(config[0]).val(code);
-        $(config[1]).val(id);
+        $(config[0]).val(fullCode);
+        $(config[1]).val(code);
         $(config[2]).hide();
-        codeValidated = true;
 
         $.ajax({
             type: "POST",
             url: "/ajax.php",
             data: {
-                id: id,
+                estimatecode: code,
                 config: config,
                 nocancelled: 'yes',
                 op: 'getEstimateData',
@@ -128,9 +129,13 @@
             },
             success: function (data) {
                 let estimateData = JSON.parse(data);
+                codeValidated = true;
                 $('#customer').prop('value', estimateData['customer']);
                 $('#tel').prop('value', estimateData['tel']);
+                $('#tel2').prop('value', estimateData['tel2']);
                 $('#total').prop('value', estimateData['total']);
+                $('#payed').prop('value', '');
+                $('#paymethod').prop('value', '');
                 console.log(estimateData);
             }
         });
@@ -172,6 +177,11 @@
         }
     }
 
+    function modalConfirmated(){
+        modalValidated = true;
+        saveSale();
+    }
+
     function saveSale() {
         if ($('#saletype').val() == 0) {
             comprobate = Array('#saledate', '#code', '#search-box-code', '#customer', '#total', '#payed', '#paymethod');
@@ -186,39 +196,47 @@
         }
 
         if (checkNoEmpty(comprobate) && codeValidated) {
-            $('#sp-save-sale').show();
-            $.ajax({
-                type: "post",
-                url: '/ajax.php',
-                data: $('#frm-saledata').serialize(),
-            }).done(function (data) {
-                $('#sp-save-sale').hide();
-                var res = JSON.parse(data);
-                var salelabel = 'venta';
-                if ($('#saletype').val() == 1) {
-                    salelabel = 'variación';
-                }
-                if (res['saved'] == 1) {
-                    id = res['lastid'];
-                    alert('Datos de la ' + salelabel + ' registrados.');
-                    $('#btn-save-sale').prop('value', 'Modificar venta');
-                    $('#opt-save-sale').prop('value', 'updateSale');
-                    $('#id').prop('value', id);
-                    //$('#div_img').show(); // Las imágenes se cargan ahora en la sección de documentos adicionales
-                    $('#div_img2').show();
-                    if ($('#saletype').val() == 0) {
-                        $('#div_pdf').show();
+            if(!modalValidated) {
+                $('#modalAlert').modal('show');
+            }
+            
+            if(modalValidated){
+                $('#sp-save-sale').show();
+                $.ajax({
+                    type: "post",
+                    url: '/ajax.php',
+                    data: $('#frm-saledata').serialize(),
+                }).done(function (data) {
+                    $('#sp-save-sale').hide();
+                    var res = JSON.parse(data);
+                    var salelabel = 'venta';
+                    if ($('#saletype').val() == 1) {
+                        salelabel = 'variación';
                     }
-                    scrollingTo('#div_img2');
-                    $('#commentsdiv').show();
-                } else if (res['codeduplicated']) {
-                    alert('Error al crear la venta. El código de pedido ya existe en otra venta!');
-                } else if (res['updated'] == 1) {
-                    alert('Datos de ' + salelabel + ' actualizados correctamente!');
-                } else if (res['duplicated'] == 1) {
-                    alert('Nada para actualizar!');
-                }
-            });
+                    if (res['saved'] == 1) {
+                        id = res['lastid'];
+                        alert('Datos de la ' + salelabel + ' registrados.');
+                        $('#btn-save-sale').prop('value', 'Modificar venta');
+                        $('#opt-save-sale').prop('value', 'updateSale');
+                        $('#id').prop('value', id);
+                        //$('#div_img').show(); // Las imágenes se cargan ahora en la sección de documentos adicionales
+                        $('#div_img2').show();
+                        if ($('#saletype').val() == 0) {
+                            $('#div_pdf').show();
+                        }
+                        scrollingTo('#div_img2');
+                        $('#commentsdiv').show();
+                    } else if (res['codeduplicated']) {
+                        alert('Error al crear la venta. El código de pedido ya existe en otra venta!');
+                    } else if (res['updated'] == 1) {
+                        alert('Datos de ' + salelabel + ' actualizados correctamente!');
+                    } else if (res['duplicated'] == 1) {
+                        alert('Nada para actualizar!');
+                    }
+                });
+            } else {
+                console.log('Modal no validada');
+            }
         } else {
             alert(completeRequiredFields);
         }
@@ -634,7 +652,7 @@
                         <label for="parentcode"
                                class="col-sm-2 col-form-label">Nº de pedido asociado</label>
                         <div class="col-sm-10">
-                            <input type="text" id="search-box" placeholder="Código o nombre del cliente"  class="form-control" value="<?php echo $parentValue; ?>" autocomplete="off"/>
+                            <input type="text" id="search-box" placeholder="Código o nombre del cliente"  class="form-control" value="<?php echo $parentValue; ?>" autocomplete="off" <?php echo $disabled; ?>/>
                             <input type="hidden" name="parentcode" id="parentcode" value="<?php echo $data ? $data->parentcode: ''; ?>" autocomplete="off">
                             <div id="suggesstion-box" style="position: absolute; z-index: 10000;"></div>
                         </div>
@@ -673,7 +691,7 @@
                         <label for="code"
                                class="col-sm-2 col-form-label">Nº de pedido</label>
                         <div class="col-sm-10">
-                            <input type="text" id="search-box-code" placeholder="Código o nombre del cliente"  class="form-control" value="<?php echo $codeValue; ?>" autocomplete="off"/>
+                            <input type="text" id="search-box-code" placeholder="Código o nombre del cliente"  class="form-control" value="<?php echo $codeValue; ?>" autocomplete="off" <?php echo $disabled; ?>/>
                             <input type="hidden" name="code" id="code" value="<?php echo $data ? $data->code: ''; ?>" autocomplete="off">
                             <div id="suggesstion-box-code" style="position: absolute; z-index: 10000;"></div>
                         </div>
@@ -698,6 +716,14 @@
                         <div class="col-sm-10">
                             <input type="text" class="form-control" name="tel" id="tel"
                                    value="<?php echo $data ? $data->tel : ''; ?>" <?php echo $disabled; ?>>
+                        </div>
+                    </div>
+                    <div class="form-group row" id="div_telefono2" style="<?php echo $displayCustomer; ?>">
+                        <label for="tel2"
+                               class="col-sm-2 col-form-label">Teléfono 2</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="tel2" id="tel2"
+                                   value="<?php echo $data ? $data->tel2 : ''; ?>" <?php echo $disabled; ?>>
                         </div>
                     </div>
                     <div class="form-group row" id="div_total">
@@ -772,6 +798,8 @@
                 ?>
                 <div class="modal-body">
                     <h6>Mis últimos presupuestos <?php icon('estimate', true); ?></h6>
+                    <h6>
+                        <a href="#" onclick="$('#myLastEstimates').slideToggle('slow');"><?php icon('view', true);?></a></h6>
                     <?php 
                         $myController->showMyLastEstimates();
                     ?>
@@ -844,7 +872,7 @@
                        class="col-sm-1 col-form-label">Documentos adicionales<?php icon('image', true) . "" . icon('word', true); ?></label>
                 <div class="col-sm-8">
                     <input type="file" id="image2" class="form-control" multiple="multiple" onchange="addImage('secondary');"
-                           onclick="border_ok('#image2')">
+                           onclick="border_ok('#image2')" >
                 </div>
 
                     <div class="col-sm-2">
@@ -858,7 +886,8 @@
                     if ($data) {
                         $config = array(
                             'divresponse' => 'ajax-extra-images-content',
-                            'excludes' => array()
+                            'excludes' => array(),
+                            'disabled' => $disabled
                         );
 
                         listDirectory('uploaded-files/images/' . $data->id . '/secondary/', true, $config);
@@ -924,5 +953,51 @@
                 exit_btn(getUrl('show_pdfs', $myController->getUrls()));
             ?>
         </div>
+    </div>
+</div>
+
+<!-- Modal de alerta para pedir confirmación antes de guardar la venta -->
+<div aria-labelledby="exampleModalLiveLabel" role="dialog" tabindex="-1" class="modal fade" id="modalAlert">
+    <div role="document" class="modal-dialog">
+        <form id="totalValidationForm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="exampleModalLiveLabel" class="modal-title red-color">Atención <?php icon('attention2', true); ?></h5>
+                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <label for="total_checked_note" class="col-12 col-form-label">
+                                    <?php
+                                        
+                                        $msg = "<h5>¿Confirmas que los datos son correctos?</h5>";
+
+                                        $msgRegister = "<h6>Una vez registrada la venta, esta quedará vinculada al presupuesto seleccionado.</h6>";
+                                        $msgUpdate = "<h6>Si estás cambiando el número de presupuesto, el presupuesto anterior que estaba vinculado con la venta quedará liberado.</h6>";
+
+                                        $complementMsg = $msgRegister;
+
+                                        if($data) {
+                                            $complementMsg = $msgUpdate;
+                                        }
+
+                                        $msg .= $complementMsg;
+                                        
+                                        $msg .= "<h6 class='mt-3'>Pulsa el botón <span class='text-primary'>'Confirmar datos'</span> para continuar o <span style='color: red;'>'Salir'</span> para modificar los datos.</h6>";
+                                        warningMsg($msg, true); 
+                                    ?>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button data-bs-dismiss="modal" class="btn btn-primary" type="button" onclick="modalConfirmated();">Confirmar datos</button>
+                    <button data-bs-dismiss="modal" class="btn btn-danger" type="button">Salir</button>
+                </div>
+            </div>
+        </form>
     </div>
 </div>

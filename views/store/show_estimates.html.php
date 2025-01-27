@@ -349,18 +349,22 @@
 <div class="card">
     <div class="card-header">
         <h4 class="card-title">Presupuestos <?php icon('estimate', true); ?></h4>
-        <span><a href="<?php echo getUrl('new_estimate', $myController->getUrls()); ?>">Nuevo</a></span>
+        <span><a href="<?php echo getUrl('new_estimate', $myController->getUrls()); ?>"><?php icon('save', true); ?></a></span>
         <?php update_icon(getUrl('show_estimates', $myController->getUrls())); ?>
         <form action="<?php echo getUrl('show_estimates', $myController->getUrls()); ?>" method="post" id="frm1">
             <div class="form-group row">
-                <label for="purchasedate" class="col-sm-1 col-form-label">Mes <?php icon('calendar', true);?></label>
+                <label for="purchasedate" class="col-sm-1 col-form-label">
+                    <h6 class="filter-label-icon">Mes <?php icon('calendar', true);?></h6>
+                </label>
                 <div class="col-sm-2">
                     <?php
                         generateSelectMonth("", false);
                 	?>
                 </div>
                 <?php if (userWithPrivileges()){ ?>
-                <label for="year" class="col-sm-1 col-form-label">Año <?php icon('calendar', true);?></label>
+                <label for="year" class="col-sm-1 col-form-label">
+                    <h6 class="filter-label-icon">Año <?php icon('calendar', true);?></h6>
+                </label>
                 <div class="col-sm-2">
                     <?php generateSelectYear(2017, "", false); ?>
                 </div>
@@ -380,9 +384,11 @@
 
             <?php
             global $user;
-            if (isadmin() || $user->getUsermanager() == 1 || $user->getUseraccounting() == 1 || $user->getUserrepository() == 1) { ?>
+            if (userWithPrivileges()) { ?>
                 <div class="form-group row">
-                    <label for="purchasedate" class="col-sm-1 col-form-label">Usuario <?php icon('user', true);?></label>
+                    <label for="purchasedate" class="col-sm-1 col-form-label">
+                        <h6 class="filter-label-icon">Usuario <?php icon('user', true);?></h6>
+                    </label>
                     <div class="col-sm-2">
                         <select name="user" class="form-select">
                             <option value="">Elije uno</option>
@@ -397,7 +403,9 @@
                         </select>
                     </div>
 
-                    <label for="purchasedate" class="col-sm-1 col-form-label">Tienda <?php icon('home', true);?></label>
+                    <label for="purchasedate" class="col-sm-1 col-form-label">
+                        <h6 class="filter-label-icon">Tienda <?php icon('home', true);?></h6>
+                    </label>
                     <div class="col-sm-2">
                         <select name="store" class="form-select">
                             <option value="">Elija una tienda</option>
@@ -418,11 +426,15 @@
             <?php } ?>
                 <div class="form-group row">
                     <?php if (userWithPrivileges()) { ?>
-                      <label for="from" class="col-sm-1 col-form-label">Desde <?php icon('calendar', true);?></label>
+                      <label for="from" class="col-sm-1 col-form-label">
+                        <h6 class="filter-label-icon">Desde <?php icon('calendar', true);?></h6>
+                      </label>
                       <div class="col-sm-2">
                           <input type="text" name="from" id="from" class="form-control">
                       </div>
-                      <label for="to" class="col-sm-1 col-form-label">Hasta <?php icon('calendar', true);?></label>
+                      <label for="to" class="col-sm-1 col-form-label">
+                        <h6 class="filter-label-icon">Hasta <?php icon('calendar', true);?></h6>
+                      </label>
                       <div class="col-sm-2">
                           <input type="text" name="to" id="to" class="form-control">
                       </div>
@@ -431,7 +443,24 @@
                 </div>
 
                 <div class="form-group row">
-                    <label for="from" class="col-sm-1 col-form-label">Código <?php icon('barcode', true); ?></label>
+                <?php 
+                    if (userWithPrivileges()) { ?>
+                        <label for="from" class="col-sm-1 col-form-label">
+                        <h6 class="filter-label-icon">Estado <?php icon('status', true);?></h6>
+                        </label>
+                        <div class="col-sm-2">
+                            <select class="form-select" name="status" id="status">
+                                <option value="">Elije uno</option>
+                                <option value="no">Sin venta</option>
+                                <option value="yes">Convertido en venta</option>
+                            </select>
+                        </div>
+                <?php 
+                    }
+                ?>
+                    <label for="from" class="col-sm-1 col-form-label">
+                        <h6 class="filter-label-icon">Código <?php icon('barcode', true); ?></h6>
+                    </label>
                     <div class="col-sm-4">
                         <input type="text" id="search-box" class="form-control" placeholder="Código o nombre del cliente">
                         <input type="hidden" name="code" id="code" class="form-control" value="">

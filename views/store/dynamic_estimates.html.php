@@ -29,8 +29,9 @@
     }
     ?>
     <tr>
-        <th>Id</th>
+        <!--<th>Id</th>-->
         <th>Código</th>
+        <th>Venta creada</th>
         <th>Fecha de presupuesto</th>
         <!--< ?php if ($controller->canIseeTheInitialSale($data->storeid)) { ?>
             <th>Venta inicial creada</th>
@@ -92,11 +93,16 @@
 
         ?>
         <tr <?php echo $trClass ?> id="tr-<?php echo $pdf->id; ?>" <?php echo $cancelled ? 'title="' . $cancelled_title . '"' : ''; ?>>
-            <td>
-                <?php echo $pdf->id; ?>
-            </td>
+            <!--<td>
+                < ?php echo $pdf->id; ?>
+            </td>-->
             <td>
                 <?php echo $pdf->code; ?>
+            </td>
+            <td>
+                <?php 
+                    echo (int)$pdf->status === 1 ? ('<span class="text-success">' . icon('checked', false)) . '</span>' : 'No';
+                ?>
             </td>
             <td><?php echo americaDate($pdf->saledate, false); ?></td>
             <td>

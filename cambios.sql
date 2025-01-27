@@ -5,6 +5,7 @@ ALTER TABLE `ge_pdfs` CHANGE `dni` `dni` VARCHAR(14) CHARACTER SET latin1 COLLAT
 ALTER TABLE `ge_pdfs` CHANGE `cancelled` `cancelled` INT(11) NOT NULL DEFAULT '0';
 ALTER TABLE `ge_pdfs` CHANGE `pdf_yet_printed` `pdf_yet_printed` INT(11) NOT NULL DEFAULT '0' COMMENT 'Nos permite controlar si la propuesta de pedido ya se imprimio', CHANGE `pending_payed_on` `pending_payed_on` DATETIME NULL DEFAULT NULL;
 ALTER TABLE `ge_pdfs` ADD `tel` VARCHAR(60) NULL DEFAULT NULL AFTER `customer`;
+ALTER TABLE `ge_pdfs` ADD `tel2` VARCHAR(60) NULL DEFAULT NULL AFTER `tel`;
 
 -- TABLA USUARIOS 
 ALTER TABLE `ge_users` CHANGE `last_login` `last_login` DATETIME NULL DEFAULT NULL;
@@ -61,6 +62,30 @@ ALTER TABLE `ge_estimate_comments`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 
-  --- INCIDENCES
+--- INCIDENCES
 
   ALTER TABLE `ge_incidences` CHANGE `observations` `observations` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL COMMENT 'Observaciones para la entrega', CHANGE `customer` `customer` VARCHAR(100) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL COMMENT 'Sólo cuando la incidencia no pertenece a un pedido', CHANGE `dni` `dni` VARCHAR(11) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL, CHANGE `address` `address` VARCHAR(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL, CHANGE `cp` `cp` INT(11) NULL, CHANGE `city` `city` VARCHAR(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL, CHANGE `provinceid` `provinceid` INT(11) NULL, CHANGE `telephone` `telephone` VARCHAR(20) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL, CHANGE `telephone2` `telephone2` VARCHAR(20) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL, CHANGE `email` `email` VARCHAR(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL, CHANGE `deliverydate` `deliverydate` DATETIME NULL, CHANGE `seller` `seller` VARCHAR(20) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL, CHANGE `assembler` `assembler` VARCHAR(20) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL;
+
+
+--- ORDERS
+
+ALTER TABLE `ge_orders` CHANGE `deliverydate` `deliverydate` DATETIME NULL DEFAULT NULL;
+ALTER TABLE `ge_orders` CHANGE `status` `status` INT(11) NOT NULL DEFAULT '0' COMMENT '0 = Pendiente, 1 = Listo, 2 = Entregado, 3 = Entregado incidencia';
+ALTER TABLE `ge_orders` CHANGE `readydeliverydate` `readydeliverydate` DATETIME NULL DEFAULT NULL;
+ALTER TABLE `ge_orders` CHANGE `finishdeliveryfile` `finishdeliveryfile` VARCHAR(100) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
+ALTER TABLE `ge_orders` CHANGE `finishdeliverycreatedon` `finishdeliverycreatedon` DATETIME NULL DEFAULT NULL;
+ALTER TABLE `ge_orders` CHANGE `finishdeliverycreatedby` `finishdeliverycreatedby` INT(11) NULL DEFAULT '-1';
+ALTER TABLE `ge_orders` CHANGE `cancelled` `cancelled` INT(11) NOT NULL DEFAULT '0';
+ALTER TABLE `ge_orders` CHANGE `saveditems` `saveditems` INT(11) NOT NULL DEFAULT '0';
+
+--- ORDER ITEMS
+
+ALTER TABLE `ge_order_items` CHANGE `manufacturing_in` `manufacturing_in` DATETIME NULL DEFAULT NULL COMMENT 'Entrada en fabricación';
+ALTER TABLE `ge_order_items` CHANGE `manufacturing_out` `manufacturing_out` DATETIME NULL DEFAULT NULL COMMENT 'Salida de fabricación';
+ALTER TABLE `ge_order_items` CHANGE `finish_in` `finish_in` DATETIME NULL DEFAULT NULL COMMENT 'Entrada en acabado', CHANGE `finish_out` `finish_out` DATETIME NULL DEFAULT NULL COMMENT 'Salida de acabado', CHANGE `store_in` `store_in` DATETIME NULL DEFAULT NULL COMMENT 'Entrada al almacén', CHANGE `store_out` `store_out` DATETIME NULL DEFAULT NULL COMMENT 'Salida del almacén';
+
+
+---- ge_order_comments
+
+ALTER TABLE `ge_order_comments` CHANGE `readydelivery` `readydelivery` INT(11) NULL DEFAULT NULL COMMENT 'comentario para el estado listo para entrega';
+ALTER TABLE `ge_order_comments` CHANGE `delivered` `delivered` INT(11) NOT NULL DEFAULT '0' COMMENT 'Comentario para el estado entregado';

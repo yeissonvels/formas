@@ -339,7 +339,8 @@ datePicker(array('purchasedate', 'deliverydate', 'paydate'));
         }
     }
 
-    /* Controlamos si seleccionamos un estado de pedido diferente se nos abre el modal para el comentario
+    /* 
+     Controlamos si seleccionamos un estado de pedido diferente se nos abre el modal para el comentario
      pero no guardamos ningún comentario, es decir le damos al borón de salir o cerrar.
      */
     function checkChangeStatusNoComment() {
@@ -694,12 +695,18 @@ if ($canEdit) {
                     $pdfid = $_GET['pdfid'];
                     $mycode = $data['pdfinfo']->code;
                     $myCustomer = $data['pdfinfo']->customer;
+                    $myTel1 = $data['pdfinfo']->tel;
+                    $myTel2 = $data['pdfinfo']->tel2;
+                    $myTotal = $data['pdfinfo']->total;
                     $purchaseDate = americaDate($data['pdfinfo']->saledate, false);
                     $myStore = $data['pdfinfo']->storeid;
 
                 } else {
                     $mycode = $data['data']->getCode();
                     $myCustomer = $data['data']->getCustomer();
+                    $myTel1 = $data['data']->getTelephone();
+                    $myTel2 = $data['data']->getTelephone2();
+                    $myTotal = numberFormat($data['data']->getTotal(), true, 2);
                     $purchaseDate = americaDate($data['data']->getPurchasedate(), false);
                     $myStore = $data['data']->getStore();
                     $pdfid = $data['data']->getPdfid();
@@ -741,14 +748,14 @@ if ($canEdit) {
                     <label for="telephone" class="col-sm-2 col-form-label">Teléfono</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" id="telephone" name="telephone" placeholder=""
-                               value="<?php echo($data['data'] ? $data['data']->getTelephone() : ''); ?>" <?php echo $disabled; ?>>
+                               value="<?php echo $myTel1; ?>" <?php echo $disabled; ?>>
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="telephone2" class="col-sm-2 col-form-label">Teléfono 2</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" id="telephone2" name="telephone2" placeholder=""
-                               value="<?php echo($data['data'] ? $data['data']->getTelephone2() : ''); ?>" <?php echo $disabled; ?>>
+                               value="<?php echo $myTel2; ?>" <?php echo $disabled; ?>>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -821,7 +828,7 @@ if ($canEdit) {
                     <label for="total" class="col-sm-2 col-form-label">Importe total</label>
                     <div class="col-sm-10">
                         <input type="text" name="total" id="total" class="form-control"
-                               value="<?php echo $data['data'] ? numberFormat($data['data']->getTotal(), true, 2) : ""; ?>"
+                               value="<?php echo $myTotal; ?>"
                             <?php echo $disabled; ?> onkeyup="addCommas($(this).prop('id'), $(this).val());">
                         <?php if ($canEdit) { ?>
                             <span class="red-color">(decimales separados por coma)</span>

@@ -249,8 +249,8 @@ class StoreModel extends Store
         return $response;
     }
 
-    function updateEstimateStatus($id) {
-        $query = "UPDATE " . $this->estimatesTable . " SET status = 1 WHERE id = $id";
+    function updateEstimateStatus($id, $status) {
+        $query = "UPDATE " . $this->estimatesTable . " SET status = $status WHERE id = $id";
         $this->wpdb->query($query);
     }
 
@@ -330,6 +330,14 @@ class StoreModel extends Store
         }
 
         return $data;
+    }
+
+    /**
+     * Para la nueva funcionalidad (2025)
+     * 
+     */
+    function getSaleData($saleId) {
+        return $this->wpdb->getOneRow($this->pdfsTable, $saleId);
     }
 
     function getAdjustPendingPayData() {
@@ -524,6 +532,7 @@ class StoreModel extends Store
 
         $filterUser = "";
         $filterCommission = "";
+        $filterStatus = "";
 
         // Si es por rango de fechas sustituímos el filtro anterior $filterDate
         if (!empty($_POST['from']) && !empty($_POST['to'])) {
@@ -550,6 +559,10 @@ class StoreModel extends Store
                 $filterCommission = ' AND pdfname <>  "" AND saletype = 0 AND commissionpayed = 0';
             }
 
+            if(!empty($_POST['status'])) {
+                $filterStatus = " AND status =  " . ($_POST['status'] == 'no' ? '0' : '1');
+            }
+
             // Concatenamos el filtro de usuario en filterDate
             $filterDate .= $filterUser . $filterCommission;
         } else {
@@ -560,9 +573,11 @@ class StoreModel extends Store
 
         $query = "SELECT *, p.id as id FROM ";
         $query .= $this->estimatesTable . " p, " . $this->usersTable . " u ";
-        $where = " WHERE " . $firstfilter. " " . $filterStore . $filterDate;
+        $where = " WHERE " . $firstfilter. " " . $filterStore . $filterDate . $filterStatus;
         $orderby = " ORDER BY code ASC, created_on ASC";
-        $estimates = $this->wpdb->get_results($query . $where . $orderby);
+        $query .= $where . $orderby;
+        //echo $query;
+        $estimates = $this->wpdb->get_results($query);
 
         if (userWithPrivileges() && $estimates) {
             $pdfparameters = '&commission=' . ($_POST['commission'] ?? "") . '&from=' . $_POST['from'] . '&to=' . $_POST['to'];
@@ -609,6 +624,7 @@ class StoreModel extends Store
     }
 
     function getEstimateData($id = 0, $comments = true) {
+        echo $id;
         $estimateId = $id > 0 ? $id : $_GET['id'];
         $data = $this->wpdb->getOneRow($this->estimatesTable, $estimateId);
         $data->creator = getUsername($data->created_by); // Ahora lo usamos (getPdfStoreOrder)
@@ -620,6 +636,11 @@ class StoreModel extends Store
         $data->products = [];
 
         return $data;
+    }
+
+    function getEstimateDataByCode($code) {
+        $query = "SELECT * FROM " . $this->estimatesTable . " WHERE code = '$code'";
+        return $this->wpdb->get_row($query);
     }
 
     function updateEstimate($whereField = 'id') {

@@ -497,6 +497,7 @@ class OrderModel
 
         //echo $query;
         $pdfs = $this->wpdb->get_results($query);
+        //pre($pdfs);
 
         return $pdfs;
     }
