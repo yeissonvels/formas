@@ -78,6 +78,8 @@ class ComposerStaticInit42abba291589bdf4648cbbfbb7ea78be
         'ArticleCategoryModel' => __DIR__ . '/../..' . '/model/ArticleCategoryModel.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Config' => __DIR__ . '/../..' . '/conf/Config.php',
+        'ConfiguratorController' => __DIR__ . '/../..' . '/controller/ConfiguratorController.php',
+        'ConfiguratorModel' => __DIR__ . '/../..' . '/model/ConfiguratorModel.php',
         'Controller' => __DIR__ . '/../..' . '/classes/Controller.php',
         'ControllerController' => __DIR__ . '/../..' . '/controller/ControllerController.php',
         'ControllerModel' => __DIR__ . '/../..' . '/model/ControllerModel.php',

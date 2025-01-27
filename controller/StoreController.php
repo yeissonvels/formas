@@ -401,9 +401,9 @@ class StoreController extends StoreModel
 		include($tpl);
 	}
 
-    function notifyNewEstimate($to, $subject, $estimateData) {
+    function notifyNewEstimate($estimateData) {
         $message = $this->createNotifyEmailContent($estimateData);
-        $mailController = new MailerController($to, $subject, $message);
+        $mailController = new MailerController("Nuevo presupuesto", $message);
         
         // Como acabamos de crear el presupuesto no tenemos el id en $_POST pero si en $estimate
         $_POST['id'] = $estimateData['id'];

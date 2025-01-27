@@ -65,7 +65,7 @@
 <div class="card">
     <div class="card-header">
         <h4 class="card-title">Incidencias <?php icon('incidence', true); ?></h4>
-        <span><a href="<?php echo getUrl('new_incidence', $myController->getUrls()); ?>">Nueva</a></span>
+        <span><a href="<?php echo getUrl('new_incidence', $myController->getUrls()); ?>"><?php icon('save', true); ?></a></span>
         <?php update_icon(getUrl('show_incidences', $myController->getUrls())); ?>
         <form action="" method="post" id="frm1">
             <div class="form-group row">

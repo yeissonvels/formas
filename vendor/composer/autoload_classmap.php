@@ -14,6 +14,8 @@ return array(
     'ArticleCategoryModel' => $baseDir . '/model/ArticleCategoryModel.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'Config' => $baseDir . '/conf/Config.php',
+    'ConfiguratorController' => $baseDir . '/controller/ConfiguratorController.php',
+    'ConfiguratorModel' => $baseDir . '/model/ConfiguratorModel.php',
     'Controller' => $baseDir . '/classes/Controller.php',
     'ControllerController' => $baseDir . '/controller/ControllerController.php',
     'ControllerModel' => $baseDir . '/model/ControllerModel.php',

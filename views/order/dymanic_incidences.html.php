@@ -75,6 +75,10 @@
             $trClass = 'table-info';
         }
 
+        if($incidence->status == 1) {
+            $trClass = 'table-success';
+        }
+
         if ($incidence->orderid > 0) {
             $_REQUEST['id'] = $incidence->orderid;
             $orderData = $controller->getOrderData(true);
