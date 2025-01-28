@@ -8,8 +8,8 @@
 
     <div class="card">
         <div class="card-header">
-            <h4 class="card-title"><?php echo trans('users') ?></h4>
-            <span><a href="<?php echo getUrl('new', $this->urls); ?>"><?php echo trans('new') ?></a></span>
+            <h4 class="card-title"><?php echo trans('users') . " " . icon('group', false) ?></h4>
+            <span><a href="<?php echo getUrl('new', $this->urls); ?>"><?php icon('save', true); ?></a></span>
             <?php update_icon(getUrl('show', $this->urls)); ?>
         </div>
         <div class="card-block">

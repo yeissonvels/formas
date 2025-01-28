@@ -466,10 +466,10 @@ class AjaxRequest
             $_POST['code'] = $code;
         }
 
-        // Obtenemos el código del presupuesto: desde el formulario se envía el id del presupuesto
+        // Obtenemos los datos del presupuesto: desde el formulario se envía el código del presupuesto
         $estimateData = $controller->getEstimateDataByCode($_POST['code']);
         
-        $_POST['code'] = $estimateData->code;
+        //$_POST['code'] = $estimateData->code;
         $result = $controller->saveSale();
 
 
@@ -488,27 +488,27 @@ class AjaxRequest
         // OJO: nueva funcionalidad 2025
         // Obtenemos los datos actuales de la venta
        
-        $currentSaleData = $controller->getSaleData($_POST['id']);
+        //$currentSaleData = $controller->getSaleData($_POST['id']);
 
         // Obtenemos los datos del presupuesto actual vinculado con la venta
-        $currentEstimateData = $controller->getEstimateDataByCode($currentSaleData->code);
+        // $currentEstimateData = $controller->getEstimateDataByCode($currentSaleData->code);
 
         // Obtenemos el código del presupuesto, desde el formulario se envía el id del presupuesto.
-        $estimateData = $controller->getEstimateDataByCode($_POST['code']);
+        // $estimateData = $controller->getEstimateDataByCode($_POST['code']);
 
 
         if ($_POST['saletype'] != 0) {
             $code = $controller->getCodeByParentId();
             $_POST['code'] = $code;
         } else {
-            $_POST['code'] = $estimateData->code;
+            //$_POST['code'] = $estimateData->code;
             $_POST["parentcode"] = "";
         }
 
         $estimateChanged = false;
 
         // OJO: nueva funcionalidad 2025
-        if($currentSaleData->code !== $estimateData->code) {
+       /* if($currentSaleData->code !== $estimateData->code) {
             $estimateChanged = true;
             //echo "Estamos cambiando el código de la venta (presupuesto)<br>";
             //echo "Old: " . $currentSaleData->code . " Nuevo: " . $estimateData->code;
@@ -525,7 +525,7 @@ class AjaxRequest
             //pre($estimateData);
         } else {
             //echo "No estamos cambiando el código de la venta (presupuesto)<br>";
-        }
+        }*/
 
         $result = $controller->updateSale();
         // Verificamos si han cambiado el código del pdf y si existe un pedido asociado actualizamos el código

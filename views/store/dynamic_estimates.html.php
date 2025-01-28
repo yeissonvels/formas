@@ -65,7 +65,7 @@
     $totalNegative = 0;
     $totalPositive = 0;
     $totalPays = 0;
-    $totalInitialSales = 0;
+    $totalSaless = 0;
 
     global $saletypes;
     global $paymethods;
@@ -101,7 +101,12 @@
             </td>
             <td>
                 <?php 
-                    echo (int)$pdf->status === 1 ? ('<span class="text-success">' . icon('checked', false)) . '</span>' : 'No';
+                    if((int)$pdf->status === 1) {
+                        $totalSaless ++;
+                        echo  ('<span class="text-success">' . icon('checked', false));
+                    } else {
+                        echo '<a href="'.getUrl('save_sale', $controller->getUrls(), $pdf->id).'" title="Registrar venta">'.icon('save', false).'</a>';
+                    }
                 ?>
             </td>
             <td><?php echo americaDate($pdf->saledate, false); ?></td>
@@ -213,10 +218,10 @@
     </tr>
     <?php if ($controller->canIseeTheInitialSale($pdf->storeid)) { ?>
         <tr>
-            <td colspan="9"><b>Sin ventas: <?php echo (int)($i - $totalInitialSales); ?></b></td>
+            <td colspan="9"><b>Ventas: <?php echo $totalSaless; ?></b></td>
         </tr>
         <tr>
-            <td colspan="9"><b>Ventas iniciales: <?php echo $totalInitialSales; ?></b></td>
+            <td colspan="9"><b>Sin ventas: <?php echo (int)($i - $totalSaless); ?></b></td>
         </tr>
     <?php } ?>
     </tbody>

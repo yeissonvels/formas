@@ -623,9 +623,9 @@ class StoreModel extends Store
         return false;
     }
 
-    function getEstimateData($id = 0, $comments = true) {
+    function getEstimateData($id = 0, $comments = true, $and = '') {
         $estimateId = $id > 0 ? $id : $_GET['id'];
-        $data = $this->wpdb->getOneRow($this->estimatesTable, $estimateId);
+        $data = $this->wpdb->getOneRow($this->estimatesTable, $estimateId, $and);
         $data->creator = getUsername($data->created_by); // Ahora lo usamos (getPdfStoreOrder)
         if($comments) {
             $data->comments = $this->getNewPdfComments($estimateId, $this->estimateCommentsTable, "estimateid");

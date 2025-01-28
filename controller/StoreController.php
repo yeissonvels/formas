@@ -80,6 +80,10 @@ class StoreController extends StoreModel
                 'controller' => CONTROLLER . "&opt=send_pdf&id=",
                 'friendly' =>  getFriendlyByType('show_pdfs', $this->classTypeName),
             ),
+            'save_sale' => array(
+                'controller' => "?controller=store&opt=upload_pdf&estimateId=",
+                'friendly' =>  getFriendlyByType('upload_pdf', $this->classTypeName),
+            ),
         );
 
         $this->urls = $urls;
@@ -128,7 +132,10 @@ class StoreController extends StoreModel
     }
 
     function upload_pdf() {
+        global $user;
+        pre($user);
         $data = false;
+        $andFilter = '';
         $parent = array();
         // Obtiene el id desde el REQUEST_URI y lo setea en $_GET
         getIdFromRequestUri();
@@ -143,6 +150,28 @@ class StoreController extends StoreModel
             $data->parent = $parent;
         }
 
+        // Funcionalidad 2025
+        if(isset($_GET['estimateId'])) {
+            $data = [];
+            if(!userWithPrivileges()) {
+                $andFilter = " AND created_by = " . $user->getId();
+            }
+            
+            try {
+                $estimateData = $this->getEstimateData($_GET['estimateId'], false, $andFilter);
+                $data['estimate'] =  $estimateData;
+            } catch (Exception $exception) {
+                $error = "Se ha producido un error:<br>";
+                if(userWithPrivileges()) {
+                    $error .= "Function: " . __FUNCTION__ . " line: " . __LINE__ . "<br>";
+                    $error .= $exception->getMessage();
+                }
+                errorMsg($error);
+                exit;
+            }
+           
+            
+        }
 
         $tpl = VIEWS_PATH_CONTROLLER . "upload_pdf" . VIEW_EXT;
         loadTemplate($tpl, $data, '', $this);
