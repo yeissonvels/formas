@@ -133,13 +133,13 @@ class StoreController extends StoreModel
 
     function upload_pdf() {
         global $user;
-        pre($user);
         $data = false;
         $andFilter = '';
         $parent = array();
         // Obtiene el id desde el REQUEST_URI y lo setea en $_GET
         getIdFromRequestUri();
         if (isset($_GET['id'])) {
+            $_GET['id'] = decode64($_GET['id']);
             $data = $this->getPdfData();
             if ($data->saletype == 1) {
                 $parent = $this->getPdfData($data->parentcode);
@@ -152,6 +152,7 @@ class StoreController extends StoreModel
 
         // Funcionalidad 2025
         if(isset($_GET['estimateId'])) {
+            $_GET['estimateId'] = decode64($_GET['estimateId']);
             $data = [];
             if(!userWithPrivileges()) {
                 $andFilter = " AND created_by = " . $user->getId();
@@ -412,6 +413,7 @@ class StoreController extends StoreModel
         // Obtiene el id desde el REQUEST_URI y lo setea en $_GET
         getIdFromRequestUri();
         if (isset($_GET['id'])) {
+            $_GET['id'] = decode64($_GET['id']);
             $data = $this->getEstimateData();
         }
 

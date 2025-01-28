@@ -105,7 +105,7 @@
                         $totalSaless ++;
                         echo  ('<span class="text-success">' . icon('checked', false));
                     } else {
-                        echo '<a href="'.getUrl('save_sale', $controller->getUrls(), $pdf->id).'" title="Registrar venta">'.icon('save', false).'</a>';
+                        echo '<a href="'.getUrl('save_sale', $controller->getUrls(), encode64($pdf->id)).'" title="Registrar venta">'.icon('save', false).'</a>';
                     }
                 ?>
             </td>
@@ -172,14 +172,14 @@
 
                         if (!isTimeOver($pdf->created_on)) {
                             ?>
-                            <a href="<?php echo getUrl($getUrl, $controller->getUrls(), $pdf->id); ?>">
+                            <a href="<?php echo getUrl($getUrl, $controller->getUrls(), encode64($pdf->id)); ?>">
                                 <?php icon('edit', true); ?>
                             </a>
                             <?php
                         } else {
                             $title = 'Sólo lectura.<br>Es posible que haya pasado más de una hora desde que creó la venta o ya existe un pedido.'
                             ?>
-                            <a href="<?php echo getUrl($getUrl, $controller->getUrls(), $pdf->id); ?>"
+                            <a href="<?php echo getUrl($getUrl, $controller->getUrls(), encode64($pdf->id)); ?>"
                                title="<?php echo $title; ?>" class="withqtip">
                                 <?php icon('view', true); ?>
                             </a>

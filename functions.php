@@ -549,6 +549,16 @@ function icon($name, $show = false, $scape = false) {
     }
 }
 
+function menuIcon($iconName, $show = false) {
+    $icon = "<i class='$iconName'></i>";
+
+    if ($show) {
+        echo $icon;
+    } else {
+        return $icon;
+    }
+}
+
 function clearStringToUpper($string) {
     $string = str_replace("á", "A", $string);
     $string = str_replace("é", "E", $string);
@@ -2092,6 +2102,14 @@ function getEstimateCode($totalEstimates, $user) {
 function escapeSerialized($aSerialized) {
     global $wpdb;
     return mysqli_real_escape_string($wpdb->getLinker(), serialize($aSerialized));
+}
+
+function encode64($cad) {
+    return base64_encode($cad);
+}
+
+function decode64($cad) {
+    return base64_decode($cad);
 }
 
 ?>

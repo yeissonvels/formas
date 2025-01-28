@@ -17,7 +17,7 @@
     <link rel='stylesheet' href='/css/menu.css' type='text/css' media='all'/>
     <link rel='stylesheet' href='/css/bootstrap.min.css' type='text/css' media='all'/>
     <link rel='stylesheet' href='/css/all.min.css' type='text/css' media='all'/>
-    <link rel='stylesheet' href='/css/style.css' type='text/css' media='all'/>
+    <link rel='stylesheet' href='/css/style.css?version=<?php echo CSS_VERSION; ?>' type='text/css' media='all'/>
     <script src="/js/jquery_v1.10.2.js"></script>
     <script src="/js/jquery.timeTo.js"></script>
     <script src="/js/jquery.qtip.js"></script>

@@ -84,6 +84,6 @@ define('PERMISSIONS_FILE', JSON_PATH . "permissions.json");
 // URLS
 
 define('LOGOUT_URL', '?controller=user&opt=logout');
-
+define('CSS_VERSION', '1.0.1');
 
 ?>

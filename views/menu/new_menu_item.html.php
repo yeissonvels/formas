@@ -37,6 +37,7 @@
             var permision = $('#permision').val();
             var position = $('#position').val();
             var target = $('#target').val();
+            var fontawesomeicon = $('#fontawesome_icon').val();
             var controller = '<?php echo FORM_CONTROLLER; ?>';
             var op = 'saveMenuItem';
 
@@ -59,6 +60,7 @@
             data.append('permision', permision);
             data.append('position', position);
             data.append('target', target);
+            data.append('fontawesomeicon', fontawesomeicon);
             data.append('controller', controller);
             data.append('op', op);
 
@@ -94,7 +96,7 @@
 
                     // Ocultamos el div de confirmación de la carga del ícono
                     setTimeout(function() {
-                        $("#message").fadeOut( "slow" );
+                        //$("#message").fadeOut( "slow" );
                     }, 1500);
 
                     alert("Menú actualizado!");
@@ -164,6 +166,8 @@
                 $('#active > option[value="' + active + '"]').prop('selected', true);
                 $('#permision > option[value="' + permision + '"]').prop('selected', true);
                 $('#position > option[value="' + position + '"]').prop('selected', true);
+                $('#fontawesome_icon').prop('value', item['fontawesomeicon']);
+
             }
         });
     }
@@ -376,11 +380,19 @@
                             <?php generateYesNotSelect('target')?>
                         </div>
                     </div>
+                    <div class="form-group row">
+                        <label for="icon"
+                        class="col-sm-2 col-form-label"><?php echo trans('icon') ?></label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control mb-1" name="fontawesome_icon" id="fontawesome_icon" placeholder="Fontawesome Icon">
+                        </div>
+                    </div>
                     <div class="form-group row" id="tricon" style="display: none;">
                         <label for="icon"
                                class="col-sm-2 col-form-label"><?php echo trans('icon') ?></label>
                         <div class="col-sm-10">
-                            <input type="file" id="icon" class="form-control"><input type="button" value="<?php echo trans('upload_icon') ?>" onclick="uploadIcon();">
+                            <input type="file" id="icon" class="form-control">
+                            <input type="button" class="btn btn-primary mt-1" value="<?php echo trans('upload_icon') ?>" onclick="uploadIcon();">
                             <img id="loader" style="vertical-align: top; display: none;" src="images/loader2.gif">
                             <br>
                             <span id="ajax-content"></span>
