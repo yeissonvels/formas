@@ -697,7 +697,7 @@
                                class="col-sm-2 col-form-label"><span id="totallabel">Importe del presupuesto</span></label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" name="total" id="total" onkeyup="addCommas($(this).prop('id'), $(this).val());"
-                                   value="<?php echo $data ? numberFormat($data->total, true, 2) : ''; ?>">
+                                   value="<?php echo $data ? numberFormat($data->total, true, 2) : ''; ?>" <?php echo $disabled; ?>>
                         </div>
                     </div>
 

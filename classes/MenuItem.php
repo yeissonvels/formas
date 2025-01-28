@@ -21,6 +21,7 @@ class MenuItem {
     public $active;
     public $target;
     public $icon;
+    public $fontawesomeicon;
     public $childs = array();
 
     /**
@@ -245,6 +246,22 @@ class MenuItem {
     public function setIcon($icon)
     {
         $this->icon = $icon;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFontawesomeIcon()
+    {
+        return $this->fontawesomeicon;
+    }
+
+    /**
+     * @param mixed $fontawesomeicon
+     */
+    public function setFontawesomeIcon($fontawesomeicon)
+    {
+        $this->fontawesomeicon = $fontawesomeicon;
     }
 
     /**

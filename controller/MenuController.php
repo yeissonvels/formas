@@ -119,7 +119,10 @@ class MenuController extends MenuModel {
 
                 $menu .= '<li class="' . $liclass . '">' . PHP_EOL;
                 $menu .=    '<a class="nav-link dropdown-toggle" href="' . $link . '" ' . $target . ' role="button" id="dropdown' . $id . '" data-bs-toggle="dropdown" aria-expanded="false">' . $label . PHP_EOL;
-                if ($item->icon != "") {
+
+                if($item->fontawesomeicon) {
+                    $menu .= menuIcon($item->fontawesomeicon);
+                } else if ($item->icon != "") {
                     $menu .= '<img src="' . UPLOADED_MENU_ICONS_PATH . 'menu' . $item->menuid . '/' . $item->icon . '" class="vert-align-middle">' . PHP_EOL; 
                 }
                 $menu .=    '</a>' . PHP_EOL;
@@ -156,7 +159,11 @@ class MenuController extends MenuModel {
 
                 $menu .=  '<li class="' . $liclass . '">' . PHP_EOL;
                 $menu .=        '<a class="' . $aclass . '" href="' . $link . '" ' . $target . '>' . $label . PHP_EOL;
-                if ($item->icon != "") {                    $menu .= '<img src="' . UPLOADED_MENU_ICONS_PATH . 'menu' . $item->menuid . '/' . $item->icon . '" class="vert-align-middle">' . PHP_EOL;
+
+                if($item->fontawesomeicon) {
+                    $menu .= menuIcon($item->fontawesomeicon);
+                } else if ($item->icon != "") {                    
+                    $menu .= '<img src="' . UPLOADED_MENU_ICONS_PATH . 'menu' . $item->menuid . '/' . $item->icon . '" class="vert-align-middle">' . PHP_EOL;
                 }
                 $menu .=    '</a>' . PHP_EOL;
                 $menu .=  '</li>' . PHP_EOL;

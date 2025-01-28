@@ -18,6 +18,7 @@
                         <th><?php echo trans('permision') ?></th>
                         <th><?php echo trans('active') ?></th>
                         <th><?php echo trans('icon') ?></th>
+                        <th><?php echo "Fontawesome icon"; ?></th>
                         <th><?php echo trans('target') ?></th>
                         <th><?php echo trans('edit') ?></th>
                         <th><?php echo trans('delete') ?></th>
@@ -41,6 +42,13 @@
                                     $iconPath = UPLOADED_MENU_ICONS_PATH . 'menu' . $_GET['id'] . '/' . $item->icon;
                                     echo $item->icon != "" ? '<img src="' . $iconPath . '">' : ''
                               ?>
+                          </td>
+                          <td>
+                            <?php
+                                if($item->fontawesomeicon) {
+                                    menuIcon($item->fontawesomeicon, true);
+                                }
+                            ?>
                           </td>
                           <td class="parent-menu"><?php echo $item->target > 0 ? "_blank" : "" ?></td>
                           <td>

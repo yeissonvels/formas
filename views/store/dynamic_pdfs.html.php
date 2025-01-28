@@ -350,14 +350,14 @@
                         if ($pdf->saletype != 3) {
                             if ($pdf->orderexist == 0 && !isTimeOver($pdf->created_on)) {
                                 ?>
-                                <a href="<?php echo getUrl($getUrl, $controller->getUrls(), $pdf->id); ?>">
+                                <a href="<?php echo getUrl($getUrl, $controller->getUrls(), encode64($pdf->id)); ?>">
                                     <?php icon('edit', true); ?>
                                 </a>
                                 <?php
                             } else {
                                 $title = 'Sólo lectura.<br>Es posible que haya pasado más de una hora desde que creó la venta o ya existe un pedido.'
                                 ?>
-                                <a href="<?php echo getUrl($getUrl, $controller->getUrls(), $pdf->id); ?>"
+                                <a href="<?php echo getUrl($getUrl, $controller->getUrls(), encode64($pdf->id)); ?>"
                                    title="<?php echo $title; ?>" class="withqtip">
                                     <?php icon('view', true); ?>
                                 </a>
