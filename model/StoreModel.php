@@ -412,8 +412,12 @@ class StoreModel extends Store
      * 
      * Obtiene los presupuestos que coinciden con la búsqueda
      */
-    function getAutocompleteEstimateCode($nocancelled = false) {
+    function getAutocompleteEstimateCode($nocancelled = false, $all = false) {
         global $user;
+        $status = "status = 0 AND ";
+        if($all) {
+            $status = "";
+        }
         $keyword = $_POST['keyword'];
         $cancelledFilter = '';
         if ($nocancelled) {
@@ -435,7 +439,7 @@ class StoreModel extends Store
         }*/
 		
         $query = 'SELECT id, code, saledate, customer FROM ' . $this->estimatesTable;
-        $query .= ' WHERE status = 0 AND ' . $createdByFilter . ' ' . $cancelledFilter;
+        $query .= ' WHERE ' . $status . $createdByFilter . ' ' . $cancelledFilter;
         $query .= ' AND (code LIKE "%' . $keyword . '%" OR customer LIKE "%' . $keyword . '%") LIMIT 3;';
         
         $codes = $this->wpdb->get_results($query);
@@ -533,6 +537,8 @@ class StoreModel extends Store
         $filterUser = "";
         $filterCommission = "";
         $filterStatus = "";
+        $filterTel = "";
+        $filterCode = "";
 
         // Si es por rango de fechas sustituímos el filtro anterior $filterDate
         if (!empty($_POST['from']) && !empty($_POST['to'])) {
@@ -563,6 +569,11 @@ class StoreModel extends Store
                 $filterStatus = " AND status =  " . ($_POST['status'] == 'no' ? '0' : '1');
             }
 
+            if(!empty($_POST['tel'])) {
+                $tel = $_POST['tel'];
+                $filterTel = " AND (tel LIKE '%$tel%' OR tel2 LIKE '%$tel%') ";
+            }
+
             // Concatenamos el filtro de usuario en filterDate
             $filterDate .= $filterUser . $filterCommission;
         } else {
@@ -573,10 +584,26 @@ class StoreModel extends Store
 
         $query = "SELECT *, p.id as id FROM ";
         $query .= $this->estimatesTable . " p, " . $this->usersTable . " u ";
-        $where = " WHERE " . $firstfilter. " " . $filterStore . $filterDate . $filterStatus;
+        $initialQuery = $query;
+        $where = " WHERE " . $firstfilter . " " . $filterStore . $filterDate . $filterStatus;
         $orderby = " ORDER BY code ASC, created_on ASC";
         $query .= $where . $orderby;
-        //echo $query;
+
+        if($filterTel != "") {
+            $initialQuery .= " WHERE $firstfilter $filterTel ";
+            $query = $initialQuery;
+        }
+
+        if(!empty($_POST['code'])) {
+            $code = $_POST['code'];
+            $initialQuery .= " WHERE $firstfilter AND code = '$code' ";
+            $query = $initialQuery;
+        }
+
+        /*echo $query;
+
+        exit;*/
+
         $estimates = $this->wpdb->get_results($query);
 
         if (userWithPrivileges() && $estimates) {
