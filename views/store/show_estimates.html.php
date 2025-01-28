@@ -3,13 +3,20 @@
     $(document).ready(function(){
         $("#search-box").keyup(function(){
             if ($(this).val() != "" && $(this).val().length > 1) {
+                let config = {
+                    searchBox: '#search-box',
+                    inputId: '#code',
+                    suggestionBox: '#suggesstion-box'
+                };
                 $.ajax({
                     type: "POST",
                     url: "/ajax.php",
                     data: {
                         keyword: $(this).val(),
-                        op: 'getAutocompleteCode',
+                        config: config,
+                        op: 'getAutocompleteEstimateCode',
                         estimate: 'yes',
+                        all: 'yes'
                     },
                     beforeSend: function () {
                         //$("#search-box").css("background","#FFF url(LoaderIcon.gif) no-repeat 165px");
@@ -32,6 +39,13 @@
         $("#search-box").val(code);
         $("#code").val(id);
         $("#suggesstion-box").hide();
+    }
+
+    function selectEstimateCode(code, fullCode, configString) {
+        let config = configString.split(',');
+        $(config[0]).val(fullCode);
+        $(config[1]).val(code);
+        $(config[2]).hide();
     }
 
     function searchEstimates() {
@@ -443,21 +457,21 @@
                 </div>
 
                 <div class="form-group row">
-                <?php 
-                    if (userWithPrivileges()) { ?>
-                        <label for="from" class="col-sm-1 col-form-label">
-                        <h6 class="filter-label-icon">Estado <?php icon('status', true);?></h6>
-                        </label>
-                        <div class="col-sm-2">
-                            <select class="form-select" name="status" id="status">
-                                <option value="">Elije uno</option>
-                                <option value="no">Sin venta</option>
-                                <option value="yes">Convertido en venta</option>
-                            </select>
-                        </div>
-                <?php 
-                    }
-                ?>
+                    <?php 
+                        if (userWithPrivileges()) { ?>
+                            <label for="from" class="col-sm-1 col-form-label">
+                            <h6 class="filter-label-icon">Estado <?php icon('status', true);?></h6>
+                            </label>
+                            <div class="col-sm-2">
+                                <select class="form-select" name="status" id="status">
+                                    <option value="">Elije uno</option>
+                                    <option value="no">Sin venta</option>
+                                    <option value="yes">Convertido en venta</option>
+                                </select>
+                            </div>
+                    <?php 
+                        }
+                    ?>
                     <label for="from" class="col-sm-1 col-form-label">
                         <h6 class="filter-label-icon">Código <?php icon('barcode', true); ?></h6>
                     </label>
@@ -466,6 +480,17 @@
                         <input type="hidden" name="code" id="code" class="form-control" value="">
                         <div id="suggesstion-box" style="position: absolute; z-index: 10000;"></div>
                     </div>
+                </div>
+                <div class="form-group row">
+                    <?php if (userWithPrivileges()) { ?>
+                      <label for="from" class="col-sm-1 col-form-label">
+                        <h6 class="filter-label-icon">Teléfono <?php icon('phone', true);?></h6>
+                      </label>
+                      <div class="col-sm-2">
+                          <input type="text" name="tel" id="tel" class="form-control" placeholder="Teléfono o teléfono 2">
+                      </div>
+                    <?php } ?>
+
                 </div>
         </form>
     </div>

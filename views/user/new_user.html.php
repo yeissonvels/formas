@@ -1,3 +1,10 @@
+<?php
+    global $user;
+    $isAdmin = false;
+    if ($user->getAdmin() == 1) {
+        $isAdmin = true;
+    }
+?>
 <script>
     var usernameValidated = <?php echo ($data && $data->getUsername() != "" ? 'true' : 'false' ); ?>;
     var usercodeValidated = <?php echo ($data && $data->getUsercode() != "" ? 'true' : 'false' ); ?>;
@@ -173,6 +180,9 @@
                         <option value="">Seleccione un tipo</option>
                         <?php
                             global $profileTypes;
+                            /*if(!$isAdmin) {
+                                unset($profileTypes[4]);
+                            }*/
                             foreach ($profileTypes as $key => $value) {
                                 $selected = "";
                                 if ($data) {
@@ -261,13 +271,6 @@
                     ?>
                 </div>
             </div>
-            <?php
-                global $user;
-                $isAdmin = false;
-                if ($user->getAdmin() == 1) {
-                    $isAdmin = true;
-                }
-            ?>
 
             <?php
                 if ($isAdmin) {

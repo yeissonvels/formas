@@ -921,12 +921,15 @@ class AjaxRequest
 
     function getAutocompleteCode() {
         $noCancelled = false;
+        $config = [];
         if (isset($_POST['nocancelled'])) {
             $noCancelled = true;
         }
         $controller = new StoreController();
         $results = $controller->getAutocompleteCode($noCancelled);
+
         $config = implode(',', $_POST['config']);
+        
 
         ?>
         <ul id="code-list" class="list-group">
@@ -945,11 +948,18 @@ class AjaxRequest
 
     function getAutocompleteEstimateCode() {
         $noCancelled = false;
+        $all = false;
+
         if (isset($_POST['nocancelled'])) {
             $noCancelled = true;
         }
+
+        if(isset($_POST['all'])) {
+            $all = true;
+        }
+
         $controller = new StoreController();
-        $results = $controller->getAutocompleteEstimateCode($noCancelled);
+        $results = $controller->getAutocompleteEstimateCode($noCancelled, $all);
         $config = implode(',', $_POST['config']);
 
         ?>
