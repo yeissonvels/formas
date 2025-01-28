@@ -430,8 +430,8 @@ class StoreController extends StoreModel
 
         $html = "<img src='cid:imagenCID' alt='Formas' style='width: 150px;'><br><br>";
 
-        $html .= "Te informamos que se ha generado un nuevo presupuesto con los siguientes datos:<br><br>";
-        
+        $html .= "Se ha generado un nuevo presupuesto en la aplicación. A continuación, los detalles:<br><br>";
+        $html .= "<hr>";
 
         $html .= "<table>";
         $html .= "<tr><th align='left'>Tienda</th><td>" . $estimateData['store']. "</td></tr>";
@@ -444,8 +444,9 @@ class StoreController extends StoreModel
         $html .= "<tr><th align='left'>Importe del presupuesto</th><td>" . $estimateData['total']. " €</td></tr>";
         $html .= "<tr><th align='left'>Origen del presupuesto</th><td>" .  $estimateOrigin. "</td></tr>";
         $html .= "</table>";
+        $html .= "<hr>";
 
-        $html .= "<br><br>Para consultar información adicional accede a <a href='$httpHost/?controller=store&opt=new_estimate&id=$id'>Formas</a>";
+        $html .= "<br><br>Puede revisar los detalles accediendo a la plataforma a través del siguiente enlace: <a href='$httpHost/?controller=store&opt=new_estimate&id=$id'>Formas</a>";
 
         return $html;
     }
