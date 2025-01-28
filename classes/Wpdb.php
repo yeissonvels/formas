@@ -283,8 +283,9 @@ class WPDB {
      *
      * Devuelve una fila
      */
-    function getOneRow($table,$id) {
-        $query = 'SELECT * FROM ' . $table . ' WHERE id=' . $id . ' LIMIT 1';
+    function getOneRow($table,$id, $and = '') {
+        $query = 'SELECT * FROM ' . $table . ' WHERE id=' . $id . " $and LIMIT 1";
+        echo $query;
         return $this->get_row($query);
     }
 

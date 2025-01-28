@@ -89,4 +89,8 @@ class AdminController {
 		loadTemplate($tpl, $access, "", $this);
 	}
 
+    function info() {
+        phpinfo();
+    }
+
 }

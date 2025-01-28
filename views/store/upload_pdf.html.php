@@ -1,12 +1,19 @@
 <?php
     datePicker('saledate');
+    $estimateData = [];
+
+    if(isset($data) && is_array($data) && isset($data['estimate'])) {
+        $estimateData = $data['estimate'];
+        $data = [];
+    }
 ?>
 <script>
     var id = "<?php echo $data ? $data->id : ''; ?>";
-    var codeValidated = <?php  echo $data && $data->code ? 'true' : 'false' ?>;
+    var codeValidated = <?php  echo $data && $data->code ? 'true' : ($estimateData && $estimateData->code ? 'true' : 'false'); ?>;
     let modalValidated = <?php  echo $data && $data->code ? 'true' : 'false' ?>;
 
     $(document).ready(function(){
+        //$('#modalAlert').modal('show');
         $("#search-box").keyup(function(){
             $('#parentcode').prop("value", "");
             if ($(this).val() != "") {
@@ -182,9 +189,33 @@
         saveSale();
     }
 
+    function cloningForm() {
+        // Clonar el formulario
+        var clonedForm = $('#frm-saledata').clone();
+        // Asignar un ID único al formulario clonado
+        clonedForm.attr('id', 'myClonedForm');
+
+        // Deshabilitar todos los elementos del formulario clonado
+        clonedForm.find('input[type="button"]').hide();
+        clonedForm.find("input, textarea, button, select").prop("disabled", true);
+
+        clonedForm.find(':input').each(function() {
+            var original = $('#frm-saledata').find('[name="'+ $(this).attr('name') +'"]');
+            if ($(this).is('select')) {
+                $(this).val(original.val());
+            } else if ($(this).is(':input')) {
+                //$(this).val(original.val());
+            }
+        });
+
+        // Agregar el formulario clonado al contenedor
+        $("#cloned").html(clonedForm);
+    }
+
     function saveSale() {
         if ($('#saletype').val() == 0) {
-            comprobate = Array('#saledate', '#code', '#search-box-code', '#customer', '#total', '#payed', '#paymethod');
+            //comprobate = Array('#saledate', '#code', '#search-box-code', '#customer', '#total', '#payed', '#paymethod');
+            comprobate = Array('#saledate', '#code', '#customer', '#total', '#payed', '#paymethod');
         } else {
             border_ok('#payed');
             comprobate = Array('#saledate', '#parentcode', '#total');
@@ -197,6 +228,7 @@
 
         if (checkNoEmpty(comprobate) && codeValidated) {
             if(!modalValidated) {
+                cloningForm();
                 $('#modalAlert').modal('show');
             }
             
@@ -623,16 +655,23 @@
                         <div class="col-sm-10">
                             <select name="saletype" id="saletype" class="form-select" <?php echo $disabled; ?> onchange="changeSaleType();">
                                 <?php
-                                global $saletypes;
-                                foreach ($saletypes as $key => $value) {
-                                    if ($key != 2) {
-                                        $selected = '';
-                                        if ($data && $data->saletype == $key) {
-                                            $selected = 'selected="selected"';
+                                    global $saletypes;
+
+                                    if(isset($_GET['estimateId'])) {
+                                        echo '<option value="0" selected>' . $saletypes[0] . '</option>';
+                                    } else {
+                                       
+                                        foreach ($saletypes as $key => $value) {
+                                            if ($key != 2) {
+                                                $selected = '';
+                                                if ($data && $data->saletype == $key) {
+                                                    $selected = 'selected="selected"';
+                                                }
+                                                echo '<option value="' . $key . '" ' . $selected . '>' . $value . '</option>';
+                                            }
                                         }
-                                        echo '<option value="' . $key . '" ' . $selected . '>' . $value . '</option>';
                                     }
-                                }
+                                    
                                 ?>
                             </select>
                         </div>
@@ -671,19 +710,16 @@
                         $displayCode = 'display: none;';
                     }
                     ?>
-                    <!--<div class="form-group row" id="div_code" style="< ?php echo $displayCode; ?>">
-                        <label for="code"
-                               class="col-sm-2 col-form-label">Nº de pedido</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" name="code" id="code" onkeyup="checkCode();"
-                                   value="< ?php echo $data ? $data->code : ''; ?>" < ?php echo $disabled; ?>>
-                        </div>
-                    </div>-->
 
                     <?php
-                        $codeValue = "";
+                        $showedCode = "";
                         if ($data && $data->saletype == 0) {
-                            $codeValue = $data->code . ' (' . americaDate($data->saledate, false) . ') ' . $data->customer;
+                            //$codeValue = $data->code . ' (' . americaDate($data->saledate, false) . ') ' . $data->customer;
+                            $showedCode = $data->code;
+                            //$code = $data->code;
+                        } else if($estimateData) {
+                            //$code = $estimateData->id;
+                            $showedCode = $estimateData->code;
                         }
                     ?>
 
@@ -691,9 +727,11 @@
                         <label for="code"
                                class="col-sm-2 col-form-label">Nº de pedido</label>
                         <div class="col-sm-10">
-                            <input type="text" id="search-box-code" placeholder="Código o nombre del cliente"  class="form-control" value="<?php echo $codeValue; ?>" autocomplete="off" <?php echo $disabled; ?>/>
-                            <input type="hidden" name="code" id="code" value="<?php echo $data ? $data->code: ''; ?>" autocomplete="off">
-                            <div id="suggesstion-box-code" style="position: absolute; z-index: 10000;"></div>
+                           <!-- <input type="text" id="search-box-code" placeholder="Código o nombre del cliente"  class="form-control" value="< ?php echo $codeValue; ?>" autocomplete="off" < ?php echo $disabled; ?>/>
+                            <input type="hidden" name="code" id="code" value="< ?php echo $data ? $data->code: ''; ?>" autocomplete="off">
+                            <div id="suggesstion-box-code" style="position: absolute; z-index: 10000;"></div>-->
+                            <input type="text" class="form-control" value="<?php echo $showedCode; ?>" autocomplete="off" disabled/>
+                            <input type="hidden" name="code" id="code" value="<?php echo $showedCode; ?>" autocomplete="off">
                         </div>
                     </div>
                     <?php
@@ -707,7 +745,7 @@
                                class="col-sm-2 col-form-label">Titular del pedido</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" name="customer" id="customer"
-                                   value="<?php echo $data ? $data->customer : ''; ?>" <?php echo $disabled; ?>>
+                                   value="<?php echo $data ? $data->customer : ($estimateData ? $estimateData->customer : ''); ?>" <?php echo $disabled; ?>>
                         </div>
                     </div>
                     <div class="form-group row" id="div_telefono" style="<?php echo $displayCustomer; ?>">
@@ -715,7 +753,7 @@
                                class="col-sm-2 col-form-label">Teléfono</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" name="tel" id="tel"
-                                   value="<?php echo $data ? $data->tel : ''; ?>" <?php echo $disabled; ?>>
+                                   value="<?php echo $data ? $data->tel : ($estimateData ? $estimateData->tel : ''); ?>" <?php echo $disabled; ?>>
                         </div>
                     </div>
                     <div class="form-group row" id="div_telefono2" style="<?php echo $displayCustomer; ?>">
@@ -723,7 +761,7 @@
                                class="col-sm-2 col-form-label">Teléfono 2</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" name="tel2" id="tel2"
-                                   value="<?php echo $data ? $data->tel2 : ''; ?>" <?php echo $disabled; ?>>
+                                   value="<?php echo $data ? $data->tel2 : ($estimateData ? $estimateData->tel2 : ''); ?>" <?php echo $disabled; ?>>
                         </div>
                     </div>
                     <div class="form-group row" id="div_total">
@@ -737,7 +775,7 @@
                                class="col-sm-2 col-form-label"><span id="totallabel"><?php echo $totalLabel; ?></span></label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" name="total" id="total" onkeyup="addCommas($(this).prop('id'), $(this).val());"
-                                   value="<?php echo $data ? numberFormat($data->total, true, 2) : ""; ?>" <?php echo $disabled; ?>>
+                                   value="<?php echo $data ? numberFormat($data->total, true, 2) : ($estimateData ? numberFormat($estimateData->total, true, 2) : ''); ?>" <?php echo $disabled; ?>>
                             <span class="red-color">(decimales separados por coma)</span>
                         </div>
                     </div>
@@ -958,7 +996,7 @@
 
 <!-- Modal de alerta para pedir confirmación antes de guardar la venta -->
 <div aria-labelledby="exampleModalLiveLabel" role="dialog" tabindex="-1" class="modal fade" id="modalAlert">
-    <div role="document" class="modal-dialog">
+    <div role="document" class="modal-dialog modal-fullscreen">
         <form id="totalValidationForm">
             <div class="modal-content">
                 <div class="modal-header">
@@ -973,6 +1011,7 @@
                                     <?php
                                         
                                         $msg = "<h5>¿Confirmas que los datos son correctos?</h5>";
+                                        $msg .= "<div id='cloned'></div>";
 
                                         $msgRegister = "<h6>Una vez registrada la venta, esta quedará vinculada al presupuesto seleccionado.</h6>";
                                         $msgUpdate = "<h6>Si estás cambiando el número de presupuesto, el presupuesto anterior que estaba vinculado con la venta quedará liberado.</h6>";
@@ -980,7 +1019,7 @@
                                         $complementMsg = $msgRegister;
 
                                         if($data) {
-                                            $complementMsg = $msgUpdate;
+                                            //$complementMsg = $msgUpdate;
                                         }
 
                                         $msg .= $complementMsg;
