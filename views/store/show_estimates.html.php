@@ -70,240 +70,19 @@
         $("#suggesstion-box").html("");
     }
 
-    function setTotalId(id) {
-        $('#totalid').prop('value', id);
-    }
-
-    function setPaymentId(id) {
-        $('#id').prop('value', id);
-    }
-
-    function checkTotal() {
-        comprobate = Array('#total_checked_on', '#total_checked_note');
-
-        if (checkNoEmpty(comprobate)) {
-            $.ajax({
-                url: '/ajax.php',
-                type: 'post',
-                data: $('#totalValidationForm').serialize()
-
-            }).done(function(Response) {
-                var res = JSON.parse(Response);
-                if (res['updated'] == 1) {
-                    var tdId = $('#totalid').val();
-                    $('#totalvalidation' + tdId).html(res['html']);
-                    reloadQtip();
-                    $('#totalid').prop("value", "");
-                    $('#total_checked_on').prop("value", "");
-                    $('#total_checked_note').prop("value", "");
-                    alert("Validación guardada!");
-                }
-            });
-        } else {
-            alert(completeRequiredFields);
-            return false;
-        }
-    }
-
-    function setAdjustid(parentid, code, op, id) {
-        // Reset de formulario
-        $('#pending_payed_on').prop('value', '');
-        $('#pendingpay_method > option[value=""]').prop('selected', true);
-        $('#pending_payed_amount').prop('value', '');
-        $('#pending_adjust_note').prop('value', '');
-
-        if (op == "save") {
-            mylabel = 'adjustPendingPay';
-            btnlabel = 'Guardar';
-        } else {
-            // Sólo si vamos a actualizar seteamos el id
-            $('#updateid').prop('value', id);
-            mylabel = 'updateAdjustPendingPay';
-            btnlabel = 'Actualizar';
-            $.ajax({
-                url: '/ajax.php',
-                type: 'post',
-                data: {
-                    op: 'getAdjustPendingPayData',
-                    parentid: parentid
-                }
-            }).done(function(Response) {
-                var res = JSON.parse(Response);
-                $('#pending_payed_on').prop('value', res['saledate']);
-                $('#pending_payed_amount').prop('value', res['payed']);
-                //$('#pendingpay_method').prop('value', res['paymethod']);
-                $('#pendingpay_method > option[value="' + res['paymethod'] + '"]').prop('selected', true);
-                $('#pending_adjust_note').prop('value', res['comment']);
-            });
-        }
-
-        $('#adjustid').prop('value', parentid);
-        $('#adjustcode').prop('value', code);
-        $('#intern-opt').prop('value', mylabel);
-        $('#adjust-lbl').html(btnlabel);
-    }
-
-    function checkPendingPay() {
-        comprobate = Array('#pending_payed_on', '#pending_payed_amount', '#pendingpay_method', '#pending_adjust_note');
-        if (checkNoEmpty(comprobate)) {
-            $('#sp-in-adjust').show();
-            $.ajax({
-                url: '/ajax.php',
-                type: 'post',
-                data: $('#pendingPayAdjustForm').serialize()
-
-            }).done(function(Response) {
-                $('#sp-in-adjust').hide();
-                var res = JSON.parse(Response);
-                if (res['saved'] == 1) {
-                    $('#pending_payed_on').prop('value', '');
-                    $('#pendingpay_method > option[value=""]').prop('selected', true);
-                    $('#pending_payed_amount').prop('value', '');
-                    $('#pending_adjust_note').prop('value', '');
-                    $('#btn-search-sales').trigger('click');
-                    alert("Pendiente de pago ajustado correctamente!");
-                } else if (res['updated'] == 1) {
-                    $('#pending_payed_on').prop('value', '');
-                    $('#pendingpay_method > option[value=""]').prop('selected', true);
-                    $('#pending_payed_amount').prop('value', '');
-                    $('#pending_adjust_note').prop('value', '');
-                    $('#btn-search-sales').trigger('click');
-                    alert("Pendiente de pago actualizado correctamente!");
-                } else if (res['duplicated'] == 1) {
-                    alert('Nada para actualizar!');
-                }
-            });
-        } else {
-            alert(completeRequiredFields);
-            return false;
-        }
-    }
-
-    function checkPayment() {
-        comprobate = Array('#accounting_checked_on', '#accounting_checked_note');
-
-        if (checkNoEmpty(comprobate)) {
-            $.ajax({
-                url: '/ajax.php',
-                type: 'post',
-                data: $('#validationForm').serialize()
-
-            }).done(function(Response) {
-                var res = JSON.parse(Response);
-                if (res['updated'] == 1) {
-                    var tdId = $('#id').val();
-                    $('#validation' + tdId).html(res['html']);
-                    reloadQtip();
-                    $('#id').prop("value", "");
-                    $('#accounting_checked_on').prop("value", "");
-                    $('#accounting_checked_note').prop("value", "");
-                    alert("Validación guardada!");
-                }
-            });
-        } else {
-            alert(completeRequiredFields);
-            return false;
-        }
-    }
-
-    function checkPaymentcommission() {
-        comprobate = Array('#commission_payed_on');
-
-        if (checkNoEmpty(comprobate)) {
-            $.ajax({
-                url: '/ajax.php',
-                type: 'post',
-                data: $('#commissionForm').serialize()
-
-            }).done(function(Response) {
-                var res = JSON.parse(Response);
-                if (res['updated'] == 1) {
-                    var tdId = $('#commission-id').val();
-                    $('#commission' +  tdId).html(res['html']);
-                    $('#commission-id').prop("value", "");
-                    $('#commission_payed_on').prop("value", "");
-                    reloadQtip();
-                    alert("Validación de propuesta guardada!");
-                }
-            });
-        } else {
-            alert(completeRequiredFields);
-            return false;
-        }
-    }
-
-    function changeValidate(id) {
-        $.ajax({
-            url: '/ajax.php',
-            type: 'post',
-            data: {
-                id: id,
-                op: 'getValidationPaymentData',
-            }
-
-        }).done(function(Response) {
-            var res = JSON.parse(Response);
-            $('#accounting_checked_on').prop("value", res['accounting_checked_on']);
-            $('#accounting_checked_note').prop("value", res['accounting_checked_note']);
-            $('#id').prop("value", id);
-        });
-    }
-
-    function deleteTotalValidation(id) {
-        if (confirm('¿Confirmas que deseas eliminar la validación?')) {
-            $.ajax({
-                url: '/ajax.php',
-                type: 'post',
-                data: {
-                    op: 'deleteTotalValidation',
-                    id: id
-                }
-            }).done(function(Response) {
-                var res = JSON.parse(Response);
-                if (res['updated'] == 1) {
-                    $('#totalvalidation' + id).html(res['html']);
-                    alert("Validación eliminada correctamente!");
-                }
-            });
-        }
-    }
-
-    function deleteValidation(id) {
-        if (confirm('¿Confirmas que deseas eliminar la validación?')) {
-            $.ajax({
-                url: '/ajax.php',
-                type: 'post',
-                data: {
-                    op: 'deleteValidation',
-                    id: id
-                }
-            }).done(function(Response) {
-                var res = JSON.parse(Response);
-                if (res['updated'] == 1) {
-                    $('#validation' + id).html(res['html']);
-                    alert("Validación eliminada correctamente!");
-                }
-            });
-        }
-    }
-
     /**
-     * id realmente es el código de la venta.
+     * id realmente es el código del presupuesto.
      */
-    function setSaleToCancelId(id, saleid, saletype) {
-        $('#idsaledelete').prop('value', id);
-        $('#saleid').prop('value', saleid);
-        $('#mysaletype').prop('value', saletype);
-        if (saletype == 0) {
-            $('#btncancel-Label').html('venta');
-            $('#typeLabel').html('venta');
-        } else {
-            $('#btncancel-Label').html('variación');
-            $('#typeLabel').html('variación');
-        }
+    function setSaleToCancelId(code, id, saletype) {
+        $('#estimateCode').prop('value', code);
+        $('#id').prop('value', id);
+        
+        $('#btncancel-Label').html('presupuesto');
+        $('#typeLabel').html('presupuesto');
+       
     }
 
-    function cancellSale() {
+    function cancellEstimate() {
         if ($('#cancell_reason').val() != "") {
             border_ok('#cancell_reason');
             $.ajax({
@@ -312,22 +91,15 @@
                 data: $('#cancelForm').serialize(),
             }).done(function(Response){
                 var res = JSON.parse(Response);
-                var trId = $('#idsaledelete').val();
-                var succesLabel = 'Venta ';
+                var trId = $('#id').val();
+                var succesLabel = 'Presupuesto ';
                 if (res['updated'] == 1){
-                    $('#idsaledelete').prop('value', '');
+                    $('#estimateCode').prop('value', '');
                     $('#cancell_reason').prop('value', '');
-
-                    /*$('#validation' + trId).html("");
-                    $('#td-edit-' + trId).html("");
-                    $('#td-delete-' + trId).html("");
-                    $('#tr-' + trId).addClass('deleted');*/
                     $('#btn-search-sales').trigger('click');
-                    if ($('#mysaletype').val() == 1) {
-                        succesLabel = 'Variación ';
-                    }
-                    alert(succesLabel + "anulada correctamente!");
-                    scrollingTo('#tr-' + trId);
+                    $('#btn-close-modal').trigger('click');
+                    alert(succesLabel + "anulado correctamente!");
+                    //scrollingTo('#tr-' + trId);
                 }
             });
         } else {
@@ -503,12 +275,12 @@
 </div>
 
 <!-- Modal de cancelación -->
-<div aria-labelledby="exampleModalLiveLabel" role="dialog" tabindex="-1" class="modal fade show" id="cancelSale">
+<div aria-labelledby="exampleModalLiveLabel" role="dialog" tabindex="-1" class="modal fade" id="cancellSale">
     <div role="document" class="modal-dialog">
         <form id="cancelForm">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 id="exampleModalLiveLabel" class="modal-title">Anular <span id="typeLabel">venta</span> <?php icon('delete', true); ?></h5>
+                    <h5 id="exampleModalLiveLabel" class="modal-title">Anular <span id="typeLabel">presupuesto</span> <?php icon('delete', true); ?></h5>
                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -517,18 +289,17 @@
                             <div class="col-lg-12">
                                 <label for="accounting_checked_note" class="col-sm-4 col-form-label">Motivo</label>
                                 <textarea class="form-control" name="cancell_reason" id="cancell_reason"></textarea>
-                                <input type="hidden" id="idsaledelete" name="id" value="">
-                                <input type="hidden" id="saleid" name="saleid" value="">
-                                <input type="hidden" id="mysaletype" name="saletype" value="">
-                                <input type="hidden" name="opt" value="cancelEstimate">
+                                <input type="hidden" id="estimateCode" name="code" value="">
+                                <input type="hidden" id="id" name="id" value="">
+                                <input type="hidden" name="opt" value="cancellEstimate">
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary" type="button" onclick="cancellSale();">Anular <span id="btncancel-Label">venta</span></button>
+                    <button class="btn btn-primary" type="button" onclick="cancellEstimate();">Anular <span id="btncancel-Label">presupuesro</span></button>
                     <?php spinner_icon('spinner', 'sp-in-comment', true); ?>
-                    <button data-bs-dismiss="modal" class="btn btn-secondary" type="button">Salir</button>
+                    <button data-bs-dismiss="modal" class="btn btn-secondary" type="button" id="btn-close-modal">Salir</button>
                 </div>
             </div>
         </form>

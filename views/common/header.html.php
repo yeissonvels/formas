@@ -157,7 +157,7 @@
 	}
 	?>
 	
-    <div class="container-fluid pt-2"> <!-- style="border: 1px solid rgba(0,0,0,.125);" -->
+    <div class="container-fluid pt-2 pb-2"> <!-- style="border: 1px solid rgba(0,0,0,.125);" -->
         <div class="row">
             <div class="col-sm-2" style="vertical-align: top; padding-bottom: 15px;">
                 <a href="<?php echo HTTP_HOST; ?>">

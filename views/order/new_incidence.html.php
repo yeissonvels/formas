@@ -143,6 +143,13 @@ if ($editing) {
         $('#incidenceitem' + id).remove();
     }
 </script>
+
+<?php
+    //pre($ajaxincidence);
+    //pre($data);
+    //exit;
+?>
+
 <div class="container-fluid mt-3">
     <div class="row">
         <div class="col-lg-12 intern-product-header">

@@ -103,6 +103,7 @@ footer {
 
 .card {
     border: none !important;
+    margin-bottom: 10px;
 }
 
 .card-header {
@@ -209,6 +210,10 @@ div.form-group.row {
 
 i.fa {
     font-size: 18px;
+}
+
+i.fa-spinner {
+    font-size: 25px;
 }
 
 .hr-separator {
