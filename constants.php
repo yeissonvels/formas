@@ -84,6 +84,10 @@ define('PERMISSIONS_FILE', JSON_PATH . "permissions.json");
 // URLS
 
 define('LOGOUT_URL', '?controller=user&opt=logout');
-define('CSS_VERSION', '1.0.1');
+define('CSS_VERSION', '1.0.4');
+define('CR', 'UHJvZ3JhbWEgd2ViIGRlc2Fycm9sbGFkbyBwb3I=');
+define('CR2', 'WWVpc3NvbiBWw6lsZXo=');
+define('MT', 'bWFpbHRvOnllaXNzb24udmVsZXpAZ21haWwuY29t');
+define('LK', 'aHR0cHM6Ly93d3cubGlua2VkaW4uY29tL2luL3llaXNzb24tdmVsZXpzLw==');
 
 ?>
