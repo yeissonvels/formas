@@ -372,7 +372,8 @@
                 </label>
                 <div class="col-sm-2">
                     <?php
-                        generateSelectMonth("", false);
+                        //generateSelectMonth("", false);
+                        generateEstimateSelectMonth();
                 	?>
                 </div>
                 <?php if (userWithPrivileges()){ ?>

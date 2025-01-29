@@ -6,7 +6,7 @@
     }
 ?>
 <!DOCTYPE html>
-<html lang="es-ES">
+<html lang="es-ES" class="h-100">
 <head>
 	<title>Programa de gestión - FORMAS</title> 
     <meta name="viewport" content="width=device-width">
@@ -17,7 +17,7 @@
     <link rel='stylesheet' href='/css/menu.css' type='text/css' media='all'/>
     <link rel='stylesheet' href='/css/bootstrap.min.css' type='text/css' media='all'/>
     <link rel='stylesheet' href='/css/all.min.css' type='text/css' media='all'/>
-    <link rel='stylesheet' href='/css/style.css?version=<?php echo CSS_VERSION; ?>' type='text/css' media='all'/>
+    <link rel='stylesheet' href='/css/style.css?v=<?php echo CSS_VERSION; ?>' type='text/css' media='all'/>
     <script src="/js/jquery_v1.10.2.js"></script>
     <script src="/js/jquery.timeTo.js"></script>
     <script src="/js/jquery.qtip.js"></script>
@@ -89,7 +89,7 @@
         }
     </script>
 </head>
-<body>
+<body class="d-flex flex-column h-100">
 
 
 <div class="container-fluid">

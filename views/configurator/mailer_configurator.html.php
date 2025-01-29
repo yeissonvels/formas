@@ -1,7 +1,7 @@
 <script>
    
-    function check_configuratio() {
-        comprobate = Array('#username', '#user_pass', '#repeat_user_pass', '#usertype');
+    function check_configuration() {
+        comprobate = Array('#host', '#user', '#password', '#fromName', '#_to', '#_cc', '#status');
         
         // Devuelve true si todos los campos han sido completados
         if (checkNoEmpty(comprobate)) {
@@ -72,6 +72,16 @@
                     <input type="text" class="form-control" name="_cc" id="_cc" placeholder=""
                            value="<?php echo($data ? $data->_cc : ''); ?>">
                 </div>
+            </div>
+
+            <div class="form-group row">
+            <label for="status"
+                       class="col-sm-2 col-form-label">Estado</label>
+                <div class="col-sm-10">
+                <select class="form-select" name="status" id="status">
+                    <option value="0" <?php echo $data && (int)$data->status === 0 ? 'selected' : ''; ?>>Inactivo</option>
+                    <option value="1" <?php echo $data && (int)$data->status === 1 ? 'selected' : ''; ?>>Activo</option>
+                </select>
             </div>
             
             <div class="form-group row">

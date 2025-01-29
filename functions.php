@@ -162,6 +162,22 @@ function generateSelectMonth($selectedMonth = "", $onchange = true, $function = 
 <?php
 }
 
+function generateEstimateSelectMonth() {
+    $months = "";
+?>
+    <select id="month" name="month" class="form-select">
+            <option value="0"><?php echo trans('select_a_month')?></option>
+<?php 
+            for($i = 1; $i <= 12; $i++) {
+                $months .= '<option value="'.$i.'"  >'.getMonth($i).'</option>';
+            }
+            
+            echo $months;
+        ?>
+    </select>
+<?php
+}
+
 function getProvinces() {
     $provinces = array();
     if (file_exists(JSON_PROVINCES)) {

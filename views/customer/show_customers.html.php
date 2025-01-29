@@ -30,7 +30,7 @@
 <div class="card">
     <div class="card-header">
         <h4 class="card-title"><?php echo 'Clientes'; ?></h4>
-        <span><a href="<?php echo getUrl('new', $myController->getUrls()) ?>"><?php echo trans('new') ?></a></span>
+        <span><a href="<?php echo getUrl('new', $myController->getUrls()) ?>"><?php icon('save', true); ?></a></span>
         <?php update_icon(getUrl('show', $myController->getUrls()));?>
         <hr>
         <table>

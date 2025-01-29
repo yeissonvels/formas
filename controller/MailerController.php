@@ -4,11 +4,11 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 class MailerController extends MailerModel {
-    private $to;
     private $subject;
     private $message;
     private $result = '';
     private $logo = '';
+    private $config;
 
     function __construct($subject, $message, $logo = 'logo-formas-naranja.png')
     {
@@ -16,24 +16,28 @@ class MailerController extends MailerModel {
         $this->subject = $subject;
         $this->message = $message;
         $this->logo = $logo;
+        $this->config = $this->getMailerConfig(1);
     }
 
     function sendEmail() {
+        // El servicio se encuentra inactivo
+        if((int)$this->config->status === 0) {
+            return false;
+        }
         $mail = new PHPMailer(true);
-        $config = $this->getMailerConfig(1);
-        $to = $config->_to;
-        $cc = $config->_cc;
+        $to = $this->config->_to;
+        $cc = $this->config->_cc;
         
         try {
             $mail->isSMTP();
-            $mail->Host = $config->host; // Cambia al servidor SMTP de tu dominio
+            $mail->Host = $this->config->host; // Cambia al servidor SMTP de tu dominio
             $mail->SMTPAuth = true;
-            $mail->Username = $config->user;
-            $mail->Password = $config->password;
+            $mail->Username = $this->config->user;
+            $mail->Password = $this->config->password;
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = 587;
         
-            $mail->setFrom($config->user, $config->fromName);
+            $mail->setFrom($this->config->user, $this->config->fromName);
             $mail->addAddress($to);
             $mail->addCC($cc);
 
