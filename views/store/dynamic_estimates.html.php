@@ -1,4 +1,5 @@
 <?php if (count($data) > 0) {
+    //pre($data);
     global $user;
     global $estimateOrigins;
     ?>
@@ -53,7 +54,7 @@
         }
 
         if (isadmin() || $user->getUsermanager() == 1) {
-            echo '<th style="display: none;">Anular</th>';
+            echo '<th style="display: ;">Anular</th>';
         }
         ?>
     </tr>
@@ -191,9 +192,9 @@
                 </td>
             <?php }
             if (isadmin() || $user->getUsermanager() == 1) {
-                echo '<td id="td-delete-' . $pdf->id . '" style="display: none;">';
-                if (!$cancelled) {
-                    echo '<a class="cursor-pointer red-color" data-target="#cancelSale" data-toggle="modal" onclick="setSaleToCancelId(\'' . $pdf->code . '\', '. $pdf->id . ', 0);">' . icon('delete', false) . '</a>';
+                echo '<td id="td-delete-' . $pdf->id . '" style="display: ;">';
+                if (!$cancelled && (int) $pdf->status == 0) {
+                    echo '<a class="cursor-pointer red-color" data-bs-target="#cancellSale" data-bs-toggle="modal" onclick="setSaleToCancelId(\'' . $pdf->code . '\', '. $pdf->id . ', 0);">' . icon('delete', false) . '</a>';
                 }
                 echo '</td>';
             }

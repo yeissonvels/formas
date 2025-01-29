@@ -20,7 +20,7 @@ if (isset($data['data']) && is_object($data['data'])){
         $htmlincidences .= '<td>' . $incidence->username . '</td>';
         $htmlincidences .= '<td>' . $incidencestatus[$incidence->status] . ' ' . americaDate($incidence->fixed_on, false) . '</td>';
         $htmlincidences .= '<td class="text-center">';
-        $htmlincidences .= '<a class="cursor-pointer" onclick="editIncidence(' . $incidence->id . ', ' . $incidence->orderid . '); $(\'#editinci-lk\').trigger(\'click\');">' . icon('edit', false) . '</a>';
+        $htmlincidences .= '<a class="cursor-pointer" onclick="editIncidence(' . $incidence->id . ', ' . $incidence->orderid . '); $(\'#editinci-lk\').tab(\'show\');">' . icon('edit', false) . '</a>';
         $htmlincidences .= '</td>';
         $htmlincidences .= '</tr>';
     }

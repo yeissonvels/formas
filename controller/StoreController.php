@@ -488,5 +488,9 @@ class StoreController extends StoreModel
         include($tpl);
    }
 
+   function testEmail() {
+        $message = "Esto es una prueba";
+        $mailController = new MailerController("Nuevo presupuesto", $message);
+   }
 
 }

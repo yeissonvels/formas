@@ -271,6 +271,10 @@ class OrderController extends OrderModel {
             $id = $_GET['id'];
             $orderController = new OrderController();
             $ajaxincidence = $orderController->getIncidenceData($id);
+            if(isset($ajaxincidence->orderid)) {
+                $orderData = $this->getOrderDataByID($ajaxincidence->orderid);
+                $ajaxincidence->orderData = $orderData;
+            }
 
             $_POST['incidenceid'] = $id;
             $incidenceComments = $orderController->getIncidenceComments();

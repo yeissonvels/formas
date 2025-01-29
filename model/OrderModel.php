@@ -249,6 +249,43 @@ class OrderModel
         return $order;
     }
 
+    function getOrderDataByID($id, $onlyOrderData = false)
+    {
+        // Deliverydate = fecha en la que se entregó el pedido.
+        $fields = "o.id as id, code, pdfid, customer, o.telephone, o.telephone2, o.email, deliveryzone, purchasedate, ";
+        $fields .= "deliveryrange, deliverymonth, deliverydate, total, pendingpay, pendingstatus, paymethod, paydate, ";
+        $fields .= "status, store, storename, createdby, finishdeliveryfile, finishdeliverycreatedon, finishdeliverycreatedby, ";
+        $fields .= "totalitems, saveditems";
+        $query = "SELECT " . $fields . " FROM " . $this->ordersTable . " o, " . $this->storesTable . " s ";
+
+        $filter = " AND o.id = " . $id;
+
+        $query .= " WHERE o.store  = s.id " . $filter;
+        $order = $this->wpdb->get_results($query);
+
+        $order = count($order) > 0 ? $order[0] : $order;
+
+        if ($order) {
+            $order = persist($order, 'Order');
+            if (!$onlyOrderData) {
+                $items = $this->wpdb->getAll($this->orderItemsTable, ' WHERE orderid = ' . $id);
+                $interComments = $this->getComments($id, 0);
+                $customerComments = $this->getComments($id, 1);
+                $comments['interns'] = $interComments;
+                $comments['customer'] = $customerComments;
+                $order->setItems($items);
+                $order->setComments($comments);
+
+                //if ($order->getStatus() > 1) { // entregado o entregado con incidencia
+                $incidences = $this->getIncidences($id, $order->getCode());
+                $order->setIncidences($incidences);
+                //
+            }
+        }
+
+        return $order;
+    }
+
     function getComments($orderid, $commentype)
     {
         $query = 'SELECT username, c.created_on, comment, readydelivery, delivered FROM ' . $this->commentsTable . " c, " . $this->usersTable . " u ";

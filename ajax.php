@@ -1148,7 +1148,7 @@ class AjaxRequest
             $title = 'Validado por ' . getUsername($userId) . ' el ' . $auxCheckedOn . '<br>';
             $title .= '<b>Nota: </b>' . $_POST['accounting_checked_note'];
             $html = '<a class="withqtip cursor-pointer" title="' . $title . '">' . icon('checked') . ' ' . icon('comments') . '</a>';
-            $html .= '<br><a class="cursor-pointer" data-target="#checkPayment" data-toggle="modal" onclick="changeValidate(' . $_POST['id'] . ');">Cambiar' . icon('edit') . '</a>';
+            $html .= '<br><a class="cursor-pointer" data-target="#checkPayment" data-bs-toggle="modal" onclick="changeValidate(' . $_POST['id'] . ');">Cambiar' . icon('edit') . '</a>';
             $html .= '<br><a class="cursor-pointer red-color" onclick="deleteValidation(' . $_POST['id'] . ');">Eliminar' . icon('delete') . '</a>';
             $response['html'] = $html;
         } else {
@@ -1206,7 +1206,7 @@ class AjaxRequest
         $result = $controller->updatePdfCode();
         if ($result['updated'] == 1) {
             $html =  '<span class="red-color">No validado<br>';
-            $html .= '<input type="button" value="Validar total" class="btn btn-success" style="font-size: 10px;" data-target="#checkTotal" data-toggle="modal" onclick="setTotalId(' . $_POST['id'] . ')">';
+            $html .= '<input type="button" value="Validar total" class="btn btn-success" style="font-size: 10px;" data-target="#checkTotal" data-bs-toggle="modal" onclick="setTotalId(' . $_POST['id'] . ')">';
             $response['updated'] = $result['updated'];
             $response['html'] = $html;
         } else {
@@ -1225,7 +1225,7 @@ class AjaxRequest
         $result = $controller->updatePdfCode();
         if ($result['updated'] == 1) {
             $html =  '<span class="red-color">No validado<br>';
-            $html .= '<input type="button" value="Validar pago" class="btn btn-success" style="font-size: 10px;" data-target="#checkPayment" data-toggle="modal" onclick="setPaymentId(' . $_POST['id'] . ')">';
+            $html .= '<input type="button" value="Validar pago" class="btn btn-success" style="font-size: 10px;" data-target="#checkPayment" data-bs-toggle="modal" onclick="setPaymentId(' . $_POST['id'] . ')">';
             $response['updated'] = $result['updated'];
             $response['html'] = $html;
         } else {
@@ -1243,7 +1243,7 @@ class AjaxRequest
         $result = $controller->updatePdfCode();
         if ($result['updated'] == 1) {
             $html =  '<span class="red-color">No validada<br>';
-            $html .= '<input type="button" value="Validar propuesta" class="btn btn-success" style="font-size: 10px;" data-target="#checkcommission" data-toggle="modal" onclick="setcommissionId(' . $_POST['id'] . ')">';
+            $html .= '<input type="button" value="Validar propuesta" class="btn btn-success" style="font-size: 10px;" data-target="#checkcommission" data-bs-toggle="modal" onclick="setcommissionId(' . $_POST['id'] . ')">';
             $response['updated'] = $result['updated'];
             $response['html'] = $html;
         } else {
@@ -1296,6 +1296,20 @@ class AjaxRequest
             $controller->update_cancelled_order('code');
         }
 
+        echo json_encode($result);
+    }
+
+    function cancellEstimate() {
+        global $user;
+        $_POST['cancelled'] = 1;
+        $_POST['cancelled_by'] = $user->getId();
+        $_POST['cancelled_on'] = date('Y-m-d H:i:s');
+        $controller = new StoreController();
+        
+        // de momento no hacemos nada con este campo
+        unset($_POST['code']);
+
+        $result = $controller->updateEstimate();
         echo json_encode($result);
     }
 

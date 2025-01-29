@@ -322,6 +322,11 @@
         });
     }
 </script>
+
+<?php
+    //pre($ajaxincidence);
+?>
+
 <div class="container-fluid mt-3">
     <div class="row">
         <div class="col-lg-12 intern-product-header">
@@ -332,7 +337,18 @@
                 <div class="form-group row">
                     <label for="code" class="col-sm-3 col-form-label">Nº de pedido</label>
                     <div class="col-sm-9">
-                        <input type="text" name="code" id="code" class="form-control" value="<?php echo $editing ? $ajaxincidence->code : ''; ?>" <?php echo $incidenceDisabled; ?>>
+                        <?php
+                            $codeValue = "";
+                            if($editing) {
+                                $codeValue = $ajaxincidence->code;
+                                if($codeValue == "" && (isset($ajaxincidence->orderData))) {
+                                    $codeValue = $ajaxincidence->orderData->getCode();
+                                }
+                            } else if(isset($ajaxincidence->orderData)) {
+                                $codeValue = $ajaxincidence->orderData->getCode();
+                            }
+                        ?>
+                        <input type="text" name="code" id="code" class="form-control" value="<?php echo $codeValue; ?>" <?php echo $incidenceDisabled; ?>>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -368,6 +384,8 @@
                                 foreach ($stores as $store) {
                                     $selected = '';
                                     if ($editing && $store['id'] == $ajaxincidence->store) {
+                                        $selected = 'selected="selected"';
+                                    } else if(isset($ajaxincidence->orderData) && $ajaxincidence->orderData->getStore() == $store['id']) {
                                         $selected = 'selected="selected"';
                                     }
                                     echo '<option value="' . $store['id'] . '" ' . $selected . '>' . $store['name'] . '</option>';
@@ -441,6 +459,7 @@
                 <div class="form-group row">
                     <div class="col-lg-12">
                         <?php
+                            $orderid = 0;
                             if (!$editing) {
                                 //$orderid = $_GET['orderid'];
                                 // Necesitamos este campo para guardar los comentarios y los items para la nota de entrega
@@ -451,7 +470,7 @@
                                 echo '<input type="hidden" id="incidenceid" name="id" value="' . $ajaxincidence->id . '">';
                             }
                         ?>
-                        <input type="hidden" name="orderid" value="0">
+                        <input type="hidden" name="orderid" value="<?php echo $orderid; ?>">
                         <?php if ($canEditIncidence) { ?>
                             <input type="hidden" name="opt" value="<?php echo $editing ? 'save_incidence' : 'save_incidence'; ?>" id="opt_incidence">
                             <input type="button" class="btn btn-primary" value="<?php echo $editing ? 'Modificar datos' : 'Guardar datos'?>" onclick="saveIncidence();" id="btn_saveincidence">
