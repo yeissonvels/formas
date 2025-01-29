@@ -692,4 +692,9 @@ class StoreModel extends Store
         $query = "SELECT * FROM " . $this->estimatesTable . " WHERE status = 0 AND created_by = $createdBy ORDER BY id DESC LIMIT 10";
         return $this->wpdb->get_results($query);
     }
+
+    function getEstimatesWithoutNotification() {
+        $query = "SELECT * FROM " . $this->estimatesTable . " WHERE email_sent = 0";
+        return $this->wpdb->get_results($query);
+    }
 }

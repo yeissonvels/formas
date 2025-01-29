@@ -1397,7 +1397,7 @@ class AjaxRequest
             // Enviamos correo
             $mailInfo['saledate'] = date('d-m-Y H:i:s');
             $mailInfo['id'] = $result['lastid'];
-            $mailInfo['store'] = getStoreName($user->getStoreId());
+            $mailInfo['store'] = ucfirst(strtolower(getStoreName($user->getStoreId())));
             $mailInfo['user'] = $user->getUsername();
             $controller->notifyNewEstimate($mailInfo);
         }
