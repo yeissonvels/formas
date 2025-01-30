@@ -462,7 +462,6 @@ class StoreModel extends Store
         $query = 'SELECT id, code, saledate, customer FROM ' . $this->pdfsTable;
         $query .= " WHERE $createdByFilter AND saletype = 0 ";
         $query .= ' AND (code LIKE "%' . $keyword . '%" OR customer LIKE "%' . $keyword . '%") LIMIT 3;';
-        echo $query;
         $codes = $this->wpdb->get_results($query);
 
         // Si no obtenemos resultados buscamos por teléfono
