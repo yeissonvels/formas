@@ -315,8 +315,12 @@ class OrderModel
     function getIncidences($id, $code = 0)
     {
         $query = "SELECT i.id as id, orderid, incidencetype, description, incidencedate, status, pendingpay, created_on, fixed_on, ";
-        $query .= " username FROM " . $this->incidencesTable . " i, " . $this->usersTable . " u WHERE (orderid = " . $id;
-        $query .= " OR code = '" . $code . "') AND i.created_by = u.id";
+        $query .= " username FROM " . $this->incidencesTable . " i, " . $this->usersTable . " u ";
+        $query .= " WHERE i.created_by = u.id AND (orderid = " . $id;
+        if($code != 0) {
+            $query .= " OR code = '$code'";
+        }
+        $query .= ")";
         return $this->wpdb->get_results($query);
     }
 

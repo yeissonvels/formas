@@ -540,6 +540,7 @@ function icon($name, $show = false, $scape = false) {
         'barcode' => 'fa-barcode',
         'checked' => 'fa-check-square',
         'email' => 'fa-envelope',
+        'send_email' => 'fa-solid fa-paper-plane',
         'search' => 'fa-search',
         'half' => 'fa-hourglass-half',
         'calculator' => 'fa-calculator',
@@ -548,7 +549,9 @@ function icon($name, $show = false, $scape = false) {
         'attention2' => 'fa-exclamation-triangle',
         'estimate' => 'fas fa-file-invoice',
         'ceo' => 'fa-user-tie',
-        'update' => 'fa-solid fa-rotate'
+        'update' => 'fa-solid fa-rotate',
+        'on' => 'fa-solid fa-toggle-on',
+        'off' => 'fa-solid fa-toggle-off'
     );
 
     if ($scape) {
@@ -2126,6 +2129,26 @@ function encode64($cad) {
 
 function decode64($cad) {
     return base64_decode($cad);
+}
+
+function isLogout() {
+    return (strpos($_SERVER['REQUEST_URI'], "opt=logout") !== false);
+}
+
+function logoutControl() {
+    if(isLogout()) {
+        $controller = new UserController();
+        $controller->logout();
+        exit;
+    }
+}
+
+function getMethodError($method, $line) {
+    $msg = "¡Se ha producido un error!<br>";
+    if(isadmin()) {
+        $msg .= "Method: $method | Line: $line";
+    }
+    return errorMsg($msg);
 }
 
 ?>

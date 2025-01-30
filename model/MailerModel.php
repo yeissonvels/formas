@@ -20,7 +20,8 @@ class MailerModel {
         return $this->wpdb;
     }
 
-    function getMailerConfig($id = 0) {
-        return $this->wpdb->getOneRow($this->mailerConfigTable, $id);
+    function getMailerConfig() {
+        $query = "SELECT * FROM " . $this->mailerConfigTable . " WHERE status = 1";
+        return $this->wpdb->get_row($query);
     }
 }

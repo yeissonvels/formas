@@ -18,7 +18,6 @@ abstract class App {
     static function initGetController() {
         if (isset($_GET['controller'])) {
             $controller = ucfirst($_GET['controller']) . 'Controller';
-
             if (class_exists($controller)) {
                 $controller = new $controller();
 

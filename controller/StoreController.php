@@ -408,18 +408,33 @@ class StoreController extends StoreModel
 	}
 
     function new_estimate() {
+        global $user;
         $data = false;
         $parent = array();
         // Obtiene el id desde el REQUEST_URI y lo setea en $_GET
         getIdFromRequestUri();
-        if (isset($_GET['id'])) {
-            $_GET['id'] = decode64($_GET['id']);
-            $data = $this->getEstimateData();
+
+        try {
+            if (isset($_GET['id'])) {
+                $_GET['id'] = decode64($_GET['id']);
+                $and = !userWithPrivileges() ? " AND created_by = " . $user->getId() : "";
+                $data = $this->getEstimateData($_GET['id'], true, $and);
+            }
+    
+            if ($data) {
+                $data->parent = $parent;
+            }
+
+        } catch (Exception $error) {
+            $msg = "¡Se ha producido un error!<br>";
+            if(isadmin()) {
+                $msg .= $error->getMessage();
+            }
+            errorMsg($msg);
+            exit;
         }
 
-        if ($data) {
-            $data->parent = $parent;
-        }
+        
 
         $tpl = VIEWS_PATH_CONTROLLER . "new_estimate" . VIEW_EXT;
         loadTemplate($tpl, $data, '', $this);
@@ -457,7 +472,7 @@ class StoreController extends StoreModel
         global $estimateOrigins;
         $httpHost = HTTP_HOST;
         $estimateOrigin = $estimateOrigins[$estimateData['estimateorigin']];
-        $id = $estimateData['id'];
+        $id = encode64($estimateData['id']);
 
         $html = "<img src='cid:imagenCID' alt='Formas' style='width: 150px;'><br><br>";
 
@@ -492,5 +507,11 @@ class StoreController extends StoreModel
         $message = "Esto es una prueba";
         $mailController = new MailerController("Nuevo presupuesto", $message);
    }
+
+   function testHostalia() {
+    $message = "Esto es una prueba";
+    $mailController = new MailerController("Nuevo presupuesto", $message);
+    $mailController->testHostalia();
+}
 
 }

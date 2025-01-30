@@ -81,7 +81,7 @@ class UserController extends UserModel {
 		foreach ($_SESSION as $key => $ses) {
 			unset($_SESSION[$key]);
 		}
-		
+
 		//setcookie('user','',time()-100);
 
         echo '<script>';
@@ -112,32 +112,6 @@ class UserController extends UserModel {
         $msg = '';
         include(VIEWS_PATH_CONTROLLER . 'change_password_form.html.php');
     }
-
-    function new_expenses_sheet() {
-        global $user;
-
-        $data = $this->getExpenseSheetData();
-
-        // Si editamos tomamos los items de la hoja de gastos
-        if($data){
-            $items = $this->getExpenseSheetItems();
-        }
-
-        include(VIEWS_PATH_CONTROLLER . 'new_expenses_sheet.html.php');
-    }
-
-
-    function show_expenses_sheets() {
-        global $user;
-        global $wpdb;
-        $expensesSheets = $this->getExpensesSheets($user);
-        include(VIEWS_PATH_CONTROLLER . 'show_expenses' . VIEW_EXT);
-    }
-	
-	function show_expenses_sheets2() {
-		//include(VIEWS_PATH_CONTROLLER . 'show_expenses2.html.php');
-		loadTemplate(VIEWS_PATH_CONTROLLER . 'show_expenses2' . VIEW_EXT);
-	}
 
     function delete_user() {
         $this->deleteUserDB();
