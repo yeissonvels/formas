@@ -255,7 +255,10 @@ class StoreModel extends Store
     }
 
     function getMyTotalEstimates($createdBy) {
-        return $this->wpdb->get_var("SELECT COUNT(*) FROM " . $this->estimatesTable . " WHERE created_by = " . $createdBy);
+        $initDate = date("Y") . "-01-01";
+        $finishDate = date("Y") . "-12-31";
+        $query = "SELECT COUNT(*) FROM " . $this->estimatesTable . " WHERE created_by = " . $createdBy . " AND created_on BETWEEN '$initDate' AND '$finishDate'";
+        return $this->wpdb->get_var($query);
     }
 
     function getEstimateCode($user) {
@@ -448,17 +451,18 @@ class StoreModel extends Store
     }
 
     function getAutocompleteMainCode() {
+        global $user;
         $keyword = $_POST['keyword'];
-        /*$createdByFilter = 'created_by = ' . $user->getId();
+        $createdByFilter = 'created_by = ' . $user->getId();
         if (isadmin() || $user->getUsermanager() == 1 || $user->getUseraccounting() == 1 || $user->getUserrepository() == 1) {
             $createdByFilter = 'id > 0';
-        }*/
+        }
 
         // Realizamos primero búsqueda por código de pedido o nombre de cliente
         $query = 'SELECT id, code, saledate, customer FROM ' . $this->pdfsTable;
-        $query .= ' WHERE id > 0 AND saletype = 0';
+        $query .= " WHERE $createdByFilter AND saletype = 0 ";
         $query .= ' AND (code LIKE "%' . $keyword . '%" OR customer LIKE "%' . $keyword . '%") LIMIT 3;';
-        //echo $query;
+        echo $query;
         $codes = $this->wpdb->get_results($query);
 
         // Si no obtenemos resultados buscamos por teléfono
