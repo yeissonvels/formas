@@ -9,7 +9,7 @@
 <div class="card">
     <div class="card-header">
         <h4 class="card-title">Friendly Urls</h4>
-        <span><a href="<?php echo getUrl('new', $data['urls']); ?>"><?php echo trans('new') ?></a></span>
+        <span><a href="<?php echo getUrl('new', $data['urls']); ?>"><?php icon('save', true); ?></a></span>
         <?php update_icon(getUrl('show', $data['urls'])); ?>
     </div>
     <div class="card-block">
@@ -43,11 +43,11 @@
                     <td><?php echo $url->getMethod() ?></td>
                     <td><?php echo getUrlType($url->getType()); ?></td>
                     <td>
-                        <a href="<?php echo getUrl('edit', $data['urls'], $id) ?>"><?php edit_icon() ?></a>
+                        <a href="<?php echo getUrl('edit', $data['urls'], $id) ?>"><?php icon('edit', true); ?></a>
                     </td>
                     <td>
                         <a href="#"
-                           onclick="delete_url(<?php echo $id ?>, '<?php echo $url->getUrlname() ?>')"><?php delete_icon() ?></a>
+                           onclick="delete_url(<?php echo $id ?>, '<?php echo $url->getUrlname() ?>')" style="color: red;"><?php icon('delete', true); ?></a>
 
                     </td>
                 </tr>

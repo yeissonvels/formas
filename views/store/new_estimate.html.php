@@ -586,7 +586,8 @@
     <div class="card-header">
         <h4 class="card-title">
             <span id="dynamictitle">
-            	<?php echo $data ? "Modificar $defaultLabel" : "Nuevo $defaultLabel" ?> <?php icon('estimate', true); ?>
+            	<?php echo $data ? "Modificar $defaultLabel" : "Nuevo $defaultLabel" ?> 
+                <?php icon('hand_ok', true, false, '26px'); ?>
         	</span>
         	<?php
             if ($data) {?>

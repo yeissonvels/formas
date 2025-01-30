@@ -173,7 +173,7 @@
                             <div id="suggesstion-box-main" style="position: absolute; z-index: 10000;"></div>
                         </div>
                         <div class="col-sm-3">
-                            <a class="lupa ml-1" onclick="$('#frm-orderview').submit();"><?php icon('search', true); ?></a>
+                            <a class="lupa" onclick="$('#frm-orderview').submit();"><?php icon('search', true); ?></a>
                         </div>
                     </div>
                 </form>

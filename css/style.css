@@ -9,6 +9,7 @@ body {
 .lupa {
     font-size: 23px;
     color: #0275d8 !important;
+    margin-left: 5px;
     cursor: pointer;
 }
 

@@ -501,7 +501,9 @@ function edit_icon($show = true) {
 /**
  * Genera un icono font Awesome
  */
-function icon($name, $show = false, $scape = false) {
+function icon($name, $show = false, $scape = false, $size = '') {
+    $size =  $size != '' ? ('style="font-size: '.$size.';"') : ''; 
+   
     $icons = array(
         'edit' => 'fa-pencil-square',
         'delete' => 'fa-trash',
@@ -551,13 +553,14 @@ function icon($name, $show = false, $scape = false) {
         'ceo' => 'fa-user-tie',
         'update' => 'fa-solid fa-rotate',
         'on' => 'fa-solid fa-toggle-on',
-        'off' => 'fa-solid fa-toggle-off'
+        'off' => 'fa-solid fa-toggle-off',
+        'hand_ok' => 'fa-regular fa-thumbs-up'
     );
 
     if ($scape) {
         $icon = '<i class=\'fa ' . $icons[$name] . ' fa-fw\'></i>';
     } else {
-        $icon = '<i class="fa ' . $icons[$name] . ' fa-fw"></i>';
+        $icon = '<i class="fa ' . $icons[$name] . ' fa-fw" '.$size.'></i>';
     }
 
 

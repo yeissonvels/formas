@@ -82,7 +82,7 @@
         if(count($item->getChilds()) > 0) {
             $label = $item->$selectedLang() != '' ? $item->$selectedLang() : $item->getLabel();
             $html .= '<li>';
-            $html .=    $label . PHP_EOL;
+            $html .=    "<b>$label</b>" . PHP_EOL;
             for ($i = 0; $i < count($profileTypes); $i++) {
                 if (isset($permissions->$id)) {
                     if (in_array($profileTypes[$i][0], $permissions->$id)) {
@@ -90,8 +90,8 @@
                     }
                 }
                 $checkValue = $id . "#" . $profileTypes[$i][0];
-                $html .= '&emsp;<input type="checkbox" value="' . $checkValue . '" ' . $checked . '>';
-                $html .= $profileTypes[$i][1] . "&emsp;";
+                $html .= '&emsp;<input type="checkbox"  class="form-check-input" value="' . $checkValue . '" ' . $checked . '>';
+                $html .= " " . $profileTypes[$i][1] . "&emsp;";
                 $checked = "";
             }
             $html .= '<ul>';
@@ -106,7 +106,7 @@
         } else {
             $label = $item->$selectedLang() != '' ? $item->$selectedLang() : $item->getLabel();
             $html .= '<li>' . PHP_EOL;
-            $html .=    $label . PHP_EOL;
+            $html .=    (($item->label == "Inicio") ? "<b>$label</b>" : $label) . PHP_EOL;
             for ($i = 0; $i < count($profileTypes); $i++) {
                 if (isset($permissions->$id)) {
                     if (in_array($profileTypes[$i][0], $permissions->$id)) {
@@ -114,8 +114,8 @@
                     }
                 }
                 $checkValue = $id . "#" . $profileTypes[$i][0];
-                $html .= '&emsp;<input type="checkbox" value="' . $checkValue . '" ' . $checked . '>';
-                $html .= $profileTypes[$i][1] . "&emsp;";
+                $html .= '&emsp;<input type="checkbox" class="form-check-input" value="' . $checkValue . '" ' . $checked . '>';
+                $html .= " ". $profileTypes[$i][1] . "&emsp;";
                 $checked = "";
             }
             $html .= '</li>' . PHP_EOL;
