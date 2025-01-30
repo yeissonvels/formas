@@ -20,8 +20,8 @@
                         <th><?php echo trans('icon') ?></th>
                         <th><?php echo "Fontawesome icon"; ?></th>
                         <th><?php echo trans('target') ?></th>
-                        <th><?php echo trans('edit') ?></th>
-                        <th><?php echo trans('delete') ?></th>
+                        <th><?php icon('edit', true); ?></th>
+                        <th><?php icon('delete', true); ?></th>
                     </tr>
                 </thead>
                 <?php
@@ -52,13 +52,13 @@
                           </td>
                           <td class="parent-menu"><?php echo $item->target > 0 ? "_blank" : "" ?></td>
                           <td>
-                              <a onclick="loadMenuItemData(<?php echo $item->getId(); ?>);scrollingTop();" style="cursor: pointer;">
-                                <?php echo edit_icon();?>
+                              <a onclick="loadMenuItemData(<?php echo $item->getId(); ?>);scrollingTop();" style="cursor: pointer; color: blue;">
+                                <?php icon('edit', true); ?>
                               </a>
                           </td>
                           <td>
-                              <a onclick="deleteMenuItem(<?php echo $item->getId(); ?>, this.event)" style="cursor: pointer;" id="a<?php echo $item->getId()?>">
-                                  <?php echo delete_icon();?>
+                              <a onclick="deleteMenuItem(<?php echo $item->getId(); ?>, this.event)" style="cursor: pointer; color: red;" id="a<?php echo $item->getId()?>">
+                                  <?php icon('delete', true); ?>
                               </a>
                           </td>
                       </tr>
@@ -99,14 +99,14 @@
             echo    '<td>' . $niv->target . '</td>';
             ?>
             <td>
-                <a onclick="loadMenuItemData(<?php echo $niv->getId(); ?>);scrollingTop();" style="cursor: pointer;">
-                    <?php echo edit_icon();?>
+                <a onclick="loadMenuItemData(<?php echo $niv->getId(); ?>);scrollingTop();" style="cursor: pointer; color: blue;">
+                    <?php icon('edit', true); ?>
                 </a>
             </td>
 
             <td>
-                <a onclick="deleteMenuItem(<?php echo $niv->getId(); ?>, this.event)" style="cursor: pointer;" id="a<?php echo $niv->getId()?>">
-                    <?php echo delete_icon();?>
+                <a onclick="deleteMenuItem(<?php echo $niv->getId(); ?>, this.event)" style="cursor: pointer; color: red;" id="a<?php echo $niv->getId()?>">
+                    <?php icon('delete', true); ?>
                 </a>
             </td>
         <?php
