@@ -1,7 +1,7 @@
 <script>
    
     function check_configuration() {
-        comprobate = Array('#host', '#user', '#password', '#fromName', '#_to', '#_cc', '#status');
+        comprobate = Array('#host', '#user', '#password', '#fromName', '#_to', '#status');
         
         // Devuelve true si todos los campos han sido completados
         if (checkNoEmpty(comprobate)) {

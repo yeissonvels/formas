@@ -16,6 +16,17 @@ class ConfiguratorModel {
     }
 
     function save_edit_config() {
+        $this->inactiveAllConfigurations();
         $this->wpdb->save_edit($this->mailerConfigTable);
+    }
+
+    function getMailerConfigurations() {
+        $query = "SELECT * FROM " . $this->mailerConfigTable;
+        return $this->wpdb->get_results($query);
+    }
+
+    function inactiveAllConfigurations() {
+        $query = "UPDATE " . $this->mailerConfigTable . " SET status = 0";
+        $this->wpdb->query($query);
     }
 }

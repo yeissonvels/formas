@@ -15,16 +15,13 @@ class WPDB {
     private $where = array();
 
     function __construct() {
+        //print_r($_SERVER);
         if (LOCALHOST) {
             $confLocal = 'config_localhost.php';
-            if (strpos(HTTP_HOST, "desarrollo.formas.local.com") !== false) {
+            if (strpos(HTTP_HOST, "desarrollo.formas") !== false) {
                 $confLocal = 'config_localhost_desarrollo.php';
             }
             $conf = new Config(CONFIG_PATH . $confLocal);
-        } else if(strpos(HTTP_HOST, "formas.riodevs.com") !== false) {
-            $conf = new Config(CONFIG_PATH . 'config_riodevs.php');
-        } else if(strpos(HTTP_HOST, "desarrollo.formas.info") !== false) {
-            $conf = new Config(CONFIG_PATH . 'config_desarrollo_formas.php');
         } else {
             $conf = new Config(CONFIG_PATH . 'config_prod.php');
         }
@@ -47,6 +44,10 @@ class WPDB {
         }
 
         mysqli_set_charset($this->linker, "utf8");
+    }
+
+    function mysqli_scape($str) {
+        return mysqli_real_escape_string($this->linker, $str);
     }
 
     function getDBName() {
@@ -127,7 +128,7 @@ class WPDB {
         $comprobate = $this->get_row($select);
         $result = FALSE; // Se inicializa a False la variable que será devuelta si la operación es exitosa por que el dato no existe
 
-        if ($comprobate === NULL) {
+        if ($comprobate == NULL) {
             $this->query($insert);
             if ($showmsg) {
                 confirmationMessage(trans('db_data_saved'));
@@ -169,9 +170,9 @@ class WPDB {
 
         //Comprobar si el dato ya existe en el sistema
         $comprobate = $this->get_row($select);
-
         $result = FALSE; // Se inicializa a False la variable que será devuelta si la operación es exitosa por que el dato no existe
-        if ($comprobate === NULL) {
+
+        if ($comprobate == NULL) {
             //echo $update;
             $this->query($update);
             if ($showmsg) {
@@ -285,8 +286,9 @@ class WPDB {
      *
      * Devuelve una fila
      */
-    function getOneRow($table,$id, $and = '') {
-        $query = 'SELECT * FROM ' . $table . ' WHERE id=' . $id . " $and LIMIT 1";
+    function getOneRow($table,$id, $and = "") {
+        $query = "SELECT * FROM " . $table . " WHERE id = $id  $and LIMIT 1";
+
         return $this->get_row($query);
     }
 
@@ -460,7 +462,13 @@ class WPDB {
         return $this->where;
     }
 
-    function getLinker() {
+    function insertIntoTableFromRow($table, $row) {
+        $query = $this->buildQueryInsert($table, $row);
+        $this->query($query);
+        return $this->insert_id;
+    }
+	
+	 function getLinker() {
         return $this->linker;
     }
 }
