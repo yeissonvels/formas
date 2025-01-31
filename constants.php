@@ -90,4 +90,14 @@ define('CR2', 'WWVpc3NvbiBWw6lsZXo=');
 define('MT', 'bWFpbHRvOnllaXNzb24udmVsZXpAZ21haWwuY29t');
 define('LK', 'aHR0cHM6Ly93d3cubGlua2VkaW4uY29tL2luL3llaXNzb24tdmVsZXpzLw==');
 
+//
+
+define('P_A', 'cGFyZW50OjpfX2NvbnN0cnVjdA==');
+define('C_N', 'U2VjdXJpdHlDb250cm9sbGVy');
+define('M_N', 'Y2hlY2s=');
+define('M_1','TGljZW5jaWEgbm8gdsOhbGlkYSBvIGFyY2hpdm8gZGUgbGljZW5jaWEgZmFsdGFudGUuIExhIGFwbGljYWNpw7NuIG5vIHB1ZWRlIGFycmFuY2FyLg==');
+define('M_2','TGljZW5jaWEgbm8gdsOhbGlkYSBvIGFyY2hpdm8gZGHDsWFkby4=');
+define('M_3','TGEgbGljZW5jaWEgaGEgZXhwaXJhZG8uIExhIGFwbGljYWNpw7NuIG5vIHB1ZWRlIGFycmFuY2FyLg==');
+define('LICENSE',ABSOLUTE_PATH .'license.dat');
+
 ?>
