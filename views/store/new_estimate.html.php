@@ -617,7 +617,7 @@
                         <label for="code"
                                class="col-sm-2 col-form-label">Número de presupuesto</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control bg-warning text-white" name="code" id="code"
+                            <input type="text" class="form-control bg-primary-subtle fw-bold" name="code" id="code"
                                    value="<?php echo $code; ?>" autocomplete="off" disabled>
                         </div>
                     </div>

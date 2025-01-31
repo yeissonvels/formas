@@ -532,6 +532,9 @@ class StoreModel extends Store
         $month = isset($_POST['month']) ? $_POST['month'] : date('m');
         $year = isset($_POST['year']) ? $_POST['year'] : date('Y');
         $allyear = false;
+        $orderCriteria = $_POST['order'];
+
+
         if ($month == "all") {
             $allyear = true;
         }
@@ -589,7 +592,7 @@ class StoreModel extends Store
         $query .= $this->estimatesTable . " p, " . $this->usersTable . " u ";
         $initialQuery = $query;
         $where = " WHERE " . $firstfilter . " " . $filterStore . $filterDate . $filterStatus;
-        $orderby = " ORDER BY code ASC, created_on ASC";
+        $orderby = " ORDER BY p.id $orderCriteria";
         $query .= $where . $orderby;
 
         if($filterTel != "") {

@@ -169,6 +169,18 @@
                 </div>
             </div>
 
+            <div class="form-group row">
+                <label for="purchasedate" class="col-sm-1 col-form-label">
+                    <h6 class="filter-label-icon">Criterio de ordenación <?php icon('sort', true);?></h6>
+                </label>
+                <div class="col-sm-2">
+                   <select class="form-select" name="order" id="order">
+                        <option value="DESC">Más reciente primero</option>
+                        <option value="ASC">Más antiguo primero</option>
+                   </select>
+                </div>
+            </div>
+
             <?php
             global $user;
             if (userWithPrivileges()) { ?>

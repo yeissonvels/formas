@@ -546,7 +546,7 @@ function icon($name, $show = false, $scape = false, $size = '') {
         'search' => 'fa-search',
         'half' => 'fa-hourglass-half',
         'calculator' => 'fa-calculator',
-        'sort' => 'fas fa-sort',
+        'sort' => 'fa-solid fa-sort',
         'attention' => 'fa-exclamation-circle',
         'attention2' => 'fa-exclamation-triangle',
         'estimate' => 'fas fa-file-invoice',
