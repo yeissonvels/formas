@@ -99,5 +99,6 @@ define('M_1','TGljZW5jaWEgbm8gdsOhbGlkYSBvIGFyY2hpdm8gZGUgbGljZW5jaWEgZmFsdGFudG
 define('M_2','TGljZW5jaWEgbm8gdsOhbGlkYSBvIGFyY2hpdm8gZGHDsWFkby4=');
 define('M_3','TGEgbGljZW5jaWEgaGEgZXhwaXJhZG8uIExhIGFwbGljYWNpw7NuIG5vIHB1ZWRlIGFycmFuY2FyLg==');
 define('LICENSE',ABSOLUTE_PATH .'license.dat');
+define('LOGO_FORMAS', '/images/logo-formas-naranja.png');
 
 ?>
