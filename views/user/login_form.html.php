@@ -1,6 +1,6 @@
 <nav class="navbar navbar-light navbar-toggleable-md">
     <a href="<?php echo HTTP_HOST; ?>">
-        <img src="/images/logo-formas-naranja.png" class="img-fluid" alt="Responsive image" style="width: 130px;">
+        <img src="<?php echo LOGO_FORMAS; ?>" class="img-fluid" alt="Responsive image" style="width: 130px;">
     </a>
 </nav>
 

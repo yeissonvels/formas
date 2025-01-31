@@ -171,7 +171,7 @@
         <div class="row">
             <div class="col-sm-2" style="vertical-align: top; padding-bottom: 15px;">
                 <a href="<?php echo HTTP_HOST; ?>">
-                    <img src="/images/logo-formas-naranja.png" style="width: 120px;" alt="Home">
+                    <img src="<?php echo LOGO_FORMAS; ?>" style="width: 120px;" alt="Home">
                 </a>
             </div>
             <div class="col-sm-5 mt-2">
