@@ -12,7 +12,17 @@
     <meta name="viewport" content="width=device-width">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel='stylesheet' href='/css/timeTo.css' type='text/css' media='all'/>
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    
+    <!-- Icono estándar -->
+    <link rel="icon" href="/assets/icons/favicon.ico" type="image/x-icon">
+    <!-- Icono para dispositivos Apple -->
+    <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png">
+    <!-- Tamaños específicos para navegadores modernos -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+    <!-- Archivo de configuración para aplicaciones web progresivas -->
+    <link rel="manifest" href="/assets/icons/site.webmanifest">
+
     <link rel='stylesheet' href='/css/jquery.qtip.css' type='text/css' media='all'/>
     <link rel='stylesheet' href='/css/menu.css' type='text/css' media='all'/>
     <link rel='stylesheet' href='/css/bootstrap.min.css' type='text/css' media='all'/>
