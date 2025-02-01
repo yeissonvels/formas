@@ -86,57 +86,31 @@ class UserModel extends User {
     }
 
     function getUser() {
-        $mensaje = "";
         if (!empty($_POST['user_login']) && !empty($_POST['user_pass'])) {
-
             $query = 'SELECT * FROM ' . $this->userTable . ' WHERE username="' . $_POST['user_login'] . '" AND user_pass="' . md5($_POST['user_pass']) . '"';
-            $user = $this->wpdb->get_row($query);
+            $user = $this->wpdb->get_row($query) ?? null;
 
-            if ($user) {
-                $user = persist($user, 'User');
+            if(!$user || $user->deleted == 1) {
+                return errorMsg(trans('login_error'), false);
             }
 
-            if ($user && $user->deleted == 0) {
-                if ($user->active > 0) {
-                	/*if (isAdmin()) {
-                		print_r($user);
-						exit;
-                	}*/
-                    $this->updateLastLogin($user->getId());
-                    $_SESSION['user'] = $user;
-					//$cookieTime = time()+60*60*24*30;
-					//setcookie('user', $user->id, $cookieTime);
-					createCookie("user", $user->id, 30);
-                    $mensaje = 'El usuario ' . $user->username. ' hizo login el ' . date('d/m/Y H:i:s');
-                    $mensaje .= ' en ' . $_SERVER['SERVER_NAME'] . '.<br> Acceso desde ' . $_SERVER['REMOTE_ADDR'];
-                    //$this->saveAppAccess($user->getId());
-                    //sendMail('jeixuxspn@gmail.com', 'Login en el administrador', $mensaje);
-                    //new Mailer('jeixuxspn@gmail.com', 'Login en el administrador', $mensaje);
-                    // Usamos javascript para evitar (Warning: Cannot modify header information - headers already sent)
-                    
-                    /*if (isAdmin()) {
-                    	pre($user);
-                    }*/
+            $user  = persist($user, 'User');
 
-                    if (!$_SERVER['HTTP_REFERER']) {
-                        redirectToIndex();
-                    } else if (strpos($_SERVER['HTTP_REFERER'], LOGOUT_URL) !== false || strpos($_SERVER['HTTP_REFERER'], "cerrar-sesion") !== false){
-                        // Si el HTTP_REFERER es a logout redireccionamos a index
-                        redirectToIndex();
-                    } else {
-                        //header('location: ' . $_SERVER['HTTP_REFERER'] . '');
-                        redirectToIndex();
-                    }
-                } else {
-                    $mensaje = errorMsg(trans('account_inactive'), false);
-                }
-            } else if (count($user) > 0 && $user->deleted == 1) {
-                $mensaje = errorMsg(trans('login_error'), false);
+            $this->updateLastLogin($user->getId());
+            $_SESSION['user'] = $user;
+            //$cookieTime = time()+60*60*24*30;
+            //setcookie('user', $user->id, $cookieTime);
+            createCookie("user", $user->id, 30);
+
+            if (!$_SERVER['HTTP_REFERER']) {
+                redirectToIndex();
+            } else if (strpos($_SERVER['HTTP_REFERER'], LOGOUT_URL) !== false || strpos($_SERVER['HTTP_REFERER'], "cerrar-sesion") !== false){
+                // Si el HTTP_REFERER es a logout redireccionamos a index
+                redirectToIndex();
             } else {
-                $mensaje = errorMsg(trans('login_error'), false);
+                //header('location: ' . $_SERVER['HTTP_REFERER'] . '');
+                redirectToIndex();
             }
-
-            return $mensaje;
         }
     }
 
